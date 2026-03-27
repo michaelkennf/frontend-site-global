@@ -80,7 +80,7 @@ export default function AdminMessages() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.05 }}
                         onClick={() => { setSelected(message); handleMarkRead(message) }}
-                        className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${selected?.id === message.id ? "bg-blue-50" : ""} ${!message.read ? "bg-blue-50/50" : ""}`}
+                        className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${selected?.id === message.id ? "bg-[var(--sos-blue-light)]" : ""} ${!message.read ? "bg-[var(--sos-blue-light)]/50" : ""}`}
                       >
                         <div className="flex items-start gap-3">
                           <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${!message.read ? "bg-[var(--sos-blue)]" : "bg-gray-200"}`}>

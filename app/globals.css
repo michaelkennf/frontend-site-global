@@ -5,11 +5,11 @@
 
 :root {
   /* Global SOS Brand Colors */
-  --sos-blue: #1B6EC2;
+  --sos-blue: #0057B8;
   --sos-red: #E31E24;
-  --sos-blue-dark: #134f8f;
+  --sos-blue-dark: #004A9E;
   --sos-red-dark: #b8171c;
-  --sos-blue-light: #e8f2fc;
+  --sos-blue-light: #E6EFF9;
   --sos-red-light: #fdeaea;
 
   --background: oklch(1 0 0);

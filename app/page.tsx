@@ -7,7 +7,6 @@ import { AboutSection } from "@/components/about-section"
 import { StatsSection } from "@/components/stats-section"
 import { AreasSection } from "@/components/areas-section"
 import { ActivitiesSection } from "@/components/activities-section"
-import { NewsSection } from "@/components/news-section"
 import { DonateSection } from "@/components/donate-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { PartnersSection } from "@/components/partners-section"
@@ -24,7 +23,6 @@ export default function HomePage() {
           <StatsSection />
           <AreasSection />
           <ActivitiesSection />
-          <NewsSection />
           <DonateSection />
           <PartnersSection />
           <NewsletterSection />

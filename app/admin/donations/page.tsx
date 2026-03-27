@@ -44,7 +44,7 @@ export default function AdminDonations() {
   const statCards = stats ? [
     { label: "Total confirmé", value: `$${stats.totalAmount.toFixed(0)}`, icon: DollarSign, color: "#16a34a" },
     { label: "Nombre de dons", value: String(stats.count), icon: Heart, color: "#E31E24" },
-    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "#1B6EC2" },
+    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "#0057B8" },
     { label: "Don moyen", value: `$${stats.averageAmount.toFixed(0)}`, icon: TrendingUp, color: "#f59e0b" },
   ] : []
 

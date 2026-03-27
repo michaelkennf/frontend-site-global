@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -37,9 +38,9 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--sos-blue)]">
-        <Image src="/images/hero.jpg" alt="Global SOS" fill className="object-cover opacity-30" />
+        <Image src="/images/hero.png" alt="Global SOS" fill className="object-cover opacity-60" />
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
-          <Image src="/images/logo.jpeg" alt="Global SOS Logo" width={100} height={100} className="mb-8 rounded-xl" />
+          <Image src="/images/logo.png" alt="Global SOS Logo" width={100} height={100} className="mb-8 rounded-xl" />
           <h1 className="font-serif font-black text-4xl mb-4">Global SOS</h1>
           <p className="text-white/80 text-lg leading-relaxed max-w-md">
             Espace administration pour la gestion du contenu, des dons et des communications.
@@ -54,13 +55,20 @@ export default function AdminLoginPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="lg:hidden flex items-center gap-3 mb-8">
-            <Image src="/images/logo.jpeg" alt="Global SOS Logo" width={60} height={60} className="rounded-lg" />
-            <div>
-              <span className="font-serif font-bold text-xl text-[var(--sos-blue)]">Global</span>
-              <span className="font-serif font-black text-xl text-[var(--sos-red)]"> SOS</span>
+          <Link href="/" className="flex items-center justify-center gap-3 mb-8 group">
+            <Image
+              src="/images/logo.png"
+              alt="Global SOS Logo"
+              width={64}
+              height={64}
+              className="rounded-lg group-hover:scale-105 transition-transform"
+            />
+            <div className="text-left">
+              <span className="font-serif font-bold text-2xl text-[var(--sos-blue)]">Global</span>
+              <span className="font-serif font-black text-2xl text-[var(--sos-red)]"> SOS</span>
+              <div className="text-xs text-gray-400 mt-0.5">Retour à l’accueil</div>
             </div>
-          </div>
+          </Link>
 
           <h2 className="font-serif font-bold text-3xl text-gray-900 mb-2">Administration</h2>
           <p className="text-gray-500 mb-8">Connectez-vous pour accéder au tableau de bord</p>
@@ -123,11 +131,6 @@ export default function AdminLoginPage() {
             </Button>
           </form>
 
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg text-center">
-            <p className="text-xs text-gray-500">
-              <strong>Admin :</strong> admin@globalsos.org / Admin@2026!
-            </p>
-          </div>
         </motion.div>
       </div>
     </div>

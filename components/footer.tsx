@@ -27,14 +27,14 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="bg-[var(--sos-blue)] text-white">
+    <footer className="text-white" style={{ backgroundColor: "#0235D6" }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Logo & Description */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.png"
                 alt="Global SOS"
                 width={60}
                 height={60}

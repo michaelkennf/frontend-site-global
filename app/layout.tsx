@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter, Montserrat } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const inter = Inter({
@@ -22,6 +21,14 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   keywords: ['humanitarian', 'NGO', 'global sos', 'humanitaire', 'aide', 'urgence', 'Bukavu', 'Sud-Kivu', 'RDC', 'Congo', 'ASBL'],
   authors: [{ name: 'Global SOS ASBL' }],
+  icons: {
+    icon: [
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+    ],
+    shortcut: ['/favicon.png'],
+    apple: ['/apple-touch-icon.png'],
+  },
 }
 
 export default function RootLayout({
@@ -33,7 +40,6 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}>
         {children}
-        <Analytics />
       </body>
     </html>
   )

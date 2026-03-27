@@ -82,7 +82,7 @@ export function HeroSection() {
           >
             <Link
               href="/about"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#1B6EC2] hover:bg-blue-50 font-bold px-8 py-4 rounded-full text-base transition-all hover:shadow-lg hover:scale-105 group"
+              className="inline-flex items-center justify-center gap-2 bg-white text-[#0057B8] hover:bg-[var(--sos-blue-light)] font-bold px-8 py-4 rounded-full text-base transition-all hover:shadow-lg hover:scale-105 group"
             >
               {t.hero.learnMore}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

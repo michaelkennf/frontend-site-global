@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AdminSidebar } from "@/components/admin-sidebar"
-import { partnersApi, Partner } from "@/lib/api"
+import { partnersApi, Partner, uploadsApi } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
 import { Plus, Pencil, Trash2, Handshake, Eye, EyeOff, Globe, X, GripVertical } from "lucide-react"
 import Image from "next/image"
@@ -16,6 +16,7 @@ export default function AdminPartnersPage() {
   const [showModal, setShowModal] = useState(false)
   const [editPartner, setEditPartner] = useState<Partner | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const emptyForm = { name: "", logo: "", website: "", description: "", order: 0, isActive: true }
@@ -85,6 +86,20 @@ export default function AdminPartnersPage() {
     }
   }
 
+  async function handleLogoFileChange(file?: File) {
+    if (!file) return
+    setUploadingLogo(true)
+    setError(null)
+    try {
+      const logoUrl = await uploadsApi.uploadImage(file)
+      setForm((prev) => ({ ...prev, logo: logoUrl }))
+    } catch {
+      setError("Erreur lors de l'upload du logo")
+    } finally {
+      setUploadingLogo(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
@@ -99,7 +114,7 @@ export default function AdminPartnersPage() {
             </div>
             <button
               onClick={openCreate}
-              className="inline-flex items-center gap-2 bg-[#1B6EC2] hover:bg-[#155fa8] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-[#0057B8] hover:bg-[#004A9E] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
             >
               <Plus size={18} />
               Ajouter un partenaire
@@ -141,7 +156,7 @@ export default function AdminPartnersPage() {
                       <button onClick={() => toggleActive(p)} title={p.isActive ? "Masquer" : "Afficher"} className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
                         {p.isActive ? <Eye size={15} /> : <EyeOff size={15} />}
                       </button>
-                      <button onClick={() => openEdit(p)} className="p-1.5 rounded hover:bg-blue-50 text-blue-500">
+                      <button onClick={() => openEdit(p)} className="p-1.5 rounded hover:bg-[var(--sos-blue-light)] text-[var(--sos-blue)]">
                         <Pencil size={15} />
                       </button>
                       <button onClick={() => setDeleteId(p.id)} className="p-1.5 rounded hover:bg-red-50 text-red-500">
@@ -156,14 +171,14 @@ export default function AdminPartnersPage() {
                         <Image src={p.logo} alt={p.name} fill className="object-contain" sizes="128px" />
                       </div>
                     ) : (
-                      <div className="w-14 h-14 rounded-full bg-[#e8f2fc] flex items-center justify-center">
-                        <Handshake size={22} style={{ color: "#1B6EC2" }} />
+                      <div className="w-14 h-14 rounded-full bg-[#E6EFF9] flex items-center justify-center">
+                        <Handshake size={22} style={{ color: "#0057B8" }} />
                       </div>
                     )}
                     <div>
                       <p className="font-bold text-gray-900">{p.name}</p>
                       {p.website && (
-                        <a href={p.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#1B6EC2] hover:underline mt-0.5">
+                        <a href={p.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#0057B8] hover:underline mt-0.5">
                           <Globe size={11} />{p.website.replace(/^https?:\/\//, "")}
                         </a>
                       )}
@@ -194,19 +209,20 @@ export default function AdminPartnersPage() {
                 <input
                   type="text" required value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                   placeholder="Ex: YARH DRC"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL du logo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Logo</label>
                 <input
-                  type="text" value={form.logo}
-                  onChange={e => setForm({ ...form, logo: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
-                  placeholder="https://... ou /images/partners/logo.png"
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleLogoFileChange(e.target.files?.[0])}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                 />
+                {uploadingLogo && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
                 {form.logo && (
                   <div className="mt-2 relative w-full h-16 bg-gray-50 rounded-lg border overflow-hidden">
                     <Image src={form.logo} alt="Aperçu" fill className="object-contain p-2" sizes="384px" />
@@ -219,7 +235,7 @@ export default function AdminPartnersPage() {
                 <input
                   type="url" value={form.website}
                   onChange={e => setForm({ ...form, website: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                   placeholder="https://www.example.org"
                 />
               </div>
@@ -229,7 +245,7 @@ export default function AdminPartnersPage() {
                 <textarea
                   value={form.description} rows={2}
                   onChange={e => setForm({ ...form, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2] resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8] resize-none"
                   placeholder="Courte description du partenaire..."
                 />
               </div>
@@ -240,7 +256,7 @@ export default function AdminPartnersPage() {
                   <input
                     type="number" min={0} value={form.order}
                     onChange={e => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                   />
                 </div>
                 <div className="flex items-end pb-0.5">
@@ -253,7 +269,7 @@ export default function AdminPartnersPage() {
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-50">Annuler</button>
-                <button type="submit" disabled={saving} className="flex-1 bg-[#1B6EC2] hover:bg-[#155fa8] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg">
+                <button type="submit" disabled={saving} className="flex-1 bg-[#0057B8] hover:bg-[#004A9E] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg">
                   {saving ? "Enregistrement..." : editPartner ? "Mettre à jour" : "Ajouter"}
                 </button>
               </div>

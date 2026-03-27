@@ -1,4 +1,5 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
+const API_ORIGIN = API_BASE.replace(/\/api\/?$/, '');
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -42,22 +43,34 @@ export const authApi = {
   profile: () => request<AdminUser>('/auth/profile', {}, true),
 };
 
-// ── Articles ───────────────────────────────────────────────────────
-export const articlesApi = {
-  getPublished: () => request<Article[]>('/articles/public'),
-  getOne: (id: string) => request<Article>(`/articles/public/${id}`),
-  getAll: () => request<Article[]>('/articles', {}, true),
-  create: (data: Partial<Article>) =>
-    request<Article>('/articles', { method: 'POST', body: JSON.stringify(data) }, true),
-  update: (id: string, data: Partial<Article>) =>
-    request<Article>(`/articles/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
-  delete: (id: string) =>
-    request<void>(`/articles/${id}`, { method: 'DELETE' }, true),
+// ── Uploads ─────────────────────────────────────────────────────────
+export const uploadsApi = {
+  uploadImage: async (file: File): Promise<string> => {
+    const token = getToken();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${API_BASE}/uploads/image`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({ message: 'Erreur upload' }));
+      throw new Error(error.message ?? `Erreur ${res.status}`);
+    }
+
+    const data = (await res.json()) as { url: string };
+    if (data.url.startsWith('http')) return data.url;
+    return `${API_ORIGIN}${data.url}`;
+  },
 };
 
 // ── Activities ─────────────────────────────────────────────────────
 export const activitiesApi = {
   getPublic: () => request<Activity[]>('/activities/public'),
+  getOnePublic: (id: string) => request<Activity>(`/activities/public/${id}`),
   getAll: () => request<Activity[]>('/activities', {}, true),
   create: (data: Partial<Activity>) =>
     request<Activity>('/activities', { method: 'POST', body: JSON.stringify(data) }, true),
@@ -151,24 +164,6 @@ export interface AdminUser {
   role: 'ADMIN' | 'GESTIONNAIRE';
   isActive: boolean;
   createdAt: string;
-}
-
-export interface Article {
-  id: string;
-  titleFr: string;
-  titleEn: string;
-  excerptFr: string;
-  excerptEn: string;
-  contentFr: string;
-  contentEn: string;
-  image?: string;
-  status: 'PUBLISHED' | 'DRAFT';
-  category: string;
-  views: number;
-  publishedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  author?: { id: string; name: string };
 }
 
 export interface Activity {

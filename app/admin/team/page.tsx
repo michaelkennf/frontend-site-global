@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AdminSidebar } from "@/components/admin-sidebar"
-import { teamApi, TeamMember } from "@/lib/api"
+import { teamApi, TeamMember, uploadsApi } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
 import { Plus, Pencil, Trash2, UserCircle2, GripVertical, Eye, EyeOff, X } from "lucide-react"
 
@@ -15,6 +15,7 @@ export default function AdminTeamPage() {
   const [showModal, setShowModal] = useState(false)
   const [editMember, setEditMember] = useState<TeamMember | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const emptyForm = {
@@ -90,6 +91,20 @@ export default function AdminTeamPage() {
     }
   }
 
+  async function handleImageFileChange(file?: File) {
+    if (!file) return
+    setUploadingImage(true)
+    setError(null)
+    try {
+      const imageUrl = await uploadsApi.uploadImage(file)
+      setForm((prev) => ({ ...prev, image: imageUrl }))
+    } catch {
+      setError("Erreur lors de l'upload de l'image")
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
@@ -102,7 +117,7 @@ export default function AdminTeamPage() {
           </div>
           <button
             onClick={openCreate}
-            className="inline-flex items-center gap-2 bg-[#1B6EC2] hover:bg-[#155fa8] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-[#0057B8] hover:bg-[#004A9E] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
           >
             <Plus size={18} />
             Ajouter un membre
@@ -151,7 +166,7 @@ export default function AdminTeamPage() {
                     </button>
                     <button
                       onClick={() => openEdit(m)}
-                      className="p-1.5 rounded hover:bg-blue-50 transition-colors text-blue-500"
+                      className="p-1.5 rounded hover:bg-[var(--sos-blue-light)] transition-colors text-[var(--sos-blue)]"
                     >
                       <Pencil size={15} />
                     </button>
@@ -174,7 +189,7 @@ export default function AdminTeamPage() {
                   </div>
                   <p className="font-bold text-gray-900">{m.nameFr}</p>
                   <p className="text-sm text-gray-400 italic">{m.nameEn}</p>
-                  <p className="text-sm font-medium text-[#1B6EC2] mt-1">{m.roleFr}</p>
+                  <p className="text-sm font-medium text-[#0057B8] mt-1">{m.roleFr}</p>
                   <p className="text-xs text-gray-400">{m.roleEn}</p>
                   {m.bio && (
                     <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">{m.bio}</p>
@@ -206,7 +221,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.nameFr}
                     onChange={e => setForm({ ...form, nameFr: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                     placeholder="Ex: Dr. Marie Kabongo"
                   />
                 </div>
@@ -215,7 +230,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.nameEn}
                     onChange={e => setForm({ ...form, nameEn: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                     placeholder="Ex: Dr. Marie Kabongo"
                   />
                 </div>
@@ -227,7 +242,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.roleFr}
                     onChange={e => setForm({ ...form, roleFr: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                     placeholder="Ex: Directrice Générale"
                   />
                 </div>
@@ -236,20 +251,26 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.roleEn}
                     onChange={e => setForm({ ...form, roleEn: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                     placeholder="Ex: Executive Director"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">URL de la photo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>
                 <input
-                  type="text" value={form.image}
-                  onChange={e => setForm({ ...form, image: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
-                  placeholder="https://... ou /images/photo.jpg"
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleImageFileChange(e.target.files?.[0])}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                 />
+                {uploadingImage && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
+                {form.image && (
+                  <div className="mt-2 relative w-20 h-20 rounded-full overflow-hidden bg-gray-100">
+                    <img src={form.image} alt="Aperçu membre" className="w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -257,7 +278,7 @@ export default function AdminTeamPage() {
                 <textarea
                   value={form.bio} rows={3}
                   onChange={e => setForm({ ...form, bio: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2] resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8] resize-none"
                   placeholder="Courte description du membre..."
                 />
               </div>
@@ -268,7 +289,7 @@ export default function AdminTeamPage() {
                   <input
                     type="number" min={0} value={form.order}
                     onChange={e => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B6EC2]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
                   />
                 </div>
                 <div className="flex items-end pb-0.5">
@@ -276,7 +297,7 @@ export default function AdminTeamPage() {
                     <input
                       type="checkbox" checked={form.isActive}
                       onChange={e => setForm({ ...form, isActive: e.target.checked })}
-                      className="w-4 h-4 rounded text-[#1B6EC2]"
+                      className="w-4 h-4 rounded text-[#0057B8]"
                     />
                     <span className="text-sm font-medium text-gray-700">Visible sur le site</span>
                   </label>
@@ -293,7 +314,7 @@ export default function AdminTeamPage() {
                 </button>
                 <button
                   type="submit" disabled={saving}
-                  className="flex-1 bg-[#1B6EC2] hover:bg-[#155fa8] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors"
+                  className="flex-1 bg-[#0057B8] hover:bg-[#004A9E] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors"
                 >
                   {saving ? "Enregistrement..." : editMember ? "Mettre à jour" : "Ajouter"}
                 </button>

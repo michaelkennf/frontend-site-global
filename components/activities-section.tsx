@@ -1,7 +1,7 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
-import { motion, useInView } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
 import { MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react"
@@ -9,8 +9,6 @@ import { activitiesApi, Activity } from "@/lib/api"
 
 export function ActivitiesSection() {
   const { t, lang } = useI18n()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: "-80px" })
   const [activities, setActivities] = useState<Activity[]>([])
   const [current, setCurrent] = useState(0)
 
@@ -29,12 +27,13 @@ export function ActivitiesSection() {
   if (activities.length === 0) return null
 
   return (
-    <section className="py-24 bg-white" id="activities" ref={ref}>
+    <section className="py-24 bg-white" id="activities">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4"
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6 }}
         >
           <div>
@@ -51,13 +50,13 @@ export function ActivitiesSection() {
           <div className="flex gap-2">
             <button
               onClick={() => setCurrent((v) => (v - 1 + activities.length) % activities.length)}
-              className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#1B6EC2] hover:text-white hover:border-[#1B6EC2] transition-colors"
+              className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#0057B8] hover:text-white hover:border-[#0057B8] transition-colors"
             >
               <ChevronLeft size={18} />
             </button>
             <button
               onClick={() => setCurrent((v) => (v + 1) % activities.length)}
-              className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#1B6EC2] hover:text-white hover:border-[#1B6EC2] transition-colors"
+              className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-[#0057B8] hover:text-white hover:border-[#0057B8] transition-colors"
             >
               <ChevronRight size={18} />
             </button>
@@ -70,13 +69,14 @@ export function ActivitiesSection() {
               key={activity.id}
               className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group"
               initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               whileHover={{ y: -4 }}
             >
               <div className="relative h-48 sm:h-52 overflow-hidden">
                 <Image
-                  src={activity.image ?? "/images/hero.png"}
+                  src={activity.image || "/images/hero.png"}
                   alt={lang === "fr" ? activity.titleFr : activity.titleEn}
                   fill
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -104,7 +104,7 @@ export function ActivitiesSection() {
                     {activity.location}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Calendar size={12} style={{ color: "#1B6EC2" }} />
+                    <Calendar size={12} style={{ color: "#0057B8" }} />
                     {activity.date}
                   </span>
                 </div>

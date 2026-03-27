@@ -26,11 +26,11 @@ const carouselImages = [
 
 // Icon per value — order matches valuesList in i18n
 export const valueIcons = [
-  { icon: Scale,          color: "#1B6EC2", bg: "#e8f2fc", label: "Équité / Equity" },
+  { icon: Scale,          color: "#0057B8", bg: "#E6EFF9", label: "Équité / Equity" },
   { icon: HeartHandshake, color: "#E31E24", bg: "#fdeaea", label: "Respect" },
-  { icon: Users,          color: "#1B6EC2", bg: "#e8f2fc", label: "Solidarité / Solidarity" },
+  { icon: Users,          color: "#0057B8", bg: "#E6EFF9", label: "Solidarité / Solidarity" },
   { icon: Eye,            color: "#E31E24", bg: "#fdeaea", label: "Transparence / Transparency" },
-  { icon: ShieldCheck,    color: "#1B6EC2", bg: "#e8f2fc", label: "Confidentialité / Confidentiality" },
+  { icon: ShieldCheck,    color: "#0057B8", bg: "#E6EFF9", label: "Confidentialité / Confidentiality" },
   { icon: Heart,          color: "#E31E24", bg: "#fdeaea", label: "Empathie / Empathy" },
 ]
 
@@ -117,7 +117,7 @@ export function AboutSection() {
             <motion.span
               variants={itemVariants}
               className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-              style={{ background: "#e8f2fc", color: "#1B6EC2" }}
+              style={{ background: "#E6EFF9", color: "#0057B8" }}
             >
               {t.about.title}
             </motion.span>
@@ -134,8 +134,8 @@ export function AboutSection() {
                   Icon: Target,
                   label: t.about.mission,
                   text: t.about.missionText,
-                  accent: "#1B6EC2",
-                  bg: "#e8f2fc",
+                  accent: "#0057B8",
+                  bg: "#E6EFF9",
                 },
                 {
                   Icon: Eye,

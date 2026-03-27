@@ -7,7 +7,7 @@ import { Shield, Heart, Leaf, CheckCircle2 } from "lucide-react"
 
 const areaIcons = [Shield, Heart, Leaf]
 const areaColors = [
-  { bg: "#e8f2fc", border: "#1B6EC2", icon: "#1B6EC2" },
+  { bg: "#E6EFF9", border: "#0057B8", icon: "#0057B8" },
   { bg: "#fdeaea", border: "#E31E24", icon: "#E31E24" },
   { bg: "#e6f9f0", border: "#16a34a", icon: "#16a34a" },
 ]
@@ -46,7 +46,7 @@ export function AreasSection() {
         >
           <span
             className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-            style={{ background: "#e8f2fc", color: "#1B6EC2" }}
+            style={{ background: "#E6EFF9", color: "#0057B8" }}
           >
             {t.areas.subtitle}
           </span>

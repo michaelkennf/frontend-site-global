@@ -45,14 +45,14 @@ export function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
               <Image
-                src="/images/logo.jpeg"
+                src="/images/logo.png"
                 alt="Global SOS Logo"
                 width={56}
                 height={56}
                 className="rounded-full object-cover w-14 h-14 group-hover:scale-105 transition-transform"
               />
               <div className="hidden sm:block">
-                <span className="font-serif font-bold text-xl" style={{ color: "#1B6EC2" }}>
+                <span className="font-serif font-bold text-xl" style={{ color: "#0057B8" }}>
                   Global
                 </span>
                 <span className="font-serif font-black text-xl" style={{ color: "#E31E24" }}>
@@ -70,7 +70,7 @@ export function Navbar() {
                   className={cn(
                     "px-4 py-2 text-sm font-medium rounded-md transition-colors",
                     isScrolled
-                      ? "text-gray-700 hover:text-[#1B6EC2] hover:bg-blue-50"
+                      ? "text-gray-700 hover:text-[#0057B8] hover:bg-[var(--sos-blue-light)]"
                       : "text-white/90 hover:text-white hover:bg-white/10"
                   )}
                 >
@@ -90,7 +90,7 @@ export function Navbar() {
                     className={cn(
                       "px-3 py-1 text-xs font-bold rounded-full transition-all uppercase",
                       lang === l
-                        ? "bg-[#1B6EC2] text-white shadow"
+                        ? "bg-[#0057B8] text-white shadow"
                         : isScrolled
                         ? "text-gray-600 hover:bg-gray-100"
                         : "text-white/80 hover:text-white"
@@ -137,7 +137,7 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#1B6EC2] hover:bg-blue-50 rounded-md transition-colors"
+                    className="px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#0057B8] hover:bg-[var(--sos-blue-light)] rounded-md transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -151,7 +151,7 @@ export function Navbar() {
                         className={cn(
                           "px-3 py-1.5 text-xs font-bold rounded-full uppercase transition-all",
                           lang === l
-                            ? "bg-[#1B6EC2] text-white"
+                            ? "bg-[#0057B8] text-white"
                             : "text-gray-600 border border-gray-200 hover:bg-gray-100"
                         )}
                       >

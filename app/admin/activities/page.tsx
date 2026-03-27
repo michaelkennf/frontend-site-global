@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2 } from "lucide-react"
-import { activitiesApi, Activity } from "@/lib/api"
+import { activitiesApi, Activity, uploadsApi } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
 
 const emptyForm = {
   titleFr: "", titleEn: "", descriptionFr: "", descriptionEn: "",
-  location: "", date: "", status: "ONGOING" as "ONGOING" | "COMPLETED",
+  image: "", location: "", date: "", status: "ONGOING" as "ONGOING" | "COMPLETED",
 }
 
 export default function AdminActivities() {
@@ -25,6 +25,7 @@ export default function AdminActivities() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function AdminActivities() {
 
   function openEdit(a: Activity) {
     setEditingId(a.id)
-    setForm({ titleFr: a.titleFr, titleEn: a.titleEn, descriptionFr: a.descriptionFr, descriptionEn: a.descriptionEn, location: a.location, date: a.date, status: a.status })
+    setForm({ titleFr: a.titleFr, titleEn: a.titleEn, descriptionFr: a.descriptionFr, descriptionEn: a.descriptionEn, image: a.image ?? "", location: a.location, date: a.date, status: a.status })
     setShowForm(true)
   }
 
@@ -61,6 +62,20 @@ export default function AdminActivities() {
     if (!confirm("Supprimer cette activité ?")) return
     try { await activitiesApi.delete(id); setActivities((prev) => prev.filter((a) => a.id !== id)) }
     catch (err: any) { alert(err.message) }
+  }
+
+  async function handleImageFileChange(file?: File) {
+    if (!file) return
+    setUploadingImage(true)
+    setError("")
+    try {
+      const imageUrl = await uploadsApi.uploadImage(file)
+      setForm((prev) => ({ ...prev, image: imageUrl }))
+    } catch (err: any) {
+      setError(err.message ?? "Erreur lors de l'upload de l'image")
+    } finally {
+      setUploadingImage(false)
+    }
   }
 
   return (
@@ -95,6 +110,16 @@ export default function AdminActivities() {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (FR)</label><Textarea rows={3} value={form.descriptionFr} onChange={(e) => setForm({ ...form, descriptionFr: e.target.value })} /></div>
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (EN)</label><Textarea rows={3} value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} /></div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-1 block">Image de l'activité</label>
+                      <Input type="file" accept="image/*" onChange={(e) => handleImageFileChange(e.target.files?.[0])} />
+                      {uploadingImage && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
+                      {form.image && (
+                        <div className="mt-2 h-24 rounded-md overflow-hidden border border-gray-200">
+                          <img src={form.image} alt="Aperçu activité" className="w-full h-full object-cover" />
+                        </div>
+                      )}
                     </div>
                     <div className="grid md:grid-cols-3 gap-4">
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Localisation</label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Bukavu, Sud-Kivu" /></div>
@@ -133,7 +158,7 @@ export default function AdminActivities() {
               {activities.map((activity, i) => (
                 <motion.div key={activity.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                   <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="p-4 bg-gradient-to-br from-blue-50 to-white border-b">
+                    <div className="p-4 bg-gradient-to-br from-[var(--sos-blue-light)] to-white border-b">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{activity.titleFr}</h3>
                         <span className={`shrink-0 px-2 py-1 rounded-full text-xs font-medium ${activity.status === "ONGOING" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>

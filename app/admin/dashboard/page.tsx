@@ -23,7 +23,7 @@ export default function AdminDashboard() {
 
   const cards = stats
     ? [
-        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "#1B6EC2" },
+        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "#0057B8" },
         { label: "Dons confirmés", value: `$${stats.totalDonations.toFixed(0)}`, icon: Heart, color: "#E31E24", positive: true, change: `${stats.donationCount} dons` },
         { label: "Abonnés actifs", value: String(stats.activeSubscribers), icon: Users, color: "#16a34a" },
         { label: "Messages non lus", value: String(stats.unreadMessages), icon: MessageSquare, color: "#f59e0b" },
@@ -121,7 +121,6 @@ export default function AdminDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { icon: FileText, label: "Nouvel article", color: "#1B6EC2", href: "/admin/articles" },
                       { icon: Calendar, label: "Nouvelle activité", color: "#16a34a", href: "/admin/activities" },
                       { icon: TrendingUp, label: "Voir les stats", color: "#f59e0b", href: "/admin/stats" },
                       { icon: Heart, label: "Rapport dons", color: "#E31E24", href: "/admin/donations" },

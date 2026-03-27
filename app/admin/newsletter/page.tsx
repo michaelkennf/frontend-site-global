@@ -69,7 +69,7 @@ export default function AdminNewsletter() {
           {stats && (
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[
-                { label: "Total abonnés", value: stats.total, icon: Users, color: "#1B6EC2" },
+                { label: "Total abonnés", value: stats.total, icon: Users, color: "#0057B8" },
                 { label: "Actifs", value: stats.active, icon: Mail, color: "#16a34a" },
                 { label: "Désabonnés", value: stats.total - stats.active, icon: TrendingUp, color: "#f59e0b" },
               ].map((stat, i) => (

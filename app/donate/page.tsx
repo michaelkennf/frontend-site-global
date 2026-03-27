@@ -118,8 +118,8 @@ function DonatePage() {
           id: "bank",
           label: lang === "fr" ? "Virement bancaire" : "Bank transfer",
           icon: "🏦",
-          color: "#1B6EC2",
-          bg: "#e8f2fc",
+          color: "#0057B8",
+          bg: "#E6EFF9",
           number: info.bankAccountNumber,
           name: info.bankAccountName,
           extra: {
@@ -198,7 +198,7 @@ function DonatePage() {
                     : "Your donation intent has been recorded. Please proceed with payment via the chosen method using the information below."}
                 </p>
                 <Button
-                  className="mt-6 bg-[#1B6EC2] text-white"
+                  className="mt-6 bg-[#0057B8] text-white"
                   onClick={() => setSubmitted(false)}
                 >
                   {lang === "fr" ? "Faire un autre don" : "Make another donation"}
@@ -271,9 +271,9 @@ function DonatePage() {
                     </div>
                   )}
 
-                  <div className="mt-6 p-4 bg-blue-50 rounded-xl flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-                    <p className="text-sm text-blue-700 leading-relaxed">
+                  <div className="mt-6 p-4 bg-[var(--sos-blue-light)] rounded-xl flex gap-3">
+                    <AlertCircle className="w-5 h-5 text-[var(--sos-blue)] shrink-0 mt-0.5" />
+                    <p className="text-sm text-[var(--sos-blue-dark)] leading-relaxed">
                       {lang === "fr"
                         ? "Après votre transfert, veuillez remplir le formulaire à droite pour que nous puissions confirmer votre don. Mentionnez votre nom comme référence."
                         : "After your transfer, please fill out the form on the right so we can confirm your donation. Mention your name as the reference."}
@@ -362,8 +362,8 @@ function DonatePage() {
                             onClick={() => setFormData({ ...formData, method: m })}
                             className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
                               formData.method === m
-                                ? "bg-[#1B6EC2] text-white border-[#1B6EC2]"
-                                : "border-gray-200 text-gray-700 hover:border-[#1B6EC2]"
+                                ? "bg-[#0057B8] text-white border-[#0057B8]"
+                                : "border-gray-200 text-gray-700 hover:border-[#0057B8]"
                             }`}
                           >
                             {m}

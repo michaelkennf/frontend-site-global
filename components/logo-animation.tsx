@@ -66,9 +66,9 @@ export function LogoAnimation({ onComplete }: LogoAnimationProps) {
             {/* Dove body */}
             <motion.path
               d="M80 90 C60 85 30 70 20 50 C10 30 30 10 50 20 C70 30 90 20 110 25 C130 30 150 45 140 65 C130 85 100 95 80 90Z"
-              fill="#1B6EC2"
+              fill="#0057B8"
               fillOpacity="0.15"
-              stroke="#1B6EC2"
+              stroke="#0057B8"
               strokeWidth="2"
               initial={{ pathLength: 0 }}
               animate={phase >= 1 ? { pathLength: 1 } : {}}
@@ -77,9 +77,9 @@ export function LogoAnimation({ onComplete }: LogoAnimationProps) {
             {/* Left wing */}
             <motion.path
               d="M80 70 C60 50 20 35 10 20 C20 15 50 25 80 45 C80 55 80 65 80 70Z"
-              fill="#1B6EC2"
+              fill="#0057B8"
               fillOpacity="0.2"
-              stroke="#1B6EC2"
+              stroke="#0057B8"
               strokeWidth="2"
               initial={{ pathLength: 0 }}
               animate={phase >= 1 ? { pathLength: 1 } : {}}
@@ -88,9 +88,9 @@ export function LogoAnimation({ onComplete }: LogoAnimationProps) {
             {/* Right wing up */}
             <motion.path
               d="M85 60 C110 35 140 20 155 15 C150 30 130 45 100 55 C95 58 90 60 85 60Z"
-              fill="#1B6EC2"
+              fill="#0057B8"
               fillOpacity="0.2"
-              stroke="#1B6EC2"
+              stroke="#0057B8"
               strokeWidth="2"
               initial={{ pathLength: 0 }}
               animate={phase >= 1 ? { pathLength: 1 } : {}}
@@ -102,15 +102,15 @@ export function LogoAnimation({ onComplete }: LogoAnimationProps) {
               animate={phase >= 2 ? { opacity: 1 } : {}}
               transition={{ duration: 0.5 }}
             >
-              <path d="M105 22 C115 14 125 10 130 8" stroke="#1B6EC2" strokeWidth="1.5" />
-              <circle cx="112" cy="17" r="3" fill="#1B6EC2" fillOpacity="0.6" />
-              <circle cx="120" cy="13" r="3" fill="#1B6EC2" fillOpacity="0.6" />
-              <circle cx="127" cy="10" r="3" fill="#1B6EC2" fillOpacity="0.6" />
+              <path d="M105 22 C115 14 125 10 130 8" stroke="#0057B8" strokeWidth="1.5" />
+              <circle cx="112" cy="17" r="3" fill="#0057B8" fillOpacity="0.6" />
+              <circle cx="120" cy="13" r="3" fill="#0057B8" fillOpacity="0.6" />
+              <circle cx="127" cy="10" r="3" fill="#0057B8" fillOpacity="0.6" />
             </motion.g>
             {/* Eye */}
             <motion.circle
               cx="50" cy="42" r="4"
-              fill="#1B6EC2"
+              fill="#0057B8"
               initial={{ scale: 0 }}
               animate={phase >= 2 ? { scale: 1 } : {}}
               transition={{ duration: 0.3 }}
@@ -170,7 +170,7 @@ export function LogoAnimation({ onComplete }: LogoAnimationProps) {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center">
-            <span className="font-serif font-bold text-3xl" style={{ color: "#1B6EC2" }}>Global</span>
+            <span className="font-serif font-bold text-3xl" style={{ color: "#0057B8" }}>Global</span>
             <br />
             <span className="font-serif font-black text-4xl" style={{ color: "#E31E24" }}>SOS</span>
           </div>

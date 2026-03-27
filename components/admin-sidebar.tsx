@@ -28,7 +28,6 @@ import {
 
 const menuItems = [
   { icon: LayoutDashboard, labelFr: "Tableau de bord", href: "/admin/dashboard", roles: ["ADMIN", "GESTIONNAIRE"] },
-  { icon: FileText, labelFr: "Articles", href: "/admin/articles", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Calendar, labelFr: "Activités", href: "/admin/activities", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: UserCircle2, labelFr: "Équipe", href: "/admin/team", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Handshake, labelFr: "Partenaires", href: "/admin/partners", roles: ["ADMIN", "GESTIONNAIRE"] },
@@ -52,7 +51,7 @@ export function AdminSidebar() {
     <>
       <div className="p-6 border-b border-sidebar-border">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <Image src="/images/logo.jpeg" alt="Global SOS" width={44} height={44} className="rounded-lg" />
+          <Image src="/images/logo.png" alt="Global SOS" width={44} height={44} className="rounded-lg" />
           <div>
             <span className="font-serif font-bold text-white">Global</span>
             <span className="font-serif font-black" style={{ color: "#E31E24" }}> SOS</span>
@@ -70,7 +69,7 @@ export function AdminSidebar() {
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs font-semibold truncate">{user.name}</p>
               <div className="flex items-center gap-1">
-                {user.role === "ADMIN" ? <Shield className="w-3 h-3 text-red-400" /> : <User className="w-3 h-3 text-blue-400" />}
+                {user.role === "ADMIN" ? <Shield className="w-3 h-3 text-red-400" /> : <User className="w-3 h-3 text-[var(--sos-blue)]" />}
                 <span className="text-white/60 text-xs">{user.role === "ADMIN" ? "Admin" : "Gestionnaire"}</span>
               </div>
             </div>

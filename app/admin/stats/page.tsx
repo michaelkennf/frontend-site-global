@@ -19,8 +19,8 @@ const STAT_META = [
     labelEn: "Communities supported",
     suffix: "+",
     icon: Users,
-    color: "#1B6EC2",
-    bg: "#e8f2fc",
+    color: "#0057B8",
+    bg: "#E6EFF9",
     description: "Nombre de communautés bénéficiaires de nos actions",
   },
   {
@@ -39,8 +39,8 @@ const STAT_META = [
     labelEn: "Emergency responses",
     suffix: "",
     icon: Siren,
-    color: "#1B6EC2",
-    bg: "#e8f2fc",
+    color: "#0057B8",
+    bg: "#E6EFF9",
     description: "Interventions d'urgence menées depuis notre création",
   },
   {
@@ -130,7 +130,7 @@ export default function AdminStatsPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center gap-2 bg-[#1B6EC2] hover:bg-[#155fa8] disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-[#0057B8] hover:bg-[#004A9E] disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors"
             >
               {saving ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -203,7 +203,7 @@ export default function AdminStatsPage() {
                           onChange={(e) =>
                             setForm({ ...form, [meta.key]: parseInt(e.target.value) || 0 })
                           }
-                          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#1B6EC2] focus:border-transparent"
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0057B8] focus:border-transparent"
                         />
                         {meta.suffix && (
                           <span className="text-gray-400 font-bold text-lg">{meta.suffix}</span>
@@ -223,7 +223,7 @@ export default function AdminStatsPage() {
         )}
 
         {/* Info */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl px-5 py-4 text-sm text-blue-700">
+        <div className="mt-6 bg-[var(--sos-blue-light)] border border-[var(--sos-blue)]/25 rounded-xl px-5 py-4 text-sm text-[var(--sos-blue-dark)]">
           <strong>Note :</strong> Les valeurs par défaut sont{" "}
           {Object.entries(DEFAULTS).map(([k, v], i, arr) => (
             <span key={k}>

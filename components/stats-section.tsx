@@ -44,9 +44,9 @@ export function StatsSection() {
 
   const items = stats
     ? [
-        { value: stats.communities, suffix: "+", label: t.stats.communities, color: "#1B6EC2" },
+        { value: stats.communities, suffix: "+", label: t.stats.communities, color: "#0057B8" },
         { value: stats.trained, suffix: "+", label: t.stats.trained, color: "#E31E24" },
-        { value: stats.responses, suffix: "", label: t.stats.responses, color: "#1B6EC2" },
+        { value: stats.responses, suffix: "", label: t.stats.responses, color: "#0057B8" },
         { value: stats.initiatives, suffix: "+", label: t.stats.initiatives, color: "#E31E24" },
       ]
     : []
