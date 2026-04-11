@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
+import { siteMediaApi, type SiteMedia } from "@/lib/api"
 import {
   ChevronLeft,
   ChevronRight,
@@ -17,11 +18,11 @@ import {
   Heart,
 } from "lucide-react"
 
-const carouselImages = [
-  { src: "/images/hero.png", alt: "Global SOS field work" },
-  { src: "/images/carousel-children.jpg", alt: "Children playing" },
-  { src: "/images/carousel-sister.jpg", alt: "Girl carrying sister" },
-  { src: "/images/carousel-farming.jpg", alt: "Women farming" },
+const FALLBACK_CAROUSEL = [
+  { id: "f1", src: "/images/carousel-children.jpg", altFr: "Enfants qui jouent", altEn: "Children playing" },
+  { id: "f2", src: "/images/carousel-sister.jpg", altFr: "Fille portant sa sœur", altEn: "Girl carrying her sister" },
+  { id: "f3", src: "/images/carousel-farming.jpg", altFr: "Femmes en agriculture", altEn: "Women farming" },
+  { id: "f4", src: "/images/hero.png", altFr: "Terrain humanitaire", altEn: "Field work" },
 ]
 
 // Icon per value — order matches valuesList in i18n
@@ -39,13 +40,26 @@ export function AboutSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-100px" })
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [carouselImages, setCarouselImages] = useState<
+    { id: string; src: string; altFr: string; altEn: string }[]
+  >(FALLBACK_CAROUSEL)
+
+  useEffect(() => {
+    siteMediaApi.getBySection("about-carousel")
+      .then((items: SiteMedia[]) => {
+        if (items && items.length > 0) {
+          setCarouselImages(items.map((m) => ({ id: m.id, src: m.url, altFr: m.altFr, altEn: m.altEn })))
+        }
+      })
+      .catch(() => { /* keep fallback */ })
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [carouselImages.length])
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length)
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)
@@ -79,7 +93,7 @@ export function AboutSection() {
                 >
                   <Image
                     src={carouselImages[currentSlide].src}
-                    alt={carouselImages[currentSlide].alt}
+                    alt={lang === "fr" ? carouselImages[currentSlide].altFr : carouselImages[currentSlide].altEn}
                     fill
                     className="object-cover object-center"
                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -95,7 +109,7 @@ export function AboutSection() {
                 <ChevronRight className="w-5 h-5 text-gray-800" />
               </button>
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {carouselImages.map((_, i) => (
+                {carouselImages.map((_img, i) => (
                   <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? "bg-white scale-110" : "bg-white/50"}`} aria-label={`Slide ${i + 1}`} />
                 ))}
               </div>

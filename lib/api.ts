@@ -156,6 +156,18 @@ export const usersApi = {
     request<void>(`/users/${id}`, { method: 'DELETE' }, true),
 };
 
+// ── Site Media ─────────────────────────────────────────────────────
+export const siteMediaApi = {
+  getBySection: (section: string) => request<SiteMedia[]>(`/site-media/public?section=${section}`),
+  getAll: () => request<SiteMedia[]>('/site-media', {}, true),
+  create: (data: Partial<SiteMedia>) =>
+    request<SiteMedia>('/site-media', { method: 'POST', body: JSON.stringify(data) }, true),
+  update: (id: string, data: Partial<SiteMedia>) =>
+    request<SiteMedia>(`/site-media/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+  delete: (id: string) =>
+    request<void>(`/site-media/${id}`, { method: 'DELETE' }, true),
+};
+
 // ── Types ──────────────────────────────────────────────────────────
 export interface AdminUser {
   id: string;
@@ -256,6 +268,19 @@ export interface Partner {
   logo?: string;
   website?: string;
   description?: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SiteMedia {
+  id: string;
+  key: string;
+  url: string;
+  altFr: string;
+  altEn: string;
+  section: string;
   order: number;
   isActive: boolean;
   createdAt: string;

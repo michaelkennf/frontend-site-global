@@ -46,7 +46,7 @@ export function PartnersSection() {
           transition={{ duration: 0.6 }}
         >
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-            style={{ background: "rgba(255,255,255,0.10)", color: "#93c5fd" }}>
+            style={{ background: "rgba(255,255,255,0.10)", color: "#a8c4e8" }}>
             <Handshake size={13} />
             {lang === "fr" ? "Nos Partenaires" : "Our Partners"}
           </div>
