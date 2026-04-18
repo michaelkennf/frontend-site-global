@@ -159,6 +159,14 @@ export const usersApi = {
 // ── Site Media ─────────────────────────────────────────────────────
 export const siteMediaApi = {
   getBySection: (section: string) => request<SiteMedia[]>(`/site-media/public?section=${section}`),
+  /** Média public par clé unique (hero, en-têtes, domaines…). Null si absent. */
+  getPublicByKey: async (key: string): Promise<SiteMedia | null> => {
+    const res = await fetch(`${API_BASE}/site-media/public/key/${encodeURIComponent(key)}`)
+    if (res.status === 404) return null
+    if (!res.ok) return null
+    const data = (await res.json()) as SiteMedia | null
+    return data ?? null
+  },
   getAll: () => request<SiteMedia[]>('/site-media', {}, true),
   create: (data: Partial<SiteMedia>) =>
     request<SiteMedia>('/site-media', { method: 'POST', body: JSON.stringify(data) }, true),

@@ -53,7 +53,7 @@ export function PartnersSection() {
           <h2 className="font-serif font-black text-3xl lg:text-4xl text-white">
             {lang === "fr" ? "Ils nous font confiance" : "They trust us"}
           </h2>
-          <div className="w-16 h-1 mx-auto mt-4 rounded-full" style={{ background: "#E31E24" }} />
+          <div className="w-16 h-1 mx-auto mt-4 rounded-full" style={{ background: "var(--sos-red)" }} />
         </motion.div>
 
         {/* Logos grid */}

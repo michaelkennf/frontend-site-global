@@ -5,17 +5,25 @@ import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { ArrowRight, Heart } from "lucide-react"
+import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 export function HeroSection() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
+  const media = useSiteMediaKeys([SITE_MEDIA.HERO_HOME])
+  const heroMedia = media[SITE_MEDIA.HERO_HOME]
+  const heroSrc = heroMedia?.url ?? "/images/hero.png"
+  const heroAlt =
+    (lang === "fr" ? heroMedia?.altFr : heroMedia?.altEn)?.trim() ||
+    "Global SOS humanitarian work"
 
   return (
     <section className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: "100vh" }}>
       {/* Background image — couvre toute la section, centré, visible en entier */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/images/hero.png"
-          alt="Global SOS humanitarian work"
+          src={heroSrc}
+          alt={heroAlt}
           fill
           priority
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
@@ -48,7 +56,7 @@ export function HeroSection() {
           >
             <span
               className="w-2 h-2 rounded-full animate-pulse"
-              style={{ backgroundColor: "#E31E24" }}
+              style={{ backgroundColor: "var(--sos-red)" }}
             />
             Organisation Humanitaire • Humanitarian NGO
           </motion.div>
@@ -82,14 +90,14 @@ export function HeroSection() {
           >
             <Link
               href="/about"
-              className="inline-flex items-center justify-center gap-2 bg-white text-[#0057B8] hover:bg-[var(--sos-blue-light)] font-bold px-8 py-4 rounded-full text-base transition-all hover:shadow-lg hover:scale-105 group"
+              className="inline-flex items-center justify-center gap-2 bg-white text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] font-bold px-8 py-4 rounded-full text-base transition-all hover:scale-[1.02] group"
             >
               {t.hero.learnMore}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/donate"
-              className="inline-flex items-center justify-center gap-2 bg-[#E31E24] hover:bg-[#b8171c] text-white font-bold px-8 py-4 rounded-full text-base transition-all hover:shadow-lg hover:scale-105 group"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-bold px-8 py-4 rounded-full text-base transition-all hover:scale-[1.02] group"
             >
               <Heart size={18} className="group-hover:scale-110 transition-transform" />
               {t.hero.donate}

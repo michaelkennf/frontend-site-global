@@ -10,9 +10,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MapPin, Send, CheckCircle, Facebook, Twitter, Linkedin } from "lucide-react"
+import { HeroRedDivider } from "@/components/hero-red-divider"
+import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 function ContactContent() {
   const { t, lang } = useI18n()
+  const headerMedia = useSiteMediaKeys([SITE_MEDIA.CONTACT_HEADER])[SITE_MEDIA.CONTACT_HEADER]
+  const headerSrc = headerMedia?.url ?? "/images/hero.png"
+  const headerAlt =
+    (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
   const [submitted, setSubmitted] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
@@ -39,7 +46,7 @@ function ContactContent() {
         {/* Hero */}
         <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
           <div className="absolute inset-0">
-            <Image src="/images/hero.png" alt="" fill className="object-cover object-center opacity-20" sizes="100vw" />
+            <Image src={headerSrc} alt={headerAlt} fill className="object-cover object-center opacity-20" sizes="100vw" />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.h1
@@ -60,6 +67,8 @@ function ContactContent() {
             </motion.p>
           </div>
         </section>
+
+        <HeroRedDivider />
 
         {/* Contact Section */}
         <section className="py-20 bg-white">
@@ -97,7 +106,10 @@ function ContactContent() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">{t.contact.emailLabel}</h3>
-                      <a href="mailto:contact@globalsos.org" className="text-gray-600 hover:text-[var(--sos-blue)] transition-colors">
+                      <a
+                        href="mailto:contact@globalsos.org?subject=Contact%20Global%20SOS"
+                        className="text-gray-600 hover:text-[var(--sos-blue)] transition-colors underline-offset-2 hover:underline font-medium"
+                      >
                         contact@globalsos.org
                       </a>
                     </div>
@@ -130,8 +142,8 @@ function ContactContent() {
                 {/* Map placeholder */}
                 <div className="mt-10 rounded-2xl overflow-hidden h-64 bg-gray-100 relative">
                   <Image
-                    src="/images/hero.png"
-                    alt="Localisation Global SOS"
+                    src={headerSrc}
+                    alt={headerAlt || (lang === "fr" ? "Localisation Global SOS" : "Global SOS location")}
                     fill
                     className="object-cover object-center"
                     sizes="(max-width: 1024px) 100vw, 50vw"

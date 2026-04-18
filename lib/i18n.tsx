@@ -9,6 +9,7 @@ export const translations = {
     nav: {
       home: "Accueil",
       about: "À propos",
+      domains: "Nos domaines",
       work: "Nos actions",
       news: "Actualités",
       research: "Recherche",
@@ -17,14 +18,20 @@ export const translations = {
     },
     hero: {
       headline: "Protéger les vies et renforcer la résilience des communautés",
-      sub: "Global SOS est une organisation humanitaire et à but non lucratif qui travaille à protéger les populations vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne.",
+      sub: "Global SOS est une organisation humanitaire à but non lucratif qui travaille à protéger les populations vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne.",
       learnMore: "En savoir plus",
       donate: "Faire un don",
     },
     about: {
       title: "À propos de Global SOS",
       description:
-        "Global SOS est une organisation humanitaire et à but non lucratif engagée à protéger les plus vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne.",
+        "Global SOS est une organisation humanitaire à but non lucratif engagée à protéger les plus vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne.",
+      whoWeAreTitle: "Qui sommes-nous ?",
+      whoWeAreParagraphs: [
+        "Global SOS est une organisation non gouvernementale à but non lucratif, fondée et ancrée à Bukavu, en République démocratique du Congo. Nous œuvrons aux côtés des communautés les plus exposées aux catastrophes, aux urgences sanitaires et aux effets du changement climatique.",
+        "Notre action repose sur la proximité du terrain, la transparence et le respect des standards humanitaires : chaque intervention vise à renforcer la résilience locale tout en préservant la dignité et les droits de chaque personne.",
+      ],
+      homeAboutEyebrow: "Notre organisation",
       mission: "Mission",
       missionText:
         "Contribuer à la protection des vies à travers trois piliers principaux : la gestion des risques de catastrophes, la justice climatique et environnementale, et les urgences sanitaires.",
@@ -49,6 +56,57 @@ export const translations = {
       area3Desc: "Protection des écosystèmes et promotion de pratiques durables pour une équité climatique réelle.",
       area3Items: ["Sensibilisation sur la protection et la préservation de l'environnement", "Protection des écosystèmes", "Pratiques durables (recyclage, reboisement, etc.)", "Défense de l'équité climatique et environnementale"],
     },
+    domainPages: {
+      indexTitle: "Nos domaines d'intervention",
+      indexSubtitle: "Trois axes stratégiques pour agir là où les besoins sont les plus critiques.",
+      discover: "Découvrir",
+      slugs: ["risques-catastrophes", "urgences-sanitaires", "justice-climatique"] as const,
+      "risques-catastrophes": {
+        title: "Gestion des risques de catastrophes",
+        excerpt:
+          "Prévention, préparation et renforcement communautaire face aux catastrophes pour réduire les vulnérabilités.",
+        heroImage: "/images/domaines/gestion-risques.png",
+        paragraphs: [
+          "Les communautés les plus fragiles sont souvent les premières exposées aux chocs climatiques et catastrophes naturelles. Global SOS accompagne les populations pour mieux comprendre les risques et se préparer avant qu'une urgence ne survienne.",
+          "Nous développons des systèmes d'alerte précoce, renforçons les capacités locales et organisons la préparation aux scénarios d'urgence avec les autorités et les organisations de base.",
+          "Quand une catastrophe frappe, nous intervenons aux côtés des communautés pour réduire les impacts immédiats tout en préparant la résilience durable au lendemain de la crise.",
+        ],
+        gallery: [
+          { src: "/images/carousel-children.jpg", alt: "Sensibilisation communautaire" },
+          { src: "/images/carousel-sister.jpg", alt: "Solidarité entre habitants" },
+        ],
+      },
+      "urgences-sanitaires": {
+        title: "Urgences sanitaires et promotion des DSSR",
+        excerpt:
+          "Actions préventives, accès aux services essentiels et promotion de la santé sexuelle et reproductive.",
+        heroImage: "/images/domaines/sante-dssr.png",
+        paragraphs: [
+          "Face aux épidémies, aux ruptures de soins et aux besoins non couverts, Global SOS déploie des actions de santé préventive et d'information adaptées au contexte local.",
+          "Nous œuvrons pour un meilleur accès à la contraception, à l'éducation sexuelle complète et à la lutte contre les violences basées sur le genre, en partenariat avec les structures de santé.",
+          "Chaque intervention intègre la dignité des personnes et la confidentialité des accompagnements, avec une attention particulière aux plus vulnérables.",
+        ],
+        gallery: [
+          { src: "/images/carousel-farming.jpg", alt: "Actions sur le terrain" },
+          { src: "/images/hero.png", alt: "Solidarité humanitaire" },
+        ],
+      },
+      "justice-climatique": {
+        title: "Justice climatique et environnementale",
+        excerpt:
+          "Protection des écosystèmes et promotion de pratiques durables pour une équité climatique réelle.",
+        heroImage: "/images/domaines/justice-climat.png",
+        paragraphs: [
+          "Les impacts du changement climatique aggravent les inégalités. Notre action vise à faire entendre les voix des communautés les plus exposées et à promouvoir des solutions justes.",
+          "Nous sensibilisons aux enjeux de préservation de l'environnement, soutenons le reboisement, le recyclage et les pratiques agricoles respectueuses des sols et de l'eau.",
+          "Global SOS défend une transition écologique qui ne laisse personne de côté, en reliant protection de la nature et droits humains.",
+        ],
+        gallery: [
+          { src: "/images/donate-bg.png", alt: "Engagement pour la planète" },
+          { src: "/images/news-header.png", alt: "Mobilisation citoyenne" },
+        ],
+      },
+    },
     stats: {
       title: "Notre impact",
       communities: "Communautés soutenues",
@@ -57,8 +115,9 @@ export const translations = {
       initiatives: "Initiatives environnementales",
     },
     activities: {
-      title: "Nos activités récentes",
-      subtitle: "Découvrez nos actions sur le terrain",
+      title: "Actualités récentes",
+      subtitle: "Suivez nos publications et nos retours depuis le terrain",
+      viewAll: "Toutes les actualités",
     },
     news: {
       title: "Actualités",
@@ -138,6 +197,7 @@ export const translations = {
     nav: {
       home: "Home",
       about: "About Us",
+      domains: "Our focus areas",
       work: "Our Work",
       news: "News & Activities",
       research: "Research",
@@ -146,14 +206,20 @@ export const translations = {
     },
     hero: {
       headline: "Protecting Lives and Strengthening Community Resilience",
-      sub: "Global SOS is a humanitarian and non-profit organization working to protect vulnerable populations, relieve human suffering and defend the dignity of every person.",
+      sub: "Global SOS is a humanitarian nonprofit organization working to protect vulnerable populations, relieve human suffering and defend the dignity of every person.",
       learnMore: "Learn More",
       donate: "Donate",
     },
     about: {
       title: "About Global SOS",
       description:
-        "Global SOS is a humanitarian and non-profit organization committed to protecting the most vulnerable, relieving human suffering and defending the dignity of every person.",
+        "Global SOS is a humanitarian nonprofit organization committed to protecting the most vulnerable, relieving human suffering and defending the dignity of every person.",
+      whoWeAreTitle: "Who are we?",
+      whoWeAreParagraphs: [
+        "Global SOS is a nonprofit non-governmental organization, founded and rooted in Bukavu, Democratic Republic of the Congo. We work alongside communities most exposed to disasters, health emergencies and the impacts of climate change.",
+        "Our approach combines field proximity, transparency and humanitarian standards: every programme aims to strengthen local resilience while upholding the dignity and rights of every person.",
+      ],
+      homeAboutEyebrow: "Our organization",
       mission: "Mission",
       missionText:
         "Contribute to the protection of lives through three main pillars: Disaster Risk Management, Climate and Environmental Justice, and Health Emergencies.",
@@ -178,6 +244,57 @@ export const translations = {
       area3Desc: "Ecosystem protection and sustainable practices to advance climate and environmental equity.",
       area3Items: ["Awareness on environmental protection and preservation", "Ecosystem protection", "Sustainable practices (recycling, reforestation, etc.)", "Advocacy for climate and environmental equity"],
     },
+    domainPages: {
+      indexTitle: "Areas of intervention",
+      indexSubtitle: "Three strategic pillars where needs are most acute.",
+      discover: "Explore",
+      slugs: ["risques-catastrophes", "urgences-sanitaires", "justice-climatique"] as const,
+      "risques-catastrophes": {
+        title: "Disaster risk management",
+        excerpt:
+          "Prevention, preparedness and community strengthening to reduce vulnerability to disasters.",
+        heroImage: "/images/domaines/gestion-risques.png",
+        paragraphs: [
+          "The most fragile communities are often first exposed to climate shocks and natural disasters. Global SOS supports people to understand risks better and prepare before emergencies occur.",
+          "We develop early warning systems, strengthen local capacities and organise preparedness alongside authorities and grassroots organisations.",
+          "When disaster strikes, we stand with communities to reduce immediate impacts while building long-term resilience for recovery.",
+        ],
+        gallery: [
+          { src: "/images/carousel-children.jpg", alt: "Community outreach" },
+          { src: "/images/carousel-sister.jpg", alt: "Solidarity among residents" },
+        ],
+      },
+      "urgences-sanitaires": {
+        title: "Health emergencies and SRHR promotion",
+        excerpt:
+          "Preventive action, essential services and sexual and reproductive health and rights.",
+        heroImage: "/images/domaines/sante-dssr.png",
+        paragraphs: [
+          "Facing epidemics, gaps in care and unmet needs, Global SOS rolls out preventive health actions and adapted information.",
+          "We promote access to contraception, comprehensive sexuality education and efforts against gender-based violence with health structures.",
+          "Every response upholds dignity and confidentiality, with particular attention to the most vulnerable.",
+        ],
+        gallery: [
+          { src: "/images/carousel-farming.jpg", alt: "Field actions" },
+          { src: "/images/hero.png", alt: "Humanitarian solidarity" },
+        ],
+      },
+      "justice-climatique": {
+        title: "Climate and environmental justice",
+        excerpt:
+          "Ecosystem protection and sustainable practices for real climate equity.",
+        heroImage: "/images/domaines/justice-climat.png",
+        paragraphs: [
+          "Climate impacts deepen inequality. Our work amplifies the voices of communities most at risk and promotes fair solutions.",
+          "We raise awareness on environmental preservation, support reforestation, recycling and farming practices that respect soils and water.",
+          "Global SOS advocates an ecological transition that leaves no one behind, linking nature protection and human rights.",
+        ],
+        gallery: [
+          { src: "/images/donate-bg.png", alt: "Commitment to the planet" },
+          { src: "/images/news-header.png", alt: "Citizen mobilisation" },
+        ],
+      },
+    },
     stats: {
       title: "Our Impact",
       communities: "Communities Supported",
@@ -186,8 +303,9 @@ export const translations = {
       initiatives: "Environmental Initiatives",
     },
     activities: {
-      title: "Recent Activities",
-      subtitle: "Discover our work in the field",
+      title: "Recent news",
+      subtitle: "Updates and stories from our work on the ground",
+      viewAll: "All news",
     },
     news: {
       title: "News",

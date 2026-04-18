@@ -27,7 +27,7 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="text-white" style={{ backgroundColor: "#0235D6" }}>
+    <footer className="text-white" style={{ backgroundColor: "var(--sos-blue)" }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Logo & Description */}
@@ -65,6 +65,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/domaines" className="text-white/80 transition-colors hover:text-white">
+                  {t.nav.domains}
+                </Link>
+              </li>
+              <li>
                 <Link href="/news" className="text-white/80 transition-colors hover:text-white">
                   {t.nav.news}
                 </Link>
@@ -97,8 +102,8 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-[var(--sos-red)]" />
                 <a
-                  href="mailto:contact@globalsos.org"
-                  className="text-white/80 hover:text-white transition-colors"
+                  href="mailto:contact@globalsos.org?subject=Contact%20Global%20SOS"
+                  className="text-white/80 hover:text-white transition-colors underline-offset-2 hover:underline"
                 >
                   contact@globalsos.org
                 </a>

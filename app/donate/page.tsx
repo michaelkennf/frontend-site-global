@@ -19,6 +19,9 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { HeroRedDivider } from "@/components/hero-red-divider"
+import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -40,6 +43,10 @@ function CopyButton({ text }: { text: string }) {
 
 function DonatePage() {
   const { lang } = useI18n()
+  const heroBg = useSiteMediaKeys([SITE_MEDIA.DONATE_HERO_BG])[SITE_MEDIA.DONATE_HERO_BG]
+  const heroSrc = heroBg?.url ?? "/images/donate-bg.png"
+  const heroAlt =
+    (lang === "fr" ? heroBg?.altFr : heroBg?.altEn)?.trim() || ""
   const [info, setInfo] = useState<DonationInfo | null>(null)
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
@@ -118,7 +125,7 @@ function DonatePage() {
           id: "bank",
           label: lang === "fr" ? "Virement bancaire" : "Bank transfer",
           icon: "🏦",
-          color: "#0057B8",
+          color: "var(--sos-blue)",
           bg: "#E6EFF9",
           number: info.bankAccountNumber,
           name: info.bankAccountName,
@@ -140,8 +147,8 @@ function DonatePage() {
           {/* Background image */}
           <div className="absolute inset-0">
             <Image
-              src="/images/donate-bg.png"
-              alt=""
+              src={heroSrc}
+              alt={heroAlt}
               fill
               priority
               sizes="100vw"
@@ -154,9 +161,10 @@ function DonatePage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#E31E24]/20 mb-6"
+              className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6"
+              style={{ background: "color-mix(in srgb, var(--sos-red) 18%, transparent)" }}
             >
-              <HandHeart className="w-10 h-10 text-[#E31E24]" />
+              <HandHeart className="w-10 h-10 text-[var(--sos-red)]" />
             </motion.div>
             <motion.h1
               className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6"
@@ -179,6 +187,8 @@ function DonatePage() {
           </div>
         </section>
 
+        <HeroRedDivider />
+
         {/* Content */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -198,7 +208,7 @@ function DonatePage() {
                     : "Your donation intent has been recorded. Please proceed with payment via the chosen method using the information below."}
                 </p>
                 <Button
-                  className="mt-6 bg-[#0057B8] text-white"
+                  className="mt-6 bg-[var(--sos-blue)] text-white"
                   onClick={() => setSubmitted(false)}
                 >
                   {lang === "fr" ? "Faire un autre don" : "Make another donation"}
@@ -301,8 +311,8 @@ function DonatePage() {
                             onClick={() => { setSelectedAmount(a); setFormData({ ...formData, amount: String(a) }) }}
                             className={`px-4 py-2 rounded-full text-sm font-bold border transition-colors ${
                               selectedAmount === a
-                                ? "bg-[#E31E24] text-white border-[#E31E24]"
-                                : "border-gray-300 text-gray-700 hover:border-[#E31E24] hover:text-[#E31E24]"
+                                ? "bg-[var(--sos-red)] text-white border-[var(--sos-red)]"
+                                : "border-gray-300 text-gray-700 hover:border-[var(--sos-red)] hover:text-[var(--sos-red)]"
                             }`}
                           >
                             ${a}
@@ -362,8 +372,8 @@ function DonatePage() {
                             onClick={() => setFormData({ ...formData, method: m })}
                             className={`px-3 py-2 rounded-lg text-sm font-medium border transition-colors ${
                               formData.method === m
-                                ? "bg-[#0057B8] text-white border-[#0057B8]"
-                                : "border-gray-200 text-gray-700 hover:border-[#0057B8]"
+                                ? "bg-[var(--sos-blue)] text-white border-[var(--sos-blue)]"
+                                : "border-gray-200 text-gray-700 hover:border-[var(--sos-blue)]"
                             }`}
                           >
                             {m}
@@ -394,7 +404,7 @@ function DonatePage() {
                     <Button
                       type="submit"
                       disabled={submitting}
-                      className="w-full h-12 bg-[#E31E24] hover:bg-[#b8171c] text-white font-bold text-base"
+                      className="w-full h-12 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-bold text-base"
                     >
                       <Heart className="w-4 h-4 mr-2" />
                       {submitting

@@ -4,13 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Global SOS Brand Colors */
-  --sos-blue: #0057B8;
-  --sos-red: #E31E24;
-  --sos-blue-dark: #004A9E;
-  --sos-red-dark: #b8171c;
-  --sos-blue-light: #E6EFF9;
-  --sos-red-light: #fdeaea;
+  /* Global SOS — bleu sections « Faire un don » (#0a1e46), rouge sang */
+  --sos-blue: #0a1e46;
+  --sos-red: #8b0a0a;
+  --sos-blue-dark: #06142f;
+  --sos-red-dark: #5c0707;
+  --sos-blue-light: #e8edf5;
+  --sos-red-light: #f5e6e6;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.12 0.02 250);

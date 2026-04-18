@@ -44,10 +44,10 @@ export function StatsSection() {
 
   const items = stats
     ? [
-        { value: stats.communities, suffix: "+", label: t.stats.communities, color: "#0057B8" },
-        { value: stats.trained, suffix: "+", label: t.stats.trained, color: "#E31E24" },
-        { value: stats.responses, suffix: "", label: t.stats.responses, color: "#0057B8" },
-        { value: stats.initiatives, suffix: "+", label: t.stats.initiatives, color: "#E31E24" },
+        { value: stats.communities, suffix: "+", label: t.stats.communities, color: "var(--sos-blue)" },
+        { value: stats.trained, suffix: "+", label: t.stats.trained, color: "var(--sos-red)" },
+        { value: stats.responses, suffix: "", label: t.stats.responses, color: "var(--sos-blue)" },
+        { value: stats.initiatives, suffix: "+", label: t.stats.initiatives, color: "var(--sos-red)" },
       ]
     : []
 
@@ -61,7 +61,7 @@ export function StatsSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-serif font-black text-4xl text-white mb-3">{t.stats.title}</h2>
-          <div className="w-16 h-1 mx-auto rounded-full" style={{ background: "#E31E24" }} />
+          <div className="w-16 h-1 mx-auto rounded-full" style={{ background: "var(--sos-red)" }} />
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">

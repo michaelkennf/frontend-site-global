@@ -9,9 +9,16 @@ import { Target, Eye, Heart, Users, Globe, Shield, UserCircle2 } from "lucide-re
 import { useEffect, useState } from "react"
 import { teamApi, TeamMember } from "@/lib/api"
 import { valueIcons } from "@/components/about-section"
+import { HeroRedDivider } from "@/components/hero-red-divider"
+import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 function AboutContent() {
   const { t, lang } = useI18n()
+  const headerMedia = useSiteMediaKeys([SITE_MEDIA.ABOUT_HEADER])[SITE_MEDIA.ABOUT_HEADER]
+  const headerSrc = headerMedia?.url ?? "/images/about-header.jpg"
+  const headerAlt =
+    (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
 
   const principles = t.about.principlesList
   const values = t.about.valuesList
@@ -34,8 +41,8 @@ function AboutContent() {
         <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
           <div className="absolute inset-0">
             <Image
-              src="/images/about-header.jpg"
-              alt=""
+              src={headerSrc}
+              alt={headerAlt}
               fill
               className="object-cover"
               sizes="100vw"
@@ -64,6 +71,34 @@ function AboutContent() {
             >
               {t.about.description}
             </motion.p>
+          </div>
+        </section>
+
+        <HeroRedDivider />
+
+        {/* Qui sommes-nous */}
+        <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55 }}
+              className="rounded-3xl bg-white border border-gray-100 shadow-sm p-8 md:p-12 lg:p-14"
+            >
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[var(--sos-blue)] mb-5">
+                <span className="h-px w-10 bg-[var(--sos-blue)]/35" aria-hidden />
+                {lang === "fr" ? "Présentation" : "Introduction"}
+              </span>
+              <h2 className="font-serif font-black text-3xl md:text-4xl text-gray-900 mb-8 text-balance leading-tight">
+                {t.about.whoWeAreTitle}
+              </h2>
+              <div className="space-y-6 text-gray-600 text-base md:text-lg leading-relaxed">
+                {t.about.whoWeAreParagraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 

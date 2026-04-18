@@ -10,6 +10,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Loader2, MapPin, Calendar } from "lucide-react"
 import { activitiesApi, Activity } from "@/lib/api"
+import { HeroRedDivider } from "@/components/hero-red-divider"
 
 function ActivityContent() {
   const { lang } = useI18n()
@@ -89,6 +90,8 @@ function ActivityContent() {
             </div>
           </div>
         </section>
+
+        <HeroRedDivider />
 
         <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

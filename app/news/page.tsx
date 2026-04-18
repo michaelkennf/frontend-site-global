@@ -9,9 +9,16 @@ import Image from "next/image"
 import Link from "next/link"
 import { Loader2, ArrowRight, Calendar, MapPin } from "lucide-react"
 import { activitiesApi, Activity } from "@/lib/api"
+import { HeroRedDivider } from "@/components/hero-red-divider"
+import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 function NewsContent() {
   const { t, lang } = useI18n()
+  const headerMedia = useSiteMediaKeys([SITE_MEDIA.NEWS_LIST_HEADER])[SITE_MEDIA.NEWS_LIST_HEADER]
+  const headerSrc = headerMedia?.url ?? "/images/news-header.png"
+  const headerAlt =
+    (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
   const [items, setItems] = useState<Activity[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -29,8 +36,8 @@ function NewsContent() {
         <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
           <div className="absolute inset-0">
             <Image
-              src="/images/news-header.png"
-              alt=""
+              src={headerSrc}
+              alt={headerAlt}
               fill
               priority
               sizes="100vw"
@@ -57,6 +64,8 @@ function NewsContent() {
             </motion.p>
           </div>
         </section>
+
+        <HeroRedDivider />
 
         <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

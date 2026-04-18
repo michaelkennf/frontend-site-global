@@ -16,6 +16,7 @@ import {
   Users,
   ShieldCheck,
   Heart,
+  ArrowRight,
 } from "lucide-react"
 
 const FALLBACK_CAROUSEL = [
@@ -25,33 +26,33 @@ const FALLBACK_CAROUSEL = [
   { id: "f4", src: "/images/hero.png", altFr: "Terrain humanitaire", altEn: "Field work" },
 ]
 
-// Icon per value — order matches valuesList in i18n
 export const valueIcons = [
-  { icon: Scale,          color: "#0057B8", bg: "#E6EFF9", label: "Équité / Equity" },
-  { icon: HeartHandshake, color: "#E31E24", bg: "#fdeaea", label: "Respect" },
-  { icon: Users,          color: "#0057B8", bg: "#E6EFF9", label: "Solidarité / Solidarity" },
-  { icon: Eye,            color: "#E31E24", bg: "#fdeaea", label: "Transparence / Transparency" },
-  { icon: ShieldCheck,    color: "#0057B8", bg: "#E6EFF9", label: "Confidentialité / Confidentiality" },
-  { icon: Heart,          color: "#E31E24", bg: "#fdeaea", label: "Empathie / Empathy" },
+  { icon: Scale, color: "var(--sos-blue)", bg: "var(--sos-blue-light)", label: "Équité / Equity" },
+  { icon: HeartHandshake, color: "var(--sos-red)", bg: "var(--sos-red-light)", label: "Respect" },
+  { icon: Users, color: "var(--sos-blue)", bg: "var(--sos-blue-light)", label: "Solidarité / Solidarity" },
+  { icon: Eye, color: "var(--sos-red)", bg: "var(--sos-red-light)", label: "Transparence / Transparency" },
+  { icon: ShieldCheck, color: "var(--sos-blue)", bg: "var(--sos-blue-light)", label: "Confidentialité / Confidentiality" },
+  { icon: Heart, color: "var(--sos-red)", bg: "var(--sos-red-light)", label: "Empathie / Empathy" },
 ]
 
 export function AboutSection() {
   const { t, lang } = useI18n()
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: "-100px" })
+  const inView = useInView(ref, { once: true, margin: "-80px" })
   const [currentSlide, setCurrentSlide] = useState(0)
   const [carouselImages, setCarouselImages] = useState<
     { id: string; src: string; altFr: string; altEn: string }[]
   >(FALLBACK_CAROUSEL)
 
   useEffect(() => {
-    siteMediaApi.getBySection("about-carousel")
+    siteMediaApi
+      .getBySection("about-carousel")
       .then((items: SiteMedia[]) => {
         if (items && items.length > 0) {
           setCarouselImages(items.map((m) => ({ id: m.id, src: m.url, altFr: m.altFr, altEn: m.altEn })))
         }
       })
-      .catch(() => { /* keep fallback */ })
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -62,147 +63,207 @@ export function AboutSection() {
   }, [carouselImages.length])
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length)
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)
+  const prevSlide = () =>
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.55 } },
   }
 
   return (
-    <section id="about" className="py-24 bg-white" ref={ref}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+    <section
+      id="about"
+      className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-b from-slate-50/90 via-white to-white"
+      ref={ref}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,87,184,0.12), transparent), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(227,30,36,0.06), transparent)",
+        }}
+        aria-hidden
+      />
 
-          {/* ── Carousel ── */}
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7 }}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Bloc identité — Qui sommes-nous */}
+        <motion.div
+          className="max-w-3xl mx-auto text-center mb-16 md:mb-20"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
+        >
+          <motion.span
+            variants={fadeUp}
+            className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] mb-5 rounded-full px-5 py-2.5 shadow-sm"
+            style={{
+              color: "var(--sos-blue)",
+              background: "linear-gradient(135deg, rgba(0,87,184,0.14), rgba(0,87,184,0.06))",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
+            }}
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
+            <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
+            <span className="relative">{t.about.homeAboutEyebrow}</span>
+            <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
+          </motion.span>
+          <motion.h2
+            variants={fadeUp}
+            className="font-serif font-black text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-balance leading-[1.15] mb-6 px-3 py-2 rounded-2xl inline-block"
+            style={{
+              color: "var(--sos-blue)",
+              background: "linear-gradient(180deg, rgba(0,87,184,0.12) 0%, rgba(0,87,184,0.04) 100%)",
+            }}
+          >
+            {t.about.whoWeAreTitle}
+          </motion.h2>
+          <motion.div variants={fadeUp} className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-pretty">
+            {t.about.whoWeAreParagraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </motion.div>
+          <motion.div variants={fadeUp} className="mt-8">
+            <Link
+              href="/about"
+              className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-red-900/15 transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
+            >
+              {t.hero.learnMore}
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 lg:items-stretch">
+          {/* Carousel */}
+          <motion.div
+            className="lg:col-span-7 flex flex-col"
+            initial={{ opacity: 0, y: 28 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.65, delay: 0.1 }}
+          >
+            <div className="relative rounded-3xl overflow-hidden shadow-xl shadow-gray-900/10 ring-1 ring-black/5 aspect-[4/3]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSlide}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.45 }}
                   className="absolute inset-0"
                 >
                   <Image
                     src={carouselImages[currentSlide].src}
-                    alt={lang === "fr" ? carouselImages[currentSlide].altFr : carouselImages[currentSlide].altEn}
+                    alt={
+                      lang === "fr"
+                        ? carouselImages[currentSlide].altFr
+                        : carouselImages[currentSlide].altEn
+                    }
                     fill
                     className="object-cover object-center"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    sizes="(max-width: 1024px) 100vw, 58vw"
                     loading="lazy"
                   />
                 </motion.div>
               </AnimatePresence>
-              <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 60%, rgba(27,110,194,0.25))" }} />
-              <button onClick={prevSlide} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all" aria-label="Previous">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(10,30,70,0.45) 0%, transparent 45%), linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, transparent 35%)",
+                }}
+              />
+              <button
+                type="button"
+                onClick={prevSlide}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10"
+                aria-label="Précédent"
+              >
                 <ChevronLeft className="w-5 h-5 text-gray-800" />
               </button>
-              <button onClick={nextSlide} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all" aria-label="Next">
+              <button
+                type="button"
+                onClick={nextSlide}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/95 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10"
+                aria-label="Suivant"
+              >
                 <ChevronRight className="w-5 h-5 text-gray-800" />
               </button>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                 {carouselImages.map((_img, i) => (
-                  <button key={i} onClick={() => setCurrentSlide(i)} className={`w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? "bg-white scale-110" : "bg-white/50"}`} aria-label={`Slide ${i + 1}`} />
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setCurrentSlide(i)}
+                    className={`h-2 rounded-full transition-all ${i === currentSlide ? "w-8 bg-white" : "w-2 bg-white/45 hover:bg-white/70"}`}
+                    aria-label={`Slide ${i + 1}`}
+                  />
                 ))}
               </div>
-            </div>
-            <div className="absolute -bottom-6 -right-6 bg-[#E31E24] text-white p-6 rounded-xl shadow-lg max-w-[200px]">
-              <div className="text-3xl font-black font-serif">15+</div>
-              <div className="text-sm mt-1 text-white/90">{lang === "fr" ? "Ans d'expérience" : "Years of experience"}</div>
-            </div>
-          </motion.div>
-
-          {/* ── Content ── */}
-          <motion.div
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}
-            className="lg:pt-2"
-          >
-            {/* Label */}
-            <motion.span
-              variants={itemVariants}
-              className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-              style={{ background: "#E6EFF9", color: "#0057B8" }}
-            >
-              {t.about.title}
-            </motion.span>
-
-            {/* Tagline — short, impactful */}
-            <motion.p variants={itemVariants} className="text-gray-600 leading-relaxed mb-8 text-base">
-              {t.about.description}
-            </motion.p>
-
-            {/* Mission & Vision — icon cards */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
-              {[
-                {
-                  Icon: Target,
-                  label: t.about.mission,
-                  text: t.about.missionText,
-                  accent: "#0057B8",
-                  bg: "#E6EFF9",
-                },
-                {
-                  Icon: Eye,
-                  label: t.about.vision,
-                  text: t.about.visionText,
-                  accent: "#E31E24",
-                  bg: "#fdeaea",
-                },
-              ].map((item) => (
-                <motion.div
-                  key={item.label}
-                  variants={itemVariants}
-                  className="p-5 rounded-2xl border border-gray-100 bg-gray-50 flex flex-col gap-3"
-                >
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: item.bg }}>
-                    <item.Icon size={22} style={{ color: item.accent }} strokeWidth={2} />
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm uppercase tracking-wide mb-1.5" style={{ color: item.accent }}>
-                      {item.label}
-                    </div>
-                    <p className="text-gray-600 text-sm leading-relaxed">{item.text}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Values — icon grid */}
-            <motion.div variants={itemVariants}>
-              <div className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wide">{t.about.values}</div>
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-3">
-                {t.about.valuesList.map((v, i) => {
-                  const vi = valueIcons[i] ?? valueIcons[0]
-                  const Icon = vi.icon
-                  return (
-                    <div
-                      key={v}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-100 hover:shadow-md transition-shadow"
-                    >
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: vi.bg }}>
-                        <Icon size={18} style={{ color: vi.color }} strokeWidth={2} />
-                      </div>
-                      <span className="text-xs font-semibold text-gray-700 text-center leading-tight">{v}</span>
-                    </div>
-                  )
-                })}
+              <div
+                className="absolute bottom-5 left-5 z-10 rounded-2xl px-5 py-4 shadow-lg ring-1 max-[380px]:hidden backdrop-blur-sm"
+                style={{
+                  background: "linear-gradient(135deg, rgba(227,30,36,0.12), rgba(255,255,255,0.92))",
+                  borderColor: "rgba(227,30,36,0.15)",
+                  boxShadow: "0 10px 40px -10px rgba(227,30,36,0.25)",
+                }}
+              >
+                <div className="text-3xl font-black font-serif leading-none" style={{ color: "var(--sos-red)" }}>
+                  15+
+                </div>
+                <div className="text-xs font-bold mt-1.5" style={{ color: "var(--sos-red)" }}>
+                  {lang === "fr" ? "Années d'engagement" : "Years of commitment"}
+                </div>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
+          {/* Mission & vision — occupe la hauteur du carrousel (zone laissée par la suppression des valeurs) */}
+          <motion.div
+            className="lg:col-span-5 flex flex-col justify-between gap-6 lg:gap-8 lg:h-full lg:min-h-0"
+            initial={{ opacity: 0, y: 28 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.65, delay: 0.18 }}
+          >
+            {[
+              {
+                Icon: Target,
+                label: t.about.mission,
+                text: t.about.missionText,
+                border: "var(--sos-blue)",
+                bg: "rgba(0, 87, 184, 0.06)",
+              },
+              {
+                Icon: Eye,
+                label: t.about.vision,
+                text: t.about.visionText,
+                border: "var(--sos-red)",
+                bg: "rgba(227, 30, 36, 0.06)",
+              },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="flex flex-1 flex-col rounded-2xl border border-gray-100 bg-white p-6 sm:p-7 lg:p-8 shadow-sm ring-1 ring-black/5 min-h-0"
+                style={{ borderLeftWidth: "4px", borderLeftColor: item.border }}
+              >
+                <div className="flex gap-4 sm:gap-5 flex-1">
+                  <div
+                    className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl"
+                    style={{ background: item.bg }}
+                  >
+                    <item.Icon size={24} style={{ color: item.border }} strokeWidth={2} />
+                  </div>
+                  <div className="min-w-0 flex flex-col justify-center flex-1">
+                    <h3 className="font-bold text-gray-900 text-xs sm:text-sm uppercase tracking-[0.12em] mb-3">
+                      {item.label}
+                    </h3>
+                    <p className="text-gray-600 text-base sm:text-[1.05rem] leading-relaxed">{item.text}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
-

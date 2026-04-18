@@ -21,6 +21,8 @@ import {
 } from "lucide-react"
 
 const SECTION_LABELS: Record<string, string> = {
+  "site-essentials": "Site — Hero accueil, en-têtes & fond don",
+  "domain-illustrations": "Domaines — illustrations des 3 piliers",
   "about-carousel": "Carousel — Page d'accueil (À propos)",
   "page-headers": "En-têtes de pages",
   general: "Général",
@@ -163,7 +165,7 @@ export default function MediaPage() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Médiathèque</h1>
               <p className="text-gray-500 text-sm mt-1">
-                Gérez les images du site (carousel, en-têtes de pages). Les images hero et fond de don ne sont pas modifiables ici.
+                Gérez les images du site : hero d&apos;accueil, en-têtes, illustrations des domaines, carousel, etc.
               </p>
             </div>
             <div className="flex gap-3">
