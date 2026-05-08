@@ -23,10 +23,10 @@ export default function AdminDashboard() {
 
   const cards = stats
     ? [
-        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "#0057B8" },
-        { label: "Dons confirmés", value: `$${stats.totalDonations.toFixed(0)}`, icon: Heart, color: "#E31E24", positive: true, change: `${stats.donationCount} dons` },
-        { label: "Abonnés actifs", value: String(stats.activeSubscribers), icon: Users, color: "#16a34a" },
-        { label: "Messages non lus", value: String(stats.unreadMessages), icon: MessageSquare, color: "#f59e0b" },
+        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "#007CF8" },
+        { label: "Dons confirmés", value: `$${stats.totalDonations.toFixed(0)}`, icon: Heart, color: "#E32219", positive: true, change: `${stats.donationCount} dons` },
+        { label: "Abonnés actifs", value: String(stats.activeSubscribers), icon: Users, color: "#007CF8" },
+        { label: "Messages non lus", value: String(stats.unreadMessages), icon: MessageSquare, color: "#E32219" },
       ]
     : []
 
@@ -53,7 +53,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-gray-500 mb-1">{stat.label}</p>
                         <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
                         {stat.change && (
-                          <div className="flex items-center gap-1 mt-2 text-sm text-green-600">
+                          <div className="flex items-center gap-1 mt-2 text-sm text-[var(--sos-blue)]">
                             <ArrowUpRight className="w-4 h-4" />
                             {stat.change}
                           </div>
@@ -96,9 +96,9 @@ export default function AdminDashboard() {
                           {donations.map((d, i) => (
                             <tr key={d.id} className="border-t border-gray-100">
                               <td className="py-3 pr-3 font-medium text-gray-900">{d.donorName}</td>
-                              <td className="py-3 pr-3 text-green-600 font-semibold">${d.amount}</td>
+                              <td className="py-3 pr-3 text-[var(--sos-blue)] font-semibold">${d.amount}</td>
                               <td className="py-3">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "CONFIRMED" ? "bg-green-100 text-green-700" : d.status === "PENDING" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"}`}>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "CONFIRMED" ? "bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)]" : d.status === "PENDING" ? "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]" : "bg-[var(--sos-red-light)] text-[var(--sos-red)]"}`}>
                                   {d.status === "CONFIRMED" ? "Confirmé" : d.status === "PENDING" ? "En attente" : "Échoué"}
                                 </span>
                               </td>
@@ -121,9 +121,10 @@ export default function AdminDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { icon: Calendar, label: "Nouvelle activité", color: "#16a34a", href: "/admin/activities" },
-                      { icon: TrendingUp, label: "Voir les stats", color: "#f59e0b", href: "/admin/stats" },
-                      { icon: Heart, label: "Rapport dons", color: "#E31E24", href: "/admin/donations" },
+                      { icon: FileText, label: "Nouvel article", color: "#007CF8", href: "/admin/articles" },
+                      { icon: Calendar, label: "Nouvelle activité", color: "#007CF8", href: "/admin/activities" },
+                      { icon: TrendingUp, label: "Voir les stats", color: "#007CF8", href: "/admin/stats" },
+                      { icon: Heart, label: "Rapport dons", color: "#E32219", href: "/admin/donations" },
                     ].map((action) => (
                       <a
                         key={action.label}

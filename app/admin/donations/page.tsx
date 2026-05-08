@@ -42,10 +42,10 @@ export default function AdminDonations() {
   }
 
   const statCards = stats ? [
-    { label: "Total confirmé", value: `$${stats.totalAmount.toFixed(0)}`, icon: DollarSign, color: "#16a34a" },
-    { label: "Nombre de dons", value: String(stats.count), icon: Heart, color: "#E31E24" },
-    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "#0057B8" },
-    { label: "Don moyen", value: `$${stats.averageAmount.toFixed(0)}`, icon: TrendingUp, color: "#f59e0b" },
+    { label: "Total confirmé", value: `$${stats.totalAmount.toFixed(0)}`, icon: DollarSign, color: "#007CF8" },
+    { label: "Nombre de dons", value: String(stats.count), icon: Heart, color: "#E32219" },
+    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "#007CF8" },
+    { label: "Don moyen", value: `$${stats.averageAmount.toFixed(0)}`, icon: TrendingUp, color: "#E32219" },
   ] : []
 
   return (
@@ -160,13 +160,13 @@ export default function AdminDonations() {
                             <motion.tr key={d.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="border-b border-gray-100 last:border-0">
                               <td className="py-3 pr-4 font-medium text-gray-900">{d.donorName}</td>
                               <td className="py-3 pr-4 text-sm text-gray-500">{d.donorEmail}</td>
-                              <td className="py-3 pr-4 font-semibold text-green-600">${d.amount} {d.currency}</td>
+                              <td className="py-3 pr-4 font-semibold text-[var(--sos-blue)]">${d.amount} {d.currency}</td>
                               <td className="py-3 pr-4 text-sm text-gray-500">{d.method}</td>
                               <td className="py-3 pr-4 text-sm text-gray-500">
                                 <div className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(d.createdAt).toLocaleDateString("fr-FR")}</div>
                               </td>
                               <td className="py-3">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "CONFIRMED" ? "bg-green-100 text-green-700" : d.status === "PENDING" ? "bg-yellow-100 text-yellow-700" : "bg-red-100 text-red-700"}`}>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${d.status === "CONFIRMED" ? "bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)]" : d.status === "PENDING" ? "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]" : "bg-[var(--sos-red-light)] text-[var(--sos-red)]"}`}>
                                   {d.status === "CONFIRMED" ? "Confirmé" : d.status === "PENDING" ? "En attente" : "Échoué"}
                                 </span>
                               </td>

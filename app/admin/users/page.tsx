@@ -28,7 +28,7 @@ export default function AdminUsers() {
     if (!isAuthenticated()) { router.push("/admin"); return }
     if (currentUser?.role !== "ADMIN") { router.push("/admin/dashboard"); return }
     fetchUsers()
-  }, [router])
+  }, [router, currentUser?.role])
 
   async function fetchUsers() {
     setLoading(true)
@@ -114,7 +114,7 @@ export default function AdminUsers() {
                       <input type="checkbox" id="isActive" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="rounded" />
                       <label htmlFor="isActive" className="text-sm font-medium text-gray-700">Compte actif</label>
                     </div>
-                    {error && <div className="flex gap-2 text-red-600 text-sm"><AlertCircle size={16} className="shrink-0 mt-0.5" />{error}</div>}
+                    {error && <div className="flex gap-2 text-[var(--sos-red)] text-sm"><AlertCircle size={16} className="shrink-0 mt-0.5" />{error}</div>}
                     <div className="flex gap-3 justify-end pt-2">
                       <Button variant="outline" onClick={() => setShowForm(false)}>Annuler</Button>
                       <Button onClick={handleSave} disabled={saving} className="bg-[var(--sos-blue)] text-white">
@@ -169,7 +169,7 @@ export default function AdminUsers() {
                             </div>
                           </td>
                           <td className="py-4 pr-4">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isActive ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isActive ? "bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)]" : "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]"}`}>
                               {user.isActive ? "Actif" : "Inactif"}
                             </span>
                           </td>
@@ -177,7 +177,7 @@ export default function AdminUsers() {
                             <div className="flex items-center gap-2">
                               <button onClick={() => openEdit(user)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><Edit className="w-4 h-4 text-gray-500" /></button>
                               {user.id !== currentUser?.id && (
-                                <button onClick={() => handleDelete(user.id)} className="p-2 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4 text-red-500" /></button>
+                                <button onClick={() => handleDelete(user.id)} className="p-2 hover:bg-[var(--sos-red-light)] rounded-lg transition-colors"><Trash2 className="w-4 h-4 text-[var(--sos-red)]" /></button>
                               )}
                             </div>
                           </td>

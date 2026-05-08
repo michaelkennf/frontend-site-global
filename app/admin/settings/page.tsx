@@ -1,174 +1,271 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AdminSidebar } from "@/components/admin-sidebar"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Settings, TrendingUp, Save, Loader2, CheckCircle } from "lucide-react"
-import { statsApi, ImpactStat } from "@/lib/api"
-import { isAuthenticated, getStoredUser } from "@/lib/auth"
+import Image from "next/image"
+import { authApi, uploadsApi } from "@/lib/api"
+import { isAuthenticated, getStoredUser, saveAuth } from "@/lib/auth"
+import {
+  User, Lock, Camera, Save, Loader2, CheckCircle,
+  Eye, EyeOff, AlertCircle,
+} from "lucide-react"
 
 export default function AdminSettings() {
   const router = useRouter()
-  const [stats, setStats] = useState<ImpactStat | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
-  const [error, setError] = useState("")
-  const currentUser = getStoredUser()
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const [currentUser, setCurrentUser] = useState(getStoredUser())
+
+  // Name
+  const [name, setName] = useState(currentUser?.name ?? "")
+  const [nameSaving, setNameSaving] = useState(false)
+  const [nameSaved, setNameSaved] = useState(false)
+  const [nameError, setNameError] = useState("")
+
+  // Password
+  const [currentPwd, setCurrentPwd] = useState("")
+  const [newPwd, setNewPwd] = useState("")
+  const [confirmPwd, setConfirmPwd] = useState("")
+  const [showCurrent, setShowCurrent] = useState(false)
+  const [showNew, setShowNew] = useState(false)
+  const [pwdSaving, setPwdSaving] = useState(false)
+  const [pwdSaved, setPwdSaved] = useState(false)
+  const [pwdError, setPwdError] = useState("")
+
+  // Avatar
+  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatar ?? "")
+  const [avatarUploading, setAvatarUploading] = useState(false)
+  const [avatarError, setAvatarError] = useState("")
 
   useEffect(() => {
     if (!isAuthenticated()) { router.push("/admin"); return }
-    statsApi.getImpact().then(setStats).catch(console.error).finally(() => setLoading(false))
   }, [router])
 
-  async function handleSaveStats() {
-    if (!stats) return
-    setSaving(true); setError("")
+  const initials = currentUser?.name
+    ?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() ?? "??"
+
+  async function handleSaveName() {
+    if (!name.trim()) { setNameError("Le nom ne peut pas être vide"); return }
+    setNameSaving(true); setNameError("")
     try {
-      await statsApi.updateImpact({
-        communities: stats.communities,
-        trained: stats.trained,
-        responses: stats.responses,
-        initiatives: stats.initiatives,
-      })
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+      const updated = await authApi.updateProfile({ name: name.trim() })
+      const token = localStorage.getItem("access_token") ?? ""
+      saveAuth(token, { ...currentUser!, ...updated })
+      setCurrentUser({ ...currentUser!, ...updated })
+      setNameSaved(true)
+      setTimeout(() => setNameSaved(false), 3000)
     } catch (err: any) {
-      setError(err.message ?? "Erreur lors de la sauvegarde")
-    } finally { setSaving(false) }
+      setNameError(err.message ?? "Erreur lors de la sauvegarde")
+    } finally { setNameSaving(false) }
+  }
+
+  async function handleSavePassword() {
+    if (!newPwd) { setPwdError("Le nouveau mot de passe est requis"); return }
+    if (newPwd.length < 8) { setPwdError("Minimum 8 caractères"); return }
+    if (newPwd !== confirmPwd) { setPwdError("Les mots de passe ne correspondent pas"); return }
+    setPwdSaving(true); setPwdError("")
+    try {
+      await authApi.updateProfile({ password: newPwd })
+      setPwdSaved(true)
+      setCurrentPwd(""); setNewPwd(""); setConfirmPwd("")
+      setTimeout(() => setPwdSaved(false), 3000)
+    } catch (err: any) {
+      setPwdError(err.message ?? "Erreur lors du changement de mot de passe")
+    } finally { setPwdSaving(false) }
+  }
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarUploading(true); setAvatarError("")
+    try {
+      const url = await uploadsApi.uploadImage(file)
+      const updated = await authApi.updateProfile({ avatar: url })
+      const token = localStorage.getItem("access_token") ?? ""
+      saveAuth(token, { ...currentUser!, ...updated })
+      setCurrentUser({ ...currentUser!, ...updated })
+      setAvatarUrl(url)
+    } catch (err: any) {
+      setAvatarError(err.message ?? "Erreur lors de l'upload")
+    } finally {
+      setAvatarUploading(false)
+      if (fileRef.current) fileRef.current.value = ""
+    }
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
       <main className="lg:ml-64 pt-16 lg:pt-0">
-        <div className="p-6 lg:p-8">
+        <div className="p-6 lg:p-8 max-w-2xl">
           <div className="mb-8">
             <h1 className="font-serif font-bold text-3xl text-gray-900">Paramètres</h1>
-            <p className="text-gray-500 mt-1">Configurez les paramètres de votre site</p>
+            <p className="text-gray-500 mt-1">Gérez votre profil et vos informations personnelles</p>
           </div>
 
           <div className="space-y-6">
-            {/* Impact Stats */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-[var(--sos-blue)]" />
-                    Chiffres d'impact
-                  </CardTitle>
-                  <CardDescription>Ces chiffres apparaissent sur la page d'accueil du site public</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {loading ? (
-                    <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
-                  ) : stats ? (
-                    <div className="space-y-4">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Communautés soutenues
-                          </label>
-                          <Input
-                            type="number"
-                            value={stats.communities}
-                            onChange={(e) => setStats({ ...stats, communities: parseInt(e.target.value) || 0 })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Personnes formées
-                          </label>
-                          <Input
-                            type="number"
-                            value={stats.trained}
-                            onChange={(e) => setStats({ ...stats, trained: parseInt(e.target.value) || 0 })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Réponses d'urgence
-                          </label>
-                          <Input
-                            type="number"
-                            value={stats.responses}
-                            onChange={(e) => setStats({ ...stats, responses: parseInt(e.target.value) || 0 })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Initiatives environnementales
-                          </label>
-                          <Input
-                            type="number"
-                            value={stats.initiatives}
-                            onChange={(e) => setStats({ ...stats, initiatives: parseInt(e.target.value) || 0 })}
-                          />
-                        </div>
-                      </div>
 
-                      {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                      <div className="flex items-center gap-3">
-                        <Button
-                          onClick={handleSaveStats}
-                          disabled={saving}
-                          className="bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] text-white"
-                        >
-                          {saving ? (
-                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                          ) : saved ? (
-                            <CheckCircle className="w-4 h-4 mr-2 text-green-400" />
-                          ) : (
-                            <Save className="w-4 h-4 mr-2" />
-                          )}
-                          {saved ? "Enregistré !" : "Enregistrer les chiffres"}
-                        </Button>
-                      </div>
+            {/* ── Photo de profil ── */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Camera className="w-5 h-5 text-[var(--sos-blue)]" />
+                Photo de profil
+              </h2>
+              <div className="flex items-center gap-6">
+                <div className="relative shrink-0">
+                  {avatarUrl ? (
+                    <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-[var(--sos-blue-light)]">
+                      <Image src={avatarUrl} alt="Avatar" width={80} height={80} className="object-cover w-full h-full" />
                     </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Profile Info */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-[var(--sos-blue)]" />
-                    Mon compte
-                  </CardTitle>
-                  <CardDescription>Informations de votre compte actuel</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="w-12 h-12 rounded-full bg-[var(--sos-blue)] flex items-center justify-center text-white font-bold text-lg">
-                        {currentUser?.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">{currentUser?.name}</p>
-                        <p className="text-sm text-gray-500">{currentUser?.email}</p>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${currentUser?.role === "ADMIN" ? "bg-red-100 text-red-700" : "bg-[var(--sos-blue-light)] text-[var(--sos-blue)]"}`}>
-                          {currentUser?.role === "ADMIN" ? "Administrateur" : "Gestionnaire"}
-                        </span>
-                      </div>
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-[var(--sos-blue)] flex items-center justify-center text-white text-2xl font-bold border-4 border-[var(--sos-blue-light)]">
+                      {initials}
                     </div>
-                    <p className="text-sm text-gray-500">
-                      Pour modifier vos informations de compte, contactez l'administrateur principal à{" "}
-                      <a href="mailto:contact@globalsos.org" className="text-[var(--sos-blue)] hover:underline">
-                        contact@globalsos.org
-                      </a>.
+                  )}
+                  {avatarUploading && (
+                    <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 text-white animate-spin" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => fileRef.current?.click()}
+                    disabled={avatarUploading}
+                    className="inline-flex items-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                  >
+                    <Camera size={16} />
+                    {avatarUploading ? "Envoi en cours…" : "Changer la photo"}
+                  </button>
+                  <p className="text-xs text-gray-400">JPG, PNG ou WebP — max 5 Mo</p>
+                  {avatarError && (
+                    <p className="text-xs text-[var(--sos-red)] flex items-center gap-1">
+                      <AlertCircle size={12} /> {avatarError}
                     </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                  )}
+                </div>
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
+            </div>
+
+            {/* ── Nom ── */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <User className="w-5 h-5 text-[var(--sos-blue)]" />
+                Nom affiché
+              </h2>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
+                    placeholder="Votre nom complet"
+                  />
+                </div>
+                {nameError && (
+                  <p className="text-sm text-[var(--sos-red)] flex items-center gap-1">
+                    <AlertCircle size={14} /> {nameError}
+                  </p>
+                )}
+                <button
+                  onClick={handleSaveName}
+                  disabled={nameSaving || name === currentUser?.name}
+                  className="inline-flex items-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+                >
+                  {nameSaving ? <Loader2 size={16} className="animate-spin" /> : nameSaved ? <CheckCircle size={16} /> : <Save size={16} />}
+                  {nameSaved ? "Nom mis à jour !" : "Enregistrer"}
+                </button>
+              </div>
+            </div>
+
+            {/* ── Mot de passe ── */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[var(--sos-blue)]" />
+                Changer le mot de passe
+              </h2>
+              <div className="space-y-3">
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+                  <input
+                    type={showNew ? "text" : "password"}
+                    value={newPwd}
+                    onChange={(e) => setNewPwd(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
+                    placeholder="Minimum 8 caractères"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNew(!showNew)}
+                    className="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600"
+                  >
+                    {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
+                  <input
+                    type={showCurrent ? "text" : "password"}
+                    value={confirmPwd}
+                    onChange={(e) => setConfirmPwd(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 pr-10 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
+                    placeholder="Répétez le mot de passe"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrent(!showCurrent)}
+                    className="absolute right-3 top-[34px] text-gray-400 hover:text-gray-600"
+                  >
+                    {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                {pwdError && (
+                  <p className="text-sm text-[var(--sos-red)] flex items-center gap-1">
+                    <AlertCircle size={14} /> {pwdError}
+                  </p>
+                )}
+                <button
+                  onClick={handleSavePassword}
+                  disabled={pwdSaving || !newPwd || !confirmPwd}
+                  className="inline-flex items-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+                >
+                  {pwdSaving ? <Loader2 size={16} className="animate-spin" /> : pwdSaved ? <CheckCircle size={16} /> : <Lock size={16} />}
+                  {pwdSaved ? "Mot de passe mis à jour !" : "Changer le mot de passe"}
+                </button>
+              </div>
+            </div>
+
+            {/* ── Infos lecture seule ── */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+              <h2 className="font-semibold text-gray-900 mb-4">Informations du compte</h2>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-gray-500">Email</span>
+                  <span className="font-medium text-gray-900">{currentUser?.email}</span>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-gray-500">Rôle</span>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                    currentUser?.role === "ADMIN"
+                      ? "bg-[var(--sos-red-light)] text-[var(--sos-red)]"
+                      : "bg-[var(--sos-blue-light)] text-[var(--sos-blue)]"
+                  }`}>
+                    {currentUser?.role === "ADMIN" ? "Administrateur" : "Gestionnaire"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </main>

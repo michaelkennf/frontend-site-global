@@ -69,9 +69,9 @@ export default function AdminNewsletter() {
           {stats && (
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[
-                { label: "Total abonnés", value: stats.total, icon: Users, color: "#0057B8" },
-                { label: "Actifs", value: stats.active, icon: Mail, color: "#16a34a" },
-                { label: "Désabonnés", value: stats.total - stats.active, icon: TrendingUp, color: "#f59e0b" },
+                { label: "Total abonnés", value: stats.total, icon: Users, color: "#007CF8" },
+                { label: "Actifs", value: stats.active, icon: Mail, color: "#007CF8" },
+                { label: "Désabonnés", value: stats.total - stats.active, icon: TrendingUp, color: "#E32219" },
               ].map((stat, i) => (
                 <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                   <Card><CardContent className="p-4">
@@ -124,13 +124,13 @@ export default function AdminNewsletter() {
                           </td>
                           <td className="py-3 pr-4 text-sm text-gray-500">{new Date(s.subscribedAt).toLocaleDateString("fr-FR")}</td>
                           <td className="py-3 pr-4">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${s.active ? "bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)]" : "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]"}`}>
                               {s.active ? "Actif" : "Désabonné"}
                             </span>
                           </td>
                           <td className="py-3">
-                            <button onClick={() => handleDelete(s.id)} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors">
-                              <Trash2 className="w-4 h-4 text-red-500" />
+                            <button onClick={() => handleDelete(s.id)} className="p-1.5 hover:bg-[var(--sos-red-light)] rounded-lg transition-colors">
+                              <Trash2 className="w-4 h-4 text-[var(--sos-red)]" />
                             </button>
                           </td>
                         </motion.tr>

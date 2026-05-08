@@ -4,9 +4,7 @@ import { I18nProvider } from "@/lib/i18n"
 import { Navbar } from "@/components/navbar"
 import { HeroSection } from "@/components/hero-section"
 import { AboutSection } from "@/components/about-section"
-import { AreasSection } from "@/components/areas-section"
 import { ActivitiesSection } from "@/components/activities-section"
-import { DonateSection } from "@/components/donate-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { PartnersSection } from "@/components/partners-section"
 import { Footer } from "@/components/footer"
@@ -21,9 +19,7 @@ export default function HomePage() {
           <HeroSection />
           <HeroRedDivider />
           <AboutSection />
-          <AreasSection />
           <ActivitiesSection />
-          <DonateSection />
           <PartnersSection />
           <NewsletterSection />
         </main>

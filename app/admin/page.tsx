@@ -38,9 +38,9 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--sos-blue)]">
-        <Image src="/images/hero.png" alt="Global SOS" fill className="object-cover opacity-60" />
+        <Image src="/images/hero image.png" alt="Global SOS" fill className="object-cover opacity-60" />
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
-          <Image src="/images/logo.png" alt="Global SOS Logo" width={100} height={100} className="mb-8 rounded-xl" />
+          <Image src="/images/logo SOS.png" alt="Global SOS Logo" width={100} height={100} className="mb-8 rounded-xl" />
           <h1 className="font-serif font-black text-4xl mb-4">Global SOS</h1>
           <p className="text-white/80 text-lg leading-relaxed max-w-md">
             Espace administration pour la gestion du contenu, des dons et des communications.
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
         >
           <Link href="/" className="flex items-center justify-center gap-3 mb-8 group">
             <Image
-              src="/images/logo.png"
+              src="/images/logo SOS.png"
               alt="Global SOS Logo"
               width={64}
               height={64}
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700"
+              className="mb-6 p-4 bg-[var(--sos-red-light)] border border-[var(--sos-red)] rounded-lg flex items-center gap-3 text-[var(--sos-red)]"
             >
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span className="text-sm">{error}</span>

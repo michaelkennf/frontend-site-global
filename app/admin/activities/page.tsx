@@ -14,8 +14,16 @@ import { isAuthenticated } from "@/lib/auth"
 
 const emptyForm = {
   titleFr: "", titleEn: "", descriptionFr: "", descriptionEn: "",
-  image: "", location: "", date: "", status: "ONGOING" as "ONGOING" | "COMPLETED",
+  image: "", location: "", date: "", category: "Général",
+  status: "ONGOING" as "ONGOING" | "COMPLETED",
 }
+
+const ACTIVITY_DOMAIN_OPTIONS: { id: string; label: string }[] = [
+  { id: "Général", label: "Général" },
+  { id: "risques-catastrophes", label: "Gestion des risques de catastrophes" },
+  { id: "urgences-sanitaires", label: "Urgences sanitaires & DSSR" },
+  { id: "justice-climatique", label: "Justice climatique & environnementale" },
+]
 
 export default function AdminActivities() {
   const router = useRouter()
@@ -44,7 +52,17 @@ export default function AdminActivities() {
 
   function openEdit(a: Activity) {
     setEditingId(a.id)
-    setForm({ titleFr: a.titleFr, titleEn: a.titleEn, descriptionFr: a.descriptionFr, descriptionEn: a.descriptionEn, image: a.image ?? "", location: a.location, date: a.date, status: a.status })
+    setForm({
+      titleFr: a.titleFr,
+      titleEn: a.titleEn,
+      descriptionFr: a.descriptionFr,
+      descriptionEn: a.descriptionEn,
+      image: a.image ?? "",
+      location: a.location,
+      date: a.date,
+      category: a.category ?? "Général",
+      status: a.status,
+    })
     setShowForm(true)
   }
 
@@ -121,9 +139,25 @@ export default function AdminActivities() {
                         </div>
                       )}
                     </div>
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid md:grid-cols-2 gap-4">
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Localisation</label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Bukavu, Sud-Kivu" /></div>
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Date</label><Input value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} placeholder="Mars 2026" /></div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-1 block">Domaine</label>
+                        <select
+                          className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                          value={form.category}
+                          onChange={(e) => setForm({ ...form, category: e.target.value })}
+                        >
+                          {ACTIVITY_DOMAIN_OPTIONS.map((opt) => (
+                            <option key={opt.id} value={opt.id}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                       <div>
                         <label className="text-sm font-medium text-gray-700 mb-1 block">Statut</label>
                         <select className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as any })}>
@@ -132,7 +166,7 @@ export default function AdminActivities() {
                         </select>
                       </div>
                     </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && <p className="text-[var(--sos-red)] text-sm">{error}</p>}
                     <div className="flex gap-3 justify-end pt-2">
                       <Button variant="outline" onClick={() => setShowForm(false)}>Annuler</Button>
                       <Button onClick={handleSave} disabled={saving} className="bg-[var(--sos-blue)] text-white">
@@ -161,7 +195,13 @@ export default function AdminActivities() {
                     <div className="p-4 bg-gradient-to-br from-[var(--sos-blue-light)] to-white border-b">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{activity.titleFr}</h3>
-                        <span className={`shrink-0 px-2 py-1 rounded-full text-xs font-medium ${activity.status === "ONGOING" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+                        <span
+                          className={`shrink-0 px-2 py-1 rounded-full text-xs font-medium ${
+                            activity.status === "ONGOING"
+                              ? "bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)]"
+                              : "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]"
+                          }`}
+                        >
                           {activity.status === "ONGOING" ? "En cours" : "Terminé"}
                         </span>
                       </div>
@@ -176,7 +216,7 @@ export default function AdminActivities() {
                         <Button variant="outline" size="sm" className="flex-1" onClick={() => openEdit(activity)}>
                           <Edit className="w-4 h-4 mr-1" />Modifier
                         </Button>
-                        <Button variant="outline" size="sm" className="text-red-600 hover:bg-red-50" onClick={() => handleDelete(activity.id)}>
+                        <Button variant="outline" size="sm" className="text-[var(--sos-red)] hover:bg-[var(--sos-red-light)]" onClick={() => handleDelete(activity.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>

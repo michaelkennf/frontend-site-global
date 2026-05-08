@@ -131,11 +131,11 @@ export default function AdminMessages() {
                         </a>
                       </Button>
                       {!selected.read && (
-                        <Button variant="outline" className="text-green-600 border-green-200 hover:bg-green-50" onClick={() => handleMarkRead(selected)}>
+                        <Button variant="outline" className="text-[var(--sos-blue)] border-[var(--sos-blue)]/30 hover:bg-[var(--sos-blue-light)]" onClick={() => handleMarkRead(selected)}>
                           <Check className="w-4 h-4 mr-2" />Marquer comme lu
                         </Button>
                       )}
-                      <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => handleDelete(selected.id)}>
+                      <Button variant="outline" className="text-[var(--sos-red)] border-[var(--sos-red)] hover:bg-[var(--sos-red-light)]" onClick={() => handleDelete(selected.id)}>
                         <Trash2 className="w-4 h-4 mr-2" />Supprimer
                       </Button>
                     </div>

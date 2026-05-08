@@ -36,7 +36,7 @@ function CopyButton({ text }: { text: string }) {
       className="ml-2 p-1 rounded hover:bg-gray-100 transition-colors"
       title="Copier"
     >
-      {copied ? <CheckCircle size={14} className="text-green-500" /> : <Copy size={14} className="text-gray-400" />}
+      {copied ? <CheckCircle size={14} className="text-[var(--sos-blue)]" /> : <Copy size={14} className="text-gray-400" />}
     </button>
   )
 }
@@ -44,7 +44,7 @@ function CopyButton({ text }: { text: string }) {
 function DonatePage() {
   const { lang } = useI18n()
   const heroBg = useSiteMediaKeys([SITE_MEDIA.DONATE_HERO_BG])[SITE_MEDIA.DONATE_HERO_BG]
-  const heroSrc = heroBg?.url ?? "/images/donate-bg.png"
+  const heroSrc = heroBg?.url ?? "/images/hero image.png"
   const heroAlt =
     (lang === "fr" ? heroBg?.altFr : heroBg?.altEn)?.trim() || ""
   const [info, setInfo] = useState<DonationInfo | null>(null)
@@ -98,7 +98,7 @@ function DonatePage() {
           id: "mpesa",
           label: "M-Pesa",
           icon: "🟢",
-          color: "#00a651",
+          color: "var(--sos-blue)",
           bg: "#e8f8f0",
           number: info.mpesaNumber,
           name: info.mpesaName,
@@ -107,7 +107,7 @@ function DonatePage() {
           id: "airtel",
           label: "Airtel Money",
           icon: "🔴",
-          color: "#e31e24",
+          color: "#E32219",
           bg: "#fdeaea",
           number: info.airtelMoneyNumber,
           name: info.airtelMoneyName,
@@ -116,7 +116,7 @@ function DonatePage() {
           id: "orange",
           label: "Orange Money",
           icon: "🟠",
-          color: "#f97316",
+          color: "var(--sos-red)",
           bg: "#fff3e0",
           number: info.orangeMoneyNumber,
           name: info.orangeMoneyName,
@@ -126,7 +126,7 @@ function DonatePage() {
           label: lang === "fr" ? "Virement bancaire" : "Bank transfer",
           icon: "🏦",
           color: "var(--sos-blue)",
-          bg: "#E6EFF9",
+          bg: "var(--sos-blue-light)",
           number: info.bankAccountNumber,
           name: info.bankAccountName,
           extra: {
@@ -143,7 +143,7 @@ function DonatePage() {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
+        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
           {/* Background image */}
           <div className="absolute inset-0">
             <Image
@@ -154,7 +154,6 @@ function DonatePage() {
               sizes="100vw"
               className="object-cover object-center"
             />
-            <div className="absolute inset-0" style={{ background: "rgba(10,30,70,0.72)" }} />
           </div>
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
@@ -198,11 +197,11 @@ function DonatePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="max-w-lg mx-auto text-center bg-white rounded-2xl p-10 shadow-lg"
               >
-                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <CheckCircle className="w-16 h-16 text-[var(--sos-blue)] mx-auto mb-4" />
                 <h2 className="font-serif font-bold text-2xl text-gray-900 mb-3">
                   {lang === "fr" ? "Merci pour votre don !" : "Thank you for your donation!"}
                 </h2>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-[var(--sos-blue-dark)] leading-relaxed">
                   {lang === "fr"
                     ? "Votre intention de don a été enregistrée. Veuillez procéder au paiement via la méthode choisie en utilisant les informations ci-dessous."
                     : "Your donation intent has been recorded. Please proceed with payment via the chosen method using the information below."}
@@ -395,7 +394,7 @@ function DonatePage() {
                     </div>
 
                     {error && (
-                      <div className="flex gap-2 text-red-600 text-sm">
+                      <div className="flex gap-2 text-[var(--sos-red)] text-sm">
                         <AlertCircle size={16} className="shrink-0 mt-0.5" />
                         {error}
                       </div>

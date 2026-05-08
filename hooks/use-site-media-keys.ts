@@ -23,7 +23,7 @@ export function useSiteMediaKeys(keys: readonly string[]) {
     return () => {
       cancelled = true
     }
-  }, [sorted])
+  }, [keys, sorted])
 
   return data
 }

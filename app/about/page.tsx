@@ -16,7 +16,7 @@ import { SITE_MEDIA } from "@/lib/site-media-keys"
 function AboutContent() {
   const { t, lang } = useI18n()
   const headerMedia = useSiteMediaKeys([SITE_MEDIA.ABOUT_HEADER])[SITE_MEDIA.ABOUT_HEADER]
-  const headerSrc = headerMedia?.url ?? "/images/about-header.jpg"
+  const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
     (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
 
@@ -38,7 +38,7 @@ function AboutContent() {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
+        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
           <div className="absolute inset-0">
             <Image
               src={headerSrc}
@@ -46,12 +46,8 @@ function AboutContent() {
               fill
               className="object-cover"
               sizes="100vw"
-              style={{ objectPosition: "center 25%", opacity: 0.45 }}
+              style={{ objectPosition: "center 25%" }}
               priority
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to bottom, rgba(10,30,70,0.55) 0%, rgba(10,30,70,0.75) 100%)" }}
             />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

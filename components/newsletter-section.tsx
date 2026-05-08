@@ -51,14 +51,14 @@ export function NewsletterSection() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mt-8 flex items-center justify-center gap-2 text-green-600"
+              className="mt-8 flex items-center justify-center gap-2 text-[var(--sos-blue)]"
             >
               <CheckCircle className="h-6 w-6" />
               <span className="text-lg font-medium">{t.newsletter.success}</span>
             </motion.div>
           ) : (
             <>
-              {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
+              {error && <p className="mt-4 text-[var(--sos-red)] text-sm">{error}</p>}
               <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Input
                   type="email"

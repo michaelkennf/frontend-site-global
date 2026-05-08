@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion, useInView } from "framer-motion"
@@ -43,7 +43,7 @@ function areaContentForSlug(slug: DomainSlug, areas: AreasBlock) {
 
 const checklistColor: Record<DomainSlug, string> = {
   "risques-catastrophes": "var(--sos-blue)",
-  "justice-climatique": "#16a34a",
+  "justice-climatique": "var(--sos-blue)",
   "urgences-sanitaires": "var(--sos-red)",
 }
 
@@ -59,12 +59,8 @@ function DomainIllustrationFigure({
 }) {
   const primary = resolveDomainIllustrationUrl(slug, media)
   const fallbackStatic = DOMAIN_ILLUSTRATION[slug]
-  const emergency = "/images/hero.png"
+  const emergency = "/images/hero image.png"
   const [src, setSrc] = useState(primary)
-
-  useEffect(() => {
-    setSrc(primary)
-  }, [primary])
 
   return (
     <Image
@@ -119,14 +115,14 @@ export function AreasSection() {
 
             const imageBlock = (
               <motion.div
-                className="relative w-full min-h-[240px] aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50 shadow-xl shadow-gray-900/10 ring-1 ring-black/5"
+                className="relative w-full min-h-[240px] aspect-[4/3] rounded-3xl overflow-hidden bg-white border border-gray-100"
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={inView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: i * 0.08, duration: 0.55 }}
               >
                 <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-8">
                   <div className="relative h-full w-full min-h-[200px]">
-                    <DomainIllustrationFigure slug={slug} media={m} alt={alt} />
+                    <DomainIllustrationFigure key={`${slug}-${m?.url ?? "fallback"}`} slug={slug} media={m} alt={alt} />
                   </div>
                 </div>
               </motion.div>

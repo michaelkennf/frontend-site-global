@@ -12,7 +12,7 @@ export function HeroSection() {
   const { t, lang } = useI18n()
   const media = useSiteMediaKeys([SITE_MEDIA.HERO_HOME])
   const heroMedia = media[SITE_MEDIA.HERO_HOME]
-  const heroSrc = heroMedia?.url ?? "/images/hero.png"
+  const heroSrc = "/images/hero image.png"
   const heroAlt =
     (lang === "fr" ? heroMedia?.altFr : heroMedia?.altEn)?.trim() ||
     "Global SOS humanitarian work"
@@ -29,19 +29,6 @@ export function HeroSection() {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
           style={{ objectFit: "cover", objectPosition: "center top" }}
         />
-        {/* Overlay mobile : fond sombre uniforme pour lisibilité */}
-        <div
-          className="absolute inset-0 sm:hidden"
-          style={{ background: "rgba(10,30,70,0.65)" }}
-        />
-        {/* Overlay desktop : dégradé gauche→droite, laisse voir l'image à droite */}
-        <div
-          className="absolute inset-0 hidden sm:block"
-          style={{
-            background:
-              "linear-gradient(to right, rgba(10,30,70,0.88) 0%, rgba(10,30,70,0.55) 45%, rgba(10,30,70,0.10) 100%)",
-          }}
-        />
       </div>
 
       {/* Content */}
@@ -52,7 +39,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white text-sm font-medium px-4 py-2 rounded-full border border-white/20 mb-6"
+            className="inline-flex items-center gap-2 bg-white/90 text-[var(--sos-blue)] text-sm font-medium px-4 py-2 rounded-full border border-white/60 mb-6"
           >
             <span
               className="w-2 h-2 rounded-full animate-pulse"

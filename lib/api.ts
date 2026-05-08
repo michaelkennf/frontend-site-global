@@ -41,6 +41,8 @@ export const authApi = {
       body: JSON.stringify({ email, password }),
     }),
   profile: () => request<AdminUser>('/auth/profile', {}, true),
+  updateProfile: (data: { name?: string; password?: string; avatar?: string }) =>
+    request<AdminUser>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) }, true),
 };
 
 // ── Uploads ─────────────────────────────────────────────────────────
@@ -78,6 +80,21 @@ export const activitiesApi = {
     request<Activity>(`/activities/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
   delete: (id: string) =>
     request<void>(`/activities/${id}`, { method: 'DELETE' }, true),
+};
+
+// ── Articles ──────────────────────────────────────────────────────
+export const articlesApi = {
+  getPublic: () => request<Article[]>('/articles/public'),
+  getOnePublic: (id: string) => request<Article>(`/articles/public/${id}`),
+  getAll: (status?: ArticleStatus) =>
+    request<Article[]>(`/articles${status ? `?status=${status}` : ''}`, {}, true),
+  getOne: (id: string) => request<Article>(`/articles/${id}`, {}, true),
+  create: (data: Partial<Article>) =>
+    request<Article>('/articles', { method: 'POST', body: JSON.stringify(data) }, true),
+  update: (id: string, data: Partial<Article>) =>
+    request<Article>(`/articles/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+  delete: (id: string) =>
+    request<void>(`/articles/${id}`, { method: 'DELETE' }, true),
 };
 
 // ── Messages ───────────────────────────────────────────────────────
@@ -181,6 +198,7 @@ export interface AdminUser {
   id: string;
   email: string;
   name: string;
+  avatar?: string;
   role: 'ADMIN' | 'GESTIONNAIRE';
   isActive: boolean;
   createdAt: string;
@@ -195,9 +213,31 @@ export interface Activity {
   image?: string;
   location: string;
   date: string;
+  category?: string;
   status: 'ONGOING' | 'COMPLETED';
   createdAt: string;
   author?: { id: string; name: string };
+}
+
+export type ArticleStatus = 'PUBLISHED' | 'DRAFT';
+
+export interface Article {
+  id: string;
+  titleFr: string;
+  titleEn: string;
+  excerptFr: string;
+  excerptEn: string;
+  contentFr: string;
+  contentEn: string;
+  image?: string;
+  status: ArticleStatus;
+  category: string;
+  views: number;
+  publishedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  authorId: string;
+  author?: { id: string; name: string; email?: string };
 }
 
 export interface Message {
@@ -216,6 +256,7 @@ export interface ImpactStat {
   trained: number;
   responses: number;
   initiatives: number;
+  yearsOfExistence: number;
 }
 
 export interface DashboardStats {

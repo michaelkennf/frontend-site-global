@@ -178,7 +178,7 @@ export default function MediaPage() {
               <button
                 onClick={openCreate}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold shadow"
-                style={{ background: "#0057B8" }}
+                style={{ background: "#007CF8" }}
               >
                 <Plus size={16} /> Ajouter une image
               </button>
@@ -187,12 +187,12 @@ export default function MediaPage() {
 
           {/* Alerts */}
           {error && (
-            <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+            <div className="mb-4 px-4 py-3 rounded-xl bg-[var(--sos-red-light)] border border-[var(--sos-red)] text-[var(--sos-red)] text-sm">
               {error}
             </div>
           )}
           {success && (
-            <div className="mb-4 px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-sm">
+            <div className="mb-4 px-4 py-3 rounded-xl bg-[var(--sos-blue-light)] border border-[var(--sos-blue)]/30 text-[var(--sos-blue-dark)] text-sm">
               {success}
             </div>
           )}
@@ -282,13 +282,13 @@ export default function MediaPage() {
                               </button>
                               <button
                                 onClick={() => openEdit(m)}
-                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg border text-blue-600 border-blue-200 hover:bg-blue-50"
+                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg border text-[var(--sos-blue)] border-[var(--sos-blue)]/30 hover:bg-[var(--sos-blue)]/10"
                               >
                                 <Pencil size={12} /> Modifier
                               </button>
                               <button
                                 onClick={() => handleDelete(m.id)}
-                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg border text-red-600 border-red-200 hover:bg-red-50 ml-auto"
+                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg border text-[var(--sos-red)] border-[var(--sos-red)] hover:bg-[var(--sos-red-light)] ml-auto"
                               >
                                 <Trash2 size={12} /> Suppr.
                               </button>
@@ -322,7 +322,7 @@ export default function MediaPage() {
               {!editingMedia && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Clé unique <span className="text-red-500">*</span>
+                    Clé unique <span className="text-[var(--sos-red)]">*</span>
                   </label>
                   <input
                     required
@@ -330,7 +330,7 @@ export default function MediaPage() {
                     value={form.key}
                     onChange={(e) => setForm((f) => ({ ...f, key: e.target.value }))}
                     placeholder="ex: carousel-5"
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] font-mono"
                   />
                 </div>
               )}
@@ -340,7 +340,7 @@ export default function MediaPage() {
                 <select
                   value={form.section}
                   onChange={(e) => setForm((f) => ({ ...f, section: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                 >
                   {SECTION_KEYS.map((k) => (
                     <option key={k} value={k}>{SECTION_LABELS[k]}</option>
@@ -350,7 +350,7 @@ export default function MediaPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  URL de l&apos;image <span className="text-red-500">*</span>
+                  URL de l&apos;image <span className="text-[var(--sos-red)]">*</span>
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -359,7 +359,7 @@ export default function MediaPage() {
                     value={form.url}
                     onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
                     placeholder="/images/photo.jpg ou https://..."
-                    className="flex-1 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   />
                   <button
                     type="button"
@@ -393,7 +393,7 @@ export default function MediaPage() {
                     type="text"
                     value={form.altFr}
                     onChange={(e) => setForm((f) => ({ ...f, altFr: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Description en français"
                   />
                 </div>
@@ -403,7 +403,7 @@ export default function MediaPage() {
                     type="text"
                     value={form.altEn}
                     onChange={(e) => setForm((f) => ({ ...f, altEn: e.target.value }))}
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Description in English"
                   />
                 </div>
@@ -416,7 +416,7 @@ export default function MediaPage() {
                     type="number"
                     value={form.order}
                     onChange={(e) => setForm((f) => ({ ...f, order: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   />
                 </div>
                 <div className="flex items-center gap-2 mt-5">
@@ -442,7 +442,7 @@ export default function MediaPage() {
                 <button
                   type="submit"
                   className="flex-1 py-2 rounded-xl text-white text-sm font-semibold"
-                  style={{ background: "#0057B8" }}
+                  style={{ background: "#007CF8" }}
                 >
                   {editingMedia ? "Enregistrer" : "Ajouter"}
                 </button>

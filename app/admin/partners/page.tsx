@@ -114,7 +114,7 @@ export default function AdminPartnersPage() {
             </div>
             <button
               onClick={openCreate}
-              className="inline-flex items-center gap-2 bg-[#0057B8] hover:bg-[#004A9E] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
             >
               <Plus size={18} />
               Ajouter un partenaire
@@ -122,7 +122,7 @@ export default function AdminPartnersPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+            <div className="bg-[var(--sos-red-light)] border border-[var(--sos-red)] text-[var(--sos-red)] px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
               {error}
               <button onClick={() => setError(null)}><X size={16} /></button>
             </div>
@@ -159,7 +159,7 @@ export default function AdminPartnersPage() {
                       <button onClick={() => openEdit(p)} className="p-1.5 rounded hover:bg-[var(--sos-blue-light)] text-[var(--sos-blue)]">
                         <Pencil size={15} />
                       </button>
-                      <button onClick={() => setDeleteId(p.id)} className="p-1.5 rounded hover:bg-red-50 text-red-500">
+                      <button onClick={() => setDeleteId(p.id)} className="p-1.5 rounded hover:bg-[var(--sos-red-light)] text-[var(--sos-red)]">
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -171,14 +171,14 @@ export default function AdminPartnersPage() {
                         <Image src={p.logo} alt={p.name} fill className="object-contain" sizes="128px" />
                       </div>
                     ) : (
-                      <div className="w-14 h-14 rounded-full bg-[#E6EFF9] flex items-center justify-center">
-                        <Handshake size={22} style={{ color: "#0057B8" }} />
+                      <div className="w-14 h-14 rounded-full bg-[var(--sos-blue-light)] flex items-center justify-center">
+                        <Handshake size={22} style={{ color: "#007CF8" }} />
                       </div>
                     )}
                     <div>
                       <p className="font-bold text-gray-900">{p.name}</p>
                       {p.website && (
-                        <a href={p.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[#0057B8] hover:underline mt-0.5">
+                        <a href={p.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-[var(--sos-blue)] hover:underline mt-0.5">
                           <Globe size={11} />{p.website.replace(/^https?:\/\//, "")}
                         </a>
                       )}
@@ -209,7 +209,7 @@ export default function AdminPartnersPage() {
                 <input
                   type="text" required value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   placeholder="Ex: YARH DRC"
                 />
               </div>
@@ -220,7 +220,7 @@ export default function AdminPartnersPage() {
                   type="file"
                   accept="image/*"
                   onChange={e => handleLogoFileChange(e.target.files?.[0])}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                 />
                 {uploadingLogo && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
                 {form.logo && (
@@ -235,7 +235,7 @@ export default function AdminPartnersPage() {
                 <input
                   type="url" value={form.website}
                   onChange={e => setForm({ ...form, website: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   placeholder="https://www.example.org"
                 />
               </div>
@@ -245,7 +245,7 @@ export default function AdminPartnersPage() {
                 <textarea
                   value={form.description} rows={2}
                   onChange={e => setForm({ ...form, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8] resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] resize-none"
                   placeholder="Courte description du partenaire..."
                 />
               </div>
@@ -256,7 +256,7 @@ export default function AdminPartnersPage() {
                   <input
                     type="number" min={0} value={form.order}
                     onChange={e => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   />
                 </div>
                 <div className="flex items-end pb-0.5">
@@ -269,7 +269,7 @@ export default function AdminPartnersPage() {
 
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-50">Annuler</button>
-                <button type="submit" disabled={saving} className="flex-1 bg-[#0057B8] hover:bg-[#004A9E] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg">
+                <button type="submit" disabled={saving} className="flex-1 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg">
                   {saving ? "Enregistrement..." : editPartner ? "Mettre à jour" : "Ajouter"}
                 </button>
               </div>
@@ -286,7 +286,7 @@ export default function AdminPartnersPage() {
             <p className="text-gray-500 text-sm mb-6">Ce partenaire sera définitivement supprimé du site.</p>
             <div className="flex gap-3">
               <button onClick={() => setDeleteId(null)} className="flex-1 border border-gray-300 text-gray-700 font-semibold py-2.5 rounded-lg hover:bg-gray-50">Annuler</button>
-              <button onClick={() => handleDelete(deleteId)} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-lg">Supprimer</button>
+              <button onClick={() => handleDelete(deleteId)} className="flex-1 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-semibold py-2.5 rounded-lg">Supprimer</button>
             </div>
           </div>
         </div>

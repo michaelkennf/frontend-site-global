@@ -117,7 +117,7 @@ export default function AdminTeamPage() {
           </div>
           <button
             onClick={openCreate}
-            className="inline-flex items-center gap-2 bg-[#0057B8] hover:bg-[#004A9E] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] text-white font-semibold px-4 py-2.5 rounded-lg transition-colors"
           >
             <Plus size={18} />
             Ajouter un membre
@@ -125,7 +125,7 @@ export default function AdminTeamPage() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
+          <div className="bg-[var(--sos-red-light)] border border-[var(--sos-red)] text-[var(--sos-red)] px-4 py-3 rounded-lg mb-6 flex items-center justify-between">
             {error}
             <button onClick={() => setError(null)}><X size={16} /></button>
           </div>
@@ -172,7 +172,7 @@ export default function AdminTeamPage() {
                     </button>
                     <button
                       onClick={() => setDeleteId(m.id)}
-                      className="p-1.5 rounded hover:bg-red-50 transition-colors text-red-500"
+                      className="p-1.5 rounded hover:bg-[var(--sos-red-light)] transition-colors text-[var(--sos-red)]"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -189,7 +189,7 @@ export default function AdminTeamPage() {
                   </div>
                   <p className="font-bold text-gray-900">{m.nameFr}</p>
                   <p className="text-sm text-gray-400 italic">{m.nameEn}</p>
-                  <p className="text-sm font-medium text-[#0057B8] mt-1">{m.roleFr}</p>
+                  <p className="text-sm font-medium text-[var(--sos-blue)] mt-1">{m.roleFr}</p>
                   <p className="text-xs text-gray-400">{m.roleEn}</p>
                   {m.bio && (
                     <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">{m.bio}</p>
@@ -221,7 +221,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.nameFr}
                     onChange={e => setForm({ ...form, nameFr: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Ex: Dr. Marie Kabongo"
                   />
                 </div>
@@ -230,7 +230,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.nameEn}
                     onChange={e => setForm({ ...form, nameEn: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Ex: Dr. Marie Kabongo"
                   />
                 </div>
@@ -242,7 +242,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.roleFr}
                     onChange={e => setForm({ ...form, roleFr: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Ex: Directrice Générale"
                   />
                 </div>
@@ -251,7 +251,7 @@ export default function AdminTeamPage() {
                   <input
                     type="text" required value={form.roleEn}
                     onChange={e => setForm({ ...form, roleEn: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                     placeholder="Ex: Executive Director"
                   />
                 </div>
@@ -263,7 +263,7 @@ export default function AdminTeamPage() {
                   type="file"
                   accept="image/*"
                   onChange={e => handleImageFileChange(e.target.files?.[0])}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                 />
                 {uploadingImage && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
                 {form.image && (
@@ -278,7 +278,7 @@ export default function AdminTeamPage() {
                 <textarea
                   value={form.bio} rows={3}
                   onChange={e => setForm({ ...form, bio: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8] resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] resize-none"
                   placeholder="Courte description du membre..."
                 />
               </div>
@@ -289,7 +289,7 @@ export default function AdminTeamPage() {
                   <input
                     type="number" min={0} value={form.order}
                     onChange={e => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0057B8]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)]"
                   />
                 </div>
                 <div className="flex items-end pb-0.5">
@@ -297,7 +297,7 @@ export default function AdminTeamPage() {
                     <input
                       type="checkbox" checked={form.isActive}
                       onChange={e => setForm({ ...form, isActive: e.target.checked })}
-                      className="w-4 h-4 rounded text-[#0057B8]"
+                      className="w-4 h-4 rounded text-[var(--sos-blue)]"
                     />
                     <span className="text-sm font-medium text-gray-700">Visible sur le site</span>
                   </label>
@@ -314,7 +314,7 @@ export default function AdminTeamPage() {
                 </button>
                 <button
                   type="submit" disabled={saving}
-                  className="flex-1 bg-[#0057B8] hover:bg-[#004A9E] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors"
+                  className="flex-1 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors"
                 >
                   {saving ? "Enregistrement..." : editMember ? "Mettre à jour" : "Ajouter"}
                 </button>
@@ -339,7 +339,7 @@ export default function AdminTeamPage() {
               </button>
               <button
                 onClick={() => handleDelete(deleteId)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-lg"
+                className="flex-1 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-semibold py-2.5 rounded-lg"
               >
                 Supprimer
               </button>

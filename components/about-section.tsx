@@ -20,10 +20,10 @@ import {
 } from "lucide-react"
 
 const FALLBACK_CAROUSEL = [
-  { id: "f1", src: "/images/carousel-children.jpg", altFr: "Enfants qui jouent", altEn: "Children playing" },
-  { id: "f2", src: "/images/carousel-sister.jpg", altFr: "Fille portant sa sœur", altEn: "Girl carrying her sister" },
-  { id: "f3", src: "/images/carousel-farming.jpg", altFr: "Femmes en agriculture", altEn: "Women farming" },
-  { id: "f4", src: "/images/hero.png", altFr: "Terrain humanitaire", altEn: "Field work" },
+  { id: "f1", src: "/images/hero image.png", altFr: "Enfants qui jouent", altEn: "Children playing" },
+  { id: "f2", src: "/images/domaines/gestion-risques.png", altFr: "Fille portant sa sœur", altEn: "Girl carrying her sister" },
+  { id: "f3", src: "/images/domaines/sante-dssr.png", altFr: "Femmes en agriculture", altEn: "Women farming" },
+  { id: "f4", src: "/images/domaines/justice-climat.png", altFr: "Terrain humanitaire", altEn: "Field work" },
 ]
 
 export const valueIcons = [
@@ -81,7 +81,7 @@ export function AboutSection() {
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,87,184,0.12), transparent), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(227,30,36,0.06), transparent)",
+            "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,124,248,0.12), transparent), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(227,34,25,0.06), transparent)",
         }}
         aria-hidden
       />
@@ -99,7 +99,7 @@ export function AboutSection() {
             className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] mb-5 rounded-full px-5 py-2.5 shadow-sm"
             style={{
               color: "var(--sos-blue)",
-              background: "linear-gradient(135deg, rgba(0,87,184,0.14), rgba(0,87,184,0.06))",
+              background: "linear-gradient(135deg, rgba(0,124,248,0.14), rgba(0,124,248,0.06))",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
             }}
           >
@@ -112,7 +112,7 @@ export function AboutSection() {
             className="font-serif font-black text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-balance leading-[1.15] mb-6 px-3 py-2 rounded-2xl inline-block"
             style={{
               color: "var(--sos-blue)",
-              background: "linear-gradient(180deg, rgba(0,87,184,0.12) 0%, rgba(0,87,184,0.04) 100%)",
+              background: "linear-gradient(180deg, rgba(0,124,248,0.12) 0%, rgba(0,124,248,0.04) 100%)",
             }}
           >
             {t.about.whoWeAreTitle}
@@ -125,7 +125,7 @@ export function AboutSection() {
           <motion.div variants={fadeUp} className="mt-8">
             <Link
               href="/about"
-              className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-red-900/15 transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
+              className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-[0_12px_24px_-12px_rgba(227,34,25,0.25)] transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
             >
               {t.hero.learnMore}
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
@@ -165,13 +165,6 @@ export function AboutSection() {
                   />
                 </motion.div>
               </AnimatePresence>
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(10,30,70,0.45) 0%, transparent 45%), linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, transparent 35%)",
-                }}
-              />
               <button
                 type="button"
                 onClick={prevSlide}
@@ -202,9 +195,9 @@ export function AboutSection() {
               <div
                 className="absolute bottom-5 left-5 z-10 rounded-2xl px-5 py-4 shadow-lg ring-1 max-[380px]:hidden backdrop-blur-sm"
                 style={{
-                  background: "linear-gradient(135deg, rgba(227,30,36,0.12), rgba(255,255,255,0.92))",
-                  borderColor: "rgba(227,30,36,0.15)",
-                  boxShadow: "0 10px 40px -10px rgba(227,30,36,0.25)",
+                  background: "linear-gradient(135deg, rgba(227,34,25,0.12), rgba(255,255,255,0.92))",
+                  borderColor: "rgba(227,34,25,0.15)",
+                  boxShadow: "0 10px 40px -10px rgba(227,34,25,0.25)",
                 }}
               >
                 <div className="text-3xl font-black font-serif leading-none" style={{ color: "var(--sos-red)" }}>
@@ -230,14 +223,14 @@ export function AboutSection() {
                 label: t.about.mission,
                 text: t.about.missionText,
                 border: "var(--sos-blue)",
-                bg: "rgba(0, 87, 184, 0.06)",
+                bg: "rgba(0, 124, 248, 0.06)",
               },
               {
                 Icon: Eye,
                 label: t.about.vision,
                 text: t.about.visionText,
                 border: "var(--sos-red)",
-                bg: "rgba(227, 30, 36, 0.06)",
+                bg: "rgba(227, 34, 25, 0.06)",
               },
             ].map((item) => (
               <div

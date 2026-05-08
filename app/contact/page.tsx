@@ -17,7 +17,7 @@ import { SITE_MEDIA } from "@/lib/site-media-keys"
 function ContactContent() {
   const { t, lang } = useI18n()
   const headerMedia = useSiteMediaKeys([SITE_MEDIA.CONTACT_HEADER])[SITE_MEDIA.CONTACT_HEADER]
-  const headerSrc = headerMedia?.url ?? "/images/hero.png"
+  const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
     (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
   const [submitted, setSubmitted] = useState(false)
@@ -44,9 +44,9 @@ function ContactContent() {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0a1e46" }}>
+        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
           <div className="absolute inset-0">
-            <Image src={headerSrc} alt={headerAlt} fill className="object-cover object-center opacity-20" sizes="100vw" />
+            <Image src={headerSrc} alt={headerAlt} fill className="object-cover object-center" sizes="100vw" />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.h1
@@ -169,13 +169,13 @@ function ContactContent() {
                       animate={{ opacity: 1, scale: 1 }}
                       className="text-center py-12"
                     >
-                      <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle className="w-8 h-8 text-green-600" />
+                      <div className="w-16 h-16 rounded-full bg-[var(--sos-blue-light)] flex items-center justify-center mx-auto mb-4">
+                        <CheckCircle className="w-8 h-8 text-[var(--sos-blue)]" />
                       </div>
                       <h3 className="font-bold text-xl text-gray-900 mb-2">
                         {lang === "fr" ? "Message envoyé !" : "Message sent!"}
                       </h3>
-                      <p className="text-gray-600">{t.contact.success}</p>
+                      <p className="text-[var(--sos-blue-dark)]">{t.contact.success}</p>
                     </motion.div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
