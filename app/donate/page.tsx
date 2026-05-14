@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -42,7 +43,8 @@ function CopyButton({ text }: { text: string }) {
 }
 
 function DonatePage() {
-  const { lang } = useI18n()
+  const { lang, t } = useI18n()
+  const { c } = useSiteContent("donate", lang)
   const heroBg = useSiteMediaKeys([SITE_MEDIA.DONATE_HERO_BG])[SITE_MEDIA.DONATE_HERO_BG]
   const heroSrc = heroBg?.url ?? "/images/hero image.png"
   const heroAlt =
@@ -171,7 +173,7 @@ function DonatePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {lang === "fr" ? "Faire un don" : "Make a Donation"}
+              {c("donate.title", t.donate.title)}
             </motion.h1>
             <motion.p
               className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed"
@@ -179,9 +181,9 @@ function DonatePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {info?.donationDescription ?? (lang === "fr"
-                ? "Votre don soutient nos actions humanitaires à travers le monde. Chaque dollar compte."
-                : "Your donation supports our humanitarian actions around the world. Every dollar counts.")}
+              {info?.donationDescription?.trim()
+                ? info.donationDescription
+                : c("donate.subtitle", t.donate.subtitle)}
             </motion.p>
           </div>
         </section>

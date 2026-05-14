@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Inter, Montserrat } from 'next/font/google'
 import './globals.css'
 
@@ -39,6 +40,11 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}>
+        {process.env.NODE_ENV === 'development' && (
+          <Script id="dev-unregister-sw" strategy="beforeInteractive">
+            {`(function(){if(typeof navigator!=='undefined'&&navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}})();`}
+          </Script>
+        )}
         {children}
       </body>
     </html>

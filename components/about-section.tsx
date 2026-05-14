@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { siteMediaApi, type SiteMedia } from "@/lib/api"
+import { useSiteContent } from "@/hooks/use-site-content"
 import {
   ChevronLeft,
   ChevronRight,
@@ -37,6 +38,7 @@ export const valueIcons = [
 
 export function AboutSection() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("about", lang)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -115,10 +117,10 @@ export function AboutSection() {
               background: "linear-gradient(180deg, rgba(0,124,248,0.12) 0%, rgba(0,124,248,0.04) 100%)",
             }}
           >
-            {t.about.whoWeAreTitle}
+            {c("about.title", t.about.whoWeAreTitle)}
           </motion.h2>
           <motion.div variants={fadeUp} className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-pretty">
-            {t.about.whoWeAreParagraphs.map((p, i) => (
+            {c("about.description", t.about.whoWeAreParagraphs.join("\n\n")).split("\n\n").filter(Boolean).map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </motion.div>

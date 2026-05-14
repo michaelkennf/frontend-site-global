@@ -15,6 +15,7 @@ import {
   resolveDomainIllustrationUrl,
 } from "@/lib/domain-assets"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 type AreasBlock = typeof translations.fr.areas
 
@@ -78,10 +79,35 @@ function DomainIllustrationFigure({
 
 export function AreasSection() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("areas", lang)
+  const { c: cDomain } = useSiteContent("domain-index", lang)
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const domainKeys = DOMAIN_DISPLAY_ORDER.map((s) => DOMAIN_SLUG_MEDIA_KEY[s])
   const domainMedia = useSiteMediaKeys(domainKeys)
+
+  function areaCmsForSlug(slug: DomainSlug): { title: string; desc: string; items: string[] } {
+    const base = areaContentForSlug(slug, t.areas)
+    if (slug === "risques-catastrophes") {
+      return {
+        title: c("areas.area1Title", base.title),
+        desc: c("areas.area1Desc", base.desc),
+        items: base.items,
+      }
+    }
+    if (slug === "urgences-sanitaires") {
+      return {
+        title: c("areas.area2Title", base.title),
+        desc: c("areas.area2Desc", base.desc),
+        items: base.items,
+      }
+    }
+    return {
+      title: c("areas.area3Title", base.title),
+      desc: c("areas.area3Desc", base.desc),
+      items: base.items,
+    }
+  }
 
   return (
     <section id="work" className="py-20 md:py-28 bg-white" ref={ref}>
@@ -96,16 +122,16 @@ export function AreasSection() {
             className="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
             style={{ background: "var(--sos-blue-light)", color: "var(--sos-blue)" }}
           >
-            {t.areas.subtitle}
+            {c("areas.subtitle", t.areas.subtitle)}
           </span>
           <h2 className="font-serif font-black text-4xl lg:text-5xl text-gray-900 text-balance">
-            {t.areas.title}
+            {c("areas.title", t.areas.title)}
           </h2>
         </motion.div>
 
         <div className="flex flex-col gap-20 md:gap-28">
           {DOMAIN_DISPLAY_ORDER.map((slug, i) => {
-            const area = areaContentForSlug(slug, t.areas)
+            const area = areaCmsForSlug(slug)
             const mkey = DOMAIN_SLUG_MEDIA_KEY[slug]
             const m = domainMedia[mkey]
             const alt =
@@ -160,7 +186,7 @@ export function AreasSection() {
                   className="inline-flex items-center gap-2 text-base font-bold transition-colors hover:gap-3 w-fit"
                   style={{ color: "var(--sos-red)" }}
                 >
-                  {t.domainPages.discover}
+                  {cDomain("domainPages.discover", t.domainPages.discover)}
                   <ArrowRight size={18} />
                 </Link>
               </motion.div>

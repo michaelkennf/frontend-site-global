@@ -13,9 +13,11 @@ import { Mail, MapPin, Send, CheckCircle, Facebook, Twitter, Linkedin } from "lu
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 function ContactContent() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("contact", lang)
   const headerMedia = useSiteMediaKeys([SITE_MEDIA.CONTACT_HEADER])[SITE_MEDIA.CONTACT_HEADER]
   const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
@@ -55,7 +57,7 @@ function ContactContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {t.contact.title}
+              {c("contact.title", t.contact.title)}
             </motion.h1>
             <motion.p
               className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed"
@@ -63,7 +65,7 @@ function ContactContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {t.contact.subtitle}
+              {c("contact.subtitle", t.contact.subtitle)}
             </motion.p>
           </div>
         </section>
@@ -92,10 +94,8 @@ function ContactContent() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">{t.contact.address}</h3>
-                      <p className="text-gray-600">
-                        Avenue Patrice Emery Lumumba,<br />
-                        Commune d'Ibanda N°29<br />
-                        Bukavu, Sud-Kivu, RDC
+                      <p className="text-gray-600 whitespace-pre-line">
+                        {c("contact.address", "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, RDC")}
                       </p>
                     </div>
                   </div>

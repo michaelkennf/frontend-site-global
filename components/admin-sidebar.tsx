@@ -24,12 +24,14 @@ import {
   X,
   Shield,
   User,
+  FileEdit,
 } from "lucide-react"
 
 const menuItems = [
   { icon: LayoutDashboard, labelFr: "Tableau de bord", href: "/admin/dashboard", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: FileText, labelFr: "Articles", href: "/admin/articles", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Calendar, labelFr: "Activités", href: "/admin/activities", roles: ["ADMIN", "GESTIONNAIRE"] },
+  { icon: FileEdit, labelFr: "Contenu du site", href: "/admin/content", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: UserCircle2, labelFr: "Équipe", href: "/admin/team", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Handshake, labelFr: "Partenaires", href: "/admin/partners", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: TrendingUp, labelFr: "Chiffres d'impact", href: "/admin/stats", roles: ["ADMIN", "GESTIONNAIRE"] },
@@ -44,11 +46,17 @@ const menuItems = [
 export function AdminSidebar() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [user, setUser] = useState(getStoredUser())
+  const [user, setUser] = useState(getStoredUser)
 
   useEffect(() => {
     setUser(getStoredUser())
   }, [pathname])
+
+  useEffect(() => {
+    const handler = () => setUser(getStoredUser())
+    window.addEventListener("user-updated", handler)
+    return () => window.removeEventListener("user-updated", handler)
+  }, [])
 
   const visibleItems = menuItems.filter((item) => user?.role && item.roles.includes(user.role))
 

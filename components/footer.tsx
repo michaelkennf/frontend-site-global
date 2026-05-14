@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n"
 import Image from "next/image"
 import Link from "next/link"
 import { Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 const SOCIAL_LINKS = [
   {
@@ -24,7 +25,10 @@ const SOCIAL_LINKS = [
 ]
 
 export function Footer() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
+  const { c } = useSiteContent("footer", lang)
+  const { c: cNav } = useSiteContent("nav", lang)
+  const { c: cContact } = useSiteContent("contact", lang)
 
   return (
     <footer className="text-white" style={{ backgroundColor: "var(--sos-blue)" }}>
@@ -43,45 +47,45 @@ export function Footer() {
               <span className="font-serif text-xl font-bold">Global SOS</span>
             </Link>
             <p className="text-sm text-white/80 leading-relaxed">
-              {t.footer.description}
+              {c("footer.description", t.footer.description)}
             </p>
             <p className="text-sm font-medium italic text-white/90">
-              {t.footer.tagline}
+              {c("footer.tagline", t.footer.tagline)}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-4 font-serif text-lg font-semibold">{t.footer.quickLinks}</h4>
+            <h4 className="mb-4 font-serif text-lg font-semibold">{c("footer.quickLinks", t.footer.quickLinks)}</h4>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.home}
+                  {cNav("nav.home", t.nav.home)}
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.about}
+                  {cNav("nav.about", t.nav.about)}
                 </Link>
               </li>
               <li>
                 <Link href="/domaines" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.domains}
+                  {cNav("nav.domains", t.nav.domains)}
                 </Link>
               </li>
               <li>
                 <Link href="/news" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.news}
+                  {cNav("nav.news", t.nav.news)}
                 </Link>
               </li>
               <li>
                 <Link href="/donate" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.donate}
+                  {cNav("nav.donate", t.nav.donate)}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-white/80 transition-colors hover:text-white">
-                  {t.nav.contact}
+                  {cNav("nav.contact", t.nav.contact)}
                 </Link>
               </li>
             </ul>
@@ -89,14 +93,17 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="mb-4 font-serif text-lg font-semibold">{t.footer.contactUs}</h4>
+            <h4 className="mb-4 font-serif text-lg font-semibold">{c("footer.contactUs", t.footer.contactUs)}</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--sos-red)]" />
-                <span className="text-white/80">
-                  Avenue Patrice Emery Lumumba,<br />
-                  Commune d'Ibanda N°29<br />
-                  Bukavu, Sud-Kivu, RDC
+                <span className="text-white/80 whitespace-pre-line">
+                  {cContact(
+                    "contact.address",
+                    lang === "fr"
+                      ? "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, RDC"
+                      : "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, DRC",
+                  )}
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -113,7 +120,7 @@ export function Footer() {
 
           {/* Social */}
           <div>
-            <h4 className="mb-4 font-serif text-lg font-semibold">{t.footer.followUs}</h4>
+            <h4 className="mb-4 font-serif text-lg font-semibold">{c("footer.followUs", t.footer.followUs)}</h4>
             <div className="flex flex-wrap gap-3">
               {SOCIAL_LINKS.map(({ href, label, Icon }) => (
                 <a
@@ -133,7 +140,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-10 border-t border-white/20 pt-6 text-center text-sm text-white/70">
-          <p>&copy; {new Date().getFullYear()} Global SOS ASBL. {t.footer.rights}</p>
+          <p>&copy; {new Date().getFullYear()} Global SOS ASBL. {c("footer.rights", t.footer.rights)}</p>
         </div>
       </div>
     </footer>

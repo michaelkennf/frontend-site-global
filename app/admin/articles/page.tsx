@@ -20,6 +20,7 @@ import {
   EyeOff,
   Search,
   Send,
+  ImagePlus,
 } from "lucide-react"
 import {
   articlesApi,
@@ -45,6 +46,7 @@ type FormState = {
   contentFr: string
   contentEn: string
   image: string
+  inlineImages: string[]
   category: string
   status: ArticleStatus
 }
@@ -57,6 +59,7 @@ const emptyForm: FormState = {
   contentFr: "",
   contentEn: "",
   image: "",
+  inlineImages: ["", "", "", ""],
   category: "Général",
   status: "DRAFT",
 }
@@ -72,6 +75,7 @@ export default function AdminArticles() {
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadingInline, setUploadingInline] = useState<boolean[]>([false, false, false, false])
   const [error, setError] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all")
   const [search, setSearch] = useState("")
@@ -104,6 +108,10 @@ export default function AdminArticles() {
 
   function openEdit(a: Article) {
     setEditingId(a.id)
+    let parsed: string[] = []
+    try { parsed = a.inlineImages ? JSON.parse(a.inlineImages) : [] } catch { parsed = [] }
+    while (parsed.length < 4) parsed.push("")
+    parsed = parsed.slice(0, 4)
     setForm({
       titleFr: a.titleFr,
       titleEn: a.titleEn,
@@ -112,6 +120,7 @@ export default function AdminArticles() {
       contentFr: a.contentFr,
       contentEn: a.contentEn,
       image: a.image ?? "",
+      inlineImages: parsed,
       category: a.category || "Général",
       status: a.status,
     })
@@ -119,11 +128,33 @@ export default function AdminArticles() {
     setShowForm(true)
   }
 
+  async function handleInlineImageUpload(index: number, file?: File) {
+    if (!file) return
+    setUploadingInline((prev) => { const n = [...prev]; n[index] = true; return n })
+    try {
+      const url = await uploadsApi.uploadImage(file)
+      setForm((prev) => {
+        const imgs = [...prev.inlineImages]
+        while (imgs.length < 4) imgs.push("")
+        imgs[index] = url
+        return { ...prev, inlineImages: imgs }
+      })
+    } catch (err: any) {
+      setError(err.message ?? "Erreur upload image")
+    } finally {
+      setUploadingInline((prev) => { const n = [...prev]; n[index] = false; return n })
+    }
+  }
+
   async function handleSave(nextStatus?: ArticleStatus) {
     setSaving(true)
     setError("")
     try {
-      const payload: FormState = nextStatus ? { ...form, status: nextStatus } : form
+      const { inlineImages, ...rest } = form
+      const payload = {
+        ...(nextStatus ? { ...rest, status: nextStatus } : rest),
+        inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)),
+      }
       if (editingId) {
         await articlesApi.update(editingId, payload)
       } else {
@@ -333,6 +364,14 @@ export default function AdminArticles() {
                         />
                       </div>
                     </div>
+                    <p className="text-xs text-gray-500 bg-[var(--sos-blue-light)]/40 border border-[var(--sos-blue-light)] rounded-lg px-3 py-2">
+                      <strong className="text-gray-800">Traduction automatique :</strong> remplissez uniquement le français
+                      <em>ou</em> uniquement l&apos;anglais pour le titre, le résumé et le contenu — l&apos;autre langue sera générée à l&apos;enregistrement.
+                      <br />
+                      <strong className="text-gray-800">Images dans le texte :</strong> insérez{" "}
+                      <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> …{" "}
+                      <code className="text-[11px] bg-white px-1 rounded">[[IMG4]]</code> dans le contenu aux endroits souhaités, puis uploadez les photos ci-dessous (facultatif).
+                    </p>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-medium text-gray-700 mb-1 block">
@@ -378,14 +417,51 @@ export default function AdminArticles() {
                       )}
                       {form.image && (
                         <div className="mt-2 h-32 rounded-md overflow-hidden border border-gray-200">
-                          <img
-                            src={form.image}
-                            alt="Aperçu article"
-                            className="w-full h-full object-cover"
-                          />
+                          <img src={form.image} alt="Aperçu couverture" className="w-full h-full object-cover" />
                         </div>
                       )}
                     </div>
+
+                    {/* Images inline */}
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center gap-1.5">
+                        <ImagePlus size={15} />
+                        Images dans le texte (jusqu&apos;à 4 — [[IMG1]] … [[IMG4]])
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[0, 1, 2, 3].map((idx) => (
+                          <div key={idx} className="flex flex-col gap-1">
+                            <div className="relative h-24 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden">
+                              {form.inlineImages[idx] ? (
+                                <>
+                                  <img src={form.inlineImages[idx]} alt={`Image ${idx + 1}`} className="w-full h-full object-cover" />
+                                  <button
+                                    type="button"
+                                    onClick={() => setForm((prev) => { const imgs = [...prev.inlineImages]; imgs[idx] = ""; return { ...prev, inlineImages: imgs } })}
+                                    className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 hover:bg-red-50"
+                                  >
+                                    <X size={12} className="text-red-500" />
+                                  </button>
+                                </>
+                              ) : (
+                                <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
+                                  {uploadingInline[idx] ? (
+                                    <Loader2 size={18} className="animate-spin text-gray-400" />
+                                  ) : (
+                                    <>
+                                      <ImagePlus size={18} className="text-gray-300" />
+                                      <span className="text-[10px] text-gray-400 mt-1">Photo {idx + 1}</span>
+                                    </>
+                                  )}
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleInlineImageUpload(idx, e.target.files?.[0])} />
+                                </label>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
                     {error && <p className="text-[var(--sos-red)] text-sm">{error}</p>}
                     <div className="flex flex-wrap gap-3 justify-end pt-2">
                       <Button variant="outline" onClick={() => setShowForm(false)}>

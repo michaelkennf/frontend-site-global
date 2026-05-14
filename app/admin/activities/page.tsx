@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2 } from "lucide-react"
+import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2, ImagePlus } from "lucide-react"
 import { activitiesApi, Activity, uploadsApi } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
 
 const emptyForm = {
   titleFr: "", titleEn: "", descriptionFr: "", descriptionEn: "",
-  image: "", location: "", date: "", category: "Général",
+  image: "", inlineImages: ["", "", "", ""], location: "", date: "", category: "Général",
   status: "ONGOING" as "ONGOING" | "COMPLETED",
 }
 
@@ -34,6 +34,7 @@ export default function AdminActivities() {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadingInline, setUploadingInline] = useState<boolean[]>([false, false, false, false])
   const [error, setError] = useState("")
 
   useEffect(() => {
@@ -52,12 +53,17 @@ export default function AdminActivities() {
 
   function openEdit(a: Activity) {
     setEditingId(a.id)
+    let parsed: string[] = []
+    try { parsed = a.inlineImages ? JSON.parse(a.inlineImages) : [] } catch { parsed = [] }
+    while (parsed.length < 4) parsed.push("")
+    parsed = parsed.slice(0, 4)
     setForm({
       titleFr: a.titleFr,
       titleEn: a.titleEn,
       descriptionFr: a.descriptionFr,
       descriptionEn: a.descriptionEn,
       image: a.image ?? "",
+      inlineImages: parsed,
       location: a.location,
       date: a.date,
       category: a.category ?? "Général",
@@ -66,11 +72,28 @@ export default function AdminActivities() {
     setShowForm(true)
   }
 
+  async function handleInlineImageUpload(index: number, file?: File) {
+    if (!file) return
+    setUploadingInline((prev) => { const n = [...prev]; n[index] = true; return n })
+    try {
+      const url = await uploadsApi.uploadImage(file)
+      setForm((prev) => {
+        const imgs = [...prev.inlineImages]
+        while (imgs.length < 4) imgs.push("")
+        imgs[index] = url
+        return { ...prev, inlineImages: imgs }
+      })
+    } catch (err: any) { setError(err.message ?? "Erreur upload") }
+    finally { setUploadingInline((prev) => { const n = [...prev]; n[index] = false; return n }) }
+  }
+
   async function handleSave() {
     setSaving(true); setError("")
     try {
-      if (editingId) await activitiesApi.update(editingId, form)
-      else await activitiesApi.create(form)
+      const { inlineImages, ...rest } = form
+      const payload = { ...rest, inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)) }
+      if (editingId) await activitiesApi.update(editingId, payload)
+      else await activitiesApi.create(payload)
       setShowForm(false); fetchActivities()
     } catch (err: any) { setError(err.message) }
     finally { setSaving(false) }
@@ -129,8 +152,13 @@ export default function AdminActivities() {
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (FR)</label><Textarea rows={3} value={form.descriptionFr} onChange={(e) => setForm({ ...form, descriptionFr: e.target.value })} /></div>
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (EN)</label><Textarea rows={3} value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} /></div>
                     </div>
+                    <p className="text-xs text-gray-500 bg-[var(--sos-blue-light)]/40 border border-[var(--sos-blue-light)] rounded-lg px-3 py-2">
+                      <strong className="text-gray-800">Traduction automatique :</strong> une seule langue suffit pour le titre et la description — l&apos;autre sera générée à l&apos;enregistrement.
+                      <br />
+                      <strong className="text-gray-800">Images dans le texte :</strong> placez <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> … <code className="text-[11px] bg-white px-1 rounded">[[IMG4]]</code> dans la description aux endroits voulus (optionnel).
+                    </p>
                     <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Image de l'activité</label>
+                      <label className="text-sm font-medium text-gray-700 mb-1 block">Image de couverture</label>
                       <Input type="file" accept="image/*" onChange={(e) => handleImageFileChange(e.target.files?.[0])} />
                       {uploadingImage && <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>}
                       {form.image && (
@@ -138,6 +166,35 @@ export default function AdminActivities() {
                           <img src={form.image} alt="Aperçu activité" className="w-full h-full object-cover" />
                         </div>
                       )}
+                    </div>
+
+                    {/* Images inline */}
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center gap-1.5">
+                        <ImagePlus size={15} />
+                        Images dans le texte (jusqu&apos;à 4 — [[IMG1]] … [[IMG4]])
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        {[0, 1, 2, 3].map((idx) => (
+                          <div key={idx}>
+                            <div className="relative h-24 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 overflow-hidden">
+                              {form.inlineImages[idx] ? (
+                                <>
+                                  <img src={form.inlineImages[idx]} alt={`Image ${idx + 1}`} className="w-full h-full object-cover" />
+                                  <button type="button" onClick={() => setForm((prev) => { const imgs = [...prev.inlineImages]; imgs[idx] = ""; return { ...prev, inlineImages: imgs } })} className="absolute top-1 right-1 bg-white/90 rounded-full p-0.5 hover:bg-red-50">
+                                    <X size={12} className="text-red-500" />
+                                  </button>
+                                </>
+                              ) : (
+                                <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
+                                  {uploadingInline[idx] ? <Loader2 size={18} className="animate-spin text-gray-400" /> : <><ImagePlus size={18} className="text-gray-300" /><span className="text-[10px] text-gray-400 mt-1">Photo {idx + 1}</span></>}
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleInlineImageUpload(idx, e.target.files?.[0])} />
+                                </label>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Localisation</label><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Bukavu, Sud-Kivu" /></div>

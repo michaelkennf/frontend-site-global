@@ -7,11 +7,13 @@ import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
 import { MapPin, Calendar, Clock3, Users, ArrowUpRight, ChevronUp, ChevronDown, ArrowRight } from "lucide-react"
 import { activitiesApi, Activity } from "@/lib/api"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 const AUTO_MS = 5500
 
 export function ActivitiesSection() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("activities", lang)
   const [activities, setActivities] = useState<Activity[]>([])
   const [currentSide, setCurrentSide] = useState(0)
   const [direction, setDirection] = useState(0)
@@ -81,7 +83,7 @@ export function ActivitiesSection() {
                 color: "var(--sos-blue)",
               }}
             >
-              {t.activities.subtitle}
+              {c("activities.subtitle", t.activities.subtitle)}
             </span>
             <h2 className="font-serif font-black text-4xl sm:text-5xl lg:text-[3.35rem] tracking-tight text-balance leading-[1.05]">
               <span style={{ color: "#0d3356" }}>
@@ -96,7 +98,7 @@ export function ActivitiesSection() {
             href="/news"
             className="group inline-flex shrink-0 items-center justify-center gap-2 self-start lg:self-auto rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)] transition-all shadow-sm"
           >
-            {t.activities.viewAll}
+            {c("activities.viewAll", t.activities.viewAll)}
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
         </motion.div>

@@ -18,7 +18,7 @@ export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(getStoredUser())
 
   // Name
-  const [name, setName] = useState(currentUser?.name ?? "")
+  const [name, setName] = useState("")
   const [nameSaving, setNameSaving] = useState(false)
   const [nameSaved, setNameSaved] = useState(false)
   const [nameError, setNameError] = useState("")
@@ -33,13 +33,17 @@ export default function AdminSettings() {
   const [pwdSaved, setPwdSaved] = useState(false)
   const [pwdError, setPwdError] = useState("")
 
-  // Avatar
-  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatar ?? "")
+  // Avatar — init in useEffect to avoid SSR/hydration mismatch
+  const [avatarUrl, setAvatarUrl] = useState("")
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [avatarError, setAvatarError] = useState("")
 
   useEffect(() => {
     if (!isAuthenticated()) { router.push("/admin"); return }
+    const stored = getStoredUser()
+    setCurrentUser(stored)
+    setName(stored?.name ?? "")
+    setAvatarUrl(stored?.avatar ?? "")
   }, [router])
 
   const initials = currentUser?.name
@@ -53,6 +57,7 @@ export default function AdminSettings() {
       const token = localStorage.getItem("access_token") ?? ""
       saveAuth(token, { ...currentUser!, ...updated })
       setCurrentUser({ ...currentUser!, ...updated })
+      window.dispatchEvent(new CustomEvent("user-updated"))
       setNameSaved(true)
       setTimeout(() => setNameSaved(false), 3000)
     } catch (err: any) {
@@ -86,6 +91,7 @@ export default function AdminSettings() {
       saveAuth(token, { ...currentUser!, ...updated })
       setCurrentUser({ ...currentUser!, ...updated })
       setAvatarUrl(url)
+      window.dispatchEvent(new CustomEvent("user-updated"))
     } catch (err: any) {
       setAvatarError(err.message ?? "Erreur lors de l'upload")
     } finally {

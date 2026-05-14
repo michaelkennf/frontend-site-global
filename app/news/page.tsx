@@ -20,6 +20,7 @@ import {
   formatCategoryLabelOrAll,
 } from "@/lib/blog-categories"
 import { cn } from "@/lib/utils"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 function readingMinutes(text: string): number {
   if (!text) return 1
@@ -44,6 +45,7 @@ function formatDate(value: string, lang: "fr" | "en"): string {
 
 function NewsContent() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("news", lang)
   const headerMedia = useSiteMediaKeys([SITE_MEDIA.NEWS_LIST_HEADER])[SITE_MEDIA.NEWS_LIST_HEADER]
   const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
@@ -115,7 +117,7 @@ function NewsContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {t.news.title}
+              {c("news.title", t.news.title)}
             </motion.h1>
             <motion.p
               className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
@@ -123,7 +125,7 @@ function NewsContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {t.news.subtitle}
+              {c("news.subtitle", t.news.subtitle)}
             </motion.p>
           </div>
         </section>
@@ -135,7 +137,7 @@ function NewsContent() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-gray-500">
-                {t.news.filterTitle}
+                {c("news.filterTitle", t.news.filterTitle)}
               </p>
               <div className="flex flex-wrap gap-2">
                 {filterButtons.map((btn) => {
@@ -170,7 +172,7 @@ function NewsContent() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-20">
                 <Newspaper className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-gray-500">{t.news.empty}</p>
+                <p className="text-gray-500">{c("news.empty", t.news.empty)}</p>
               </div>
             ) : (
               <>
@@ -197,7 +199,7 @@ function NewsContent() {
                       />
                       <div className="absolute top-5 left-5 flex flex-wrap gap-2">
                         <span className="text-[11px] font-black px-3 py-1 rounded-full bg-[var(--sos-red)] text-white uppercase tracking-wider">
-                          {t.news.featured}
+                          {c("news.featured", t.news.featured)}
                         </span>
                         {featured.domain && (
                           <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/95 text-[var(--sos-blue-dark)] uppercase tracking-wider">
@@ -222,7 +224,7 @@ function NewsContent() {
                               ? featured.item.descriptionFr
                               : featured.item.descriptionEn,
                           )}{" "}
-                          {t.news.readingMin}
+                          {c("news.readingMin", t.news.readingMin)}
                         </span>
                       </div>
                       <h2 className="font-serif font-black text-2xl md:text-3xl lg:text-4xl text-gray-900 leading-tight mb-4 text-pretty">
@@ -242,7 +244,7 @@ function NewsContent() {
                         href={`/news/${featured.item.id}`}
                         className="inline-flex items-center gap-2 text-[var(--sos-blue)] font-bold hover:gap-3 transition-all"
                       >
-                        {t.news.readMore}
+                        {c("news.readMore", t.news.readMore)}
                         <ArrowRight size={18} />
                       </Link>
                     </div>
@@ -254,7 +256,7 @@ function NewsContent() {
                   <>
                     <div className="flex items-end justify-between mb-8">
                       <h3 className="font-serif font-bold text-xl md:text-2xl text-gray-900">
-                        {t.news.latest}
+                        {c("news.latest", t.news.latest)}
                       </h3>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -300,7 +302,7 @@ function NewsContent() {
                                   {readingMinutes(
                                     lang === "fr" ? a.descriptionFr : a.descriptionEn,
                                   )}{" "}
-                                  {t.news.readingMin}
+                                  {c("news.readingMin", t.news.readingMin)}
                                 </span>
                               </div>
                               <h3 className="font-serif font-bold text-gray-900 text-lg leading-snug mb-2 line-clamp-2 group-hover:text-[var(--sos-red)] transition-colors">
@@ -320,7 +322,7 @@ function NewsContent() {
                                   href={`/news/${a.id}`}
                                   className="inline-flex items-center gap-1 text-sm font-bold text-[var(--sos-blue)] hover:gap-2 transition-all"
                                 >
-                                  {t.news.readMore}
+                                  {c("news.readMore", t.news.readMore)}
                                   <ArrowRight size={14} />
                                 </Link>
                               </div>

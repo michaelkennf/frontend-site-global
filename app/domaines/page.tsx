@@ -10,6 +10,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { DOMAIN_DISPLAY_ORDER, DOMAIN_SLUG_MEDIA_KEY, resolveDomainIllustrationUrl } from "@/lib/domain-assets"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 const accentMap: Record<string, { color: string; bg: string }> = {
   "risques-catastrophes": { color: "var(--sos-blue)", bg: "var(--sos-blue-light)" },
@@ -18,7 +19,9 @@ const accentMap: Record<string, { color: string; bg: string }> = {
 }
 
 function DomainesContent() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
+  const { c } = useSiteContent("domain-index", lang)
+  const { c: cAreas } = useSiteContent("areas", lang)
   const dp = t.domainPages
   const domainKeys = DOMAIN_DISPLAY_ORDER.map((s) => DOMAIN_SLUG_MEDIA_KEY[s])
   const domainMedia = useSiteMediaKeys(domainKeys)
@@ -39,13 +42,13 @@ function DomainesContent() {
           />
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <span className="inline-block text-xs font-bold uppercase tracking-[0.25em] px-3 py-1 rounded-full mb-4 bg-[var(--sos-blue-light)] text-[var(--sos-blue)]">
-              {t.areas.subtitle}
+              {cAreas("areas.subtitle", t.areas.subtitle)}
             </span>
             <h1 className="font-serif font-black text-4xl sm:text-5xl lg:text-6xl text-gray-900 text-balance mb-5 leading-[1.1]">
-              {dp.indexTitle}
+              {c("domainPages.indexTitle", dp.indexTitle)}
             </h1>
             <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-              {dp.indexSubtitle}
+              {c("domainPages.indexSubtitle", dp.indexSubtitle)}
             </p>
           </div>
         </section>
@@ -84,18 +87,18 @@ function DomainesContent() {
                       className="inline-block self-start text-[11px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3"
                       style={{ background: accent.bg, color: accent.color }}
                     >
-                      {String(i + 1).padStart(2, "0")} · {dp.indexTitle}
+                      {String(i + 1).padStart(2, "0")} · {c("domainPages.indexTitle", dp.indexTitle)}
                     </span>
                     <h2 className="font-serif font-black text-xl md:text-2xl text-gray-900 mb-3 leading-snug">
                       <Link
                         href={`/domaines/${slug}`}
                         className="hover:text-[var(--sos-red)] transition-colors"
                       >
-                        {block.title}
+                        {c(`domain.${slug}.title`, block.title)}
                       </Link>
                     </h2>
                     <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-5 flex-1">
-                      {block.excerpt}
+                      {c(`domain.${slug}.excerpt`, block.excerpt)}
                     </p>
                     {block.actions && block.actions.length > 0 && (
                       <ul className="space-y-2 mb-6">
@@ -119,7 +122,7 @@ function DomainesContent() {
                       className="inline-flex items-center gap-2 font-bold text-sm hover:gap-3 transition-all w-fit"
                       style={{ color: "var(--sos-red)" }}
                     >
-                      {dp.discover}
+                      {c("domainPages.discover", dp.discover)}
                       <ArrowRight size={16} />
                     </Link>
                   </div>

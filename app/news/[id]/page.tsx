@@ -15,6 +15,7 @@ import {
   classifyActivityForDomain,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
+import { renderBodyWithInlineImages } from "@/lib/render-inline-body"
 
 function readingMinutes(text: string): number {
   if (!text) return 1
@@ -207,16 +208,20 @@ function ActivityContent() {
 
         <HeroRedDivider />
 
-        {/* Corps de l'article */}
+        {/* Corps de l'article (texte + [[IMG1]]…[[IMG4]] dans le contenu) */}
         <section className="py-14 bg-white">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap"
+              className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
             >
-              {lang === "fr" ? item.descriptionFr : item.descriptionEn}
+              {renderBodyWithInlineImages(
+                lang === "fr" ? item.descriptionFr : item.descriptionEn,
+                item.inlineImages,
+                lang === "fr" ? item.titleFr : item.titleEn,
+              )}
             </motion.div>
           </div>
         </section>

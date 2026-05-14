@@ -9,9 +9,11 @@ import { Menu, X, ChevronDown } from "lucide-react"
 import { useI18n, Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { DOMAIN_DISPLAY_ORDER } from "@/lib/domain-assets"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 export function Navbar() {
   const { t, lang, setLang } = useI18n()
+  const { c } = useSiteContent("nav", lang)
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -42,11 +44,11 @@ export function Navbar() {
   }, [pathname])
 
   const navLinks = [
-    { label: t.nav.home, href: "/" },
-    { label: t.nav.about, href: "/about" },
-    { label: t.nav.domains, href: "/domaines", hasDropdown: true },
-    { label: t.nav.news, href: "/news" },
-    { label: t.nav.contact, href: "/contact" },
+    { label: c("nav.home", t.nav.home), href: "/" },
+    { label: c("nav.about", t.nav.about), href: "/about" },
+    { label: c("nav.domains", t.nav.domains), href: "/domaines", hasDropdown: true },
+    { label: c("nav.news", t.nav.news), href: "/news" },
+    { label: c("nav.contact", t.nav.contact), href: "/contact" },
   ]
 
   const domainLinks = DOMAIN_DISPLAY_ORDER.map((slug) => ({
@@ -220,7 +222,7 @@ export function Navbar() {
                 href="/donate"
                 className="bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white px-5 py-2.5 rounded-full text-sm font-bold transition-colors"
               >
-                {t.nav.donate}
+                {c("nav.donate", t.nav.donate)}
               </Link>
             </div>
 
@@ -343,7 +345,7 @@ export function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     className="flex-1 text-center bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white px-4 py-2 rounded-full text-sm font-bold transition-colors"
                   >
-                    {t.nav.donate}
+                    {c("nav.donate", t.nav.donate)}
                   </Link>
                 </div>
               </div>

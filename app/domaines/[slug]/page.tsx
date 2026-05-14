@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { I18nProvider, useI18n } from "@/lib/i18n"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
@@ -18,6 +18,7 @@ import {
   classifyActivityForDomain,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 const accentBySlug: Record<DomainSlug, { color: string; bg: string }> = {
   "risques-catastrophes": { color: "var(--sos-blue)", bg: "var(--sos-blue-light)" },
@@ -29,6 +30,17 @@ function DomainDetailContent() {
   const { t, lang } = useI18n()
   const params = useParams()
   const slugParam = typeof params.slug === "string" ? params.slug : ""
+  const cmsR = useSiteContent("domain-risques-catastrophes", lang)
+  const cmsU = useSiteContent("domain-urgences-sanitaires", lang)
+  const cmsJ = useSiteContent("domain-justice-climatique", lang)
+  const cmsDomain = useSiteContent("domain-index", lang)
+  const cmsActivities = useSiteContent("activities", lang)
+
+  function cDomain(slug: DomainSlug) {
+    if (slug === "risques-catastrophes") return cmsR.c
+    if (slug === "urgences-sanitaires") return cmsU.c
+    return cmsJ.c
+  }
   const mediaKey = isDomainSlug(slugParam) ? DOMAIN_SLUG_MEDIA_KEY[slugParam] : null
   const domainMedia = useSiteMediaKeys(mediaKey ? [mediaKey] : [])
   const heroMedia = mediaKey ? domainMedia[mediaKey] : null
@@ -54,8 +66,16 @@ function DomainDetailContent() {
   const slug = slugParam
   const dp = t.domainPages
   const page = dp[slug]
+  const c = cDomain(slug)
   const heroSrc = resolveDomainIllustrationUrl(slug, heroMedia)
   const accent = accentBySlug[slug]
+
+  const leadText = c(`domain.${slug}.lead`, page.lead)
+  const bodyRaw = c(`domain.${slug}.body`, page.paragraphs.join("\n\n"))
+  const bodyParagraphs =
+    bodyRaw.split(/\n\n+/).map((p) => p.trim()).filter(Boolean).length > 0
+      ? bodyRaw.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
+      : page.paragraphs
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -69,7 +89,7 @@ function DomainDetailContent() {
               className="inline-flex items-center gap-1 text-[var(--sos-blue)] hover:text-[var(--sos-blue-dark)] text-sm font-medium mb-6"
             >
               <ChevronLeft size={18} />
-              {dp.indexTitle}
+              {cmsDomain.c("domainPages.indexTitle", dp.indexTitle)}
             </Link>
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-7">
@@ -77,13 +97,13 @@ function DomainDetailContent() {
                   className="inline-block text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-5"
                   style={{ background: accent.bg, color: accent.color }}
                 >
-                  {dp.indexTitle}
+                  {cmsDomain.c("domainPages.indexTitle", dp.indexTitle)}
                 </span>
                 <h1 className="font-serif font-black text-3xl sm:text-4xl lg:text-5xl text-gray-900 text-balance leading-tight mb-5">
-                  {page.title}
+                  {c(`domain.${slug}.title`, page.title)}
                 </h1>
                 <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-2xl">
-                  {page.excerpt}
+                  {c(`domain.${slug}.excerpt`, page.excerpt)}
                 </p>
               </div>
               <div className="lg:col-span-5">
@@ -107,7 +127,7 @@ function DomainDetailContent() {
         {/* Contenu éditorial */}
         <section className="py-14 md:py-16 bg-white">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            {page.lead && (
+            {leadText.trim() && (
               <motion.p
                 className="text-xl md:text-2xl text-gray-900 font-medium leading-relaxed mb-10 pl-5 border-l-4"
                 style={{ borderColor: accent.color }}
@@ -116,11 +136,11 @@ function DomainDetailContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                {page.lead}
+                {leadText}
               </motion.p>
             )}
             <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
-              {page.paragraphs.map((p, i) => (
+              {bodyParagraphs.map((p, i) => (
                 <motion.p
                   key={i}
                   className="leading-relaxed text-base md:text-lg text-pretty"
@@ -151,10 +171,10 @@ function DomainDetailContent() {
                   className="inline-block text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3"
                   style={{ background: accent.bg, color: accent.color }}
                 >
-                  {dp.actionsTitle}
+                  {cmsDomain.c("domainPages.actionsTitle", dp.actionsTitle)}
                 </span>
                 <h2 className="font-serif font-black text-3xl md:text-4xl text-gray-900">
-                  {dp.actionsTitle}
+                  {cmsDomain.c("domainPages.actionsTitle", dp.actionsTitle)}
                 </h2>
               </motion.div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -190,7 +210,7 @@ function DomainDetailContent() {
                     className="inline-block text-xs font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3"
                     style={{ background: accent.bg, color: accent.color }}
                   >
-                    {dp.readArticles}
+                    {cmsDomain.c("domainPages.readArticles", dp.readArticles)}
                   </span>
                   <h2 className="font-serif font-black text-3xl md:text-4xl text-gray-900">
                     {lang === "fr" ? "Sur le terrain" : "From the field"}
@@ -200,7 +220,7 @@ function DomainDetailContent() {
                   href="/news"
                   className="inline-flex items-center gap-2 text-sm font-bold text-[var(--sos-blue)] hover:gap-3 transition-all"
                 >
-                  {t.activities.viewAll}
+                  {cmsActivities.c("activities.viewAll", t.activities.viewAll)}
                   <ArrowRight size={16} />
                 </Link>
               </div>

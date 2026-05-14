@@ -193,6 +193,14 @@ export const siteMediaApi = {
     request<void>(`/site-media/${id}`, { method: 'DELETE' }, true),
 };
 
+// ── Site Content (CMS) ─────────────────────────────────────────────
+export const siteContentApi = {
+  getBySection: (section: string) => request<SiteContent[]>(`/site-content/public?section=${section}`),
+  getAllAdmin: () => request<SiteContent[]>('/site-content/admin/all', {}, true),
+  upsert: (key: string, data: { valueFr: string; valueEn: string; section: string }) =>
+    request<SiteContent>(`/site-content/${key}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+};
+
 // ── Types ──────────────────────────────────────────────────────────
 export interface AdminUser {
   id: string;
@@ -211,6 +219,7 @@ export interface Activity {
   descriptionFr: string;
   descriptionEn: string;
   image?: string;
+  inlineImages?: string;
   location: string;
   date: string;
   category?: string;
@@ -230,6 +239,7 @@ export interface Article {
   contentFr: string;
   contentEn: string;
   image?: string;
+  inlineImages?: string;
   status: ArticleStatus;
   category: string;
   views: number;
@@ -333,6 +343,15 @@ export interface SiteMedia {
   order: number;
   isActive: boolean;
   createdAt: string;
+  updatedAt: string;
+}
+
+export interface SiteContent {
+  id: string;
+  key: string;
+  valueFr: string;
+  valueEn: string;
+  section: string;
   updatedAt: string;
 }
 

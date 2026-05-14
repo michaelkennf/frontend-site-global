@@ -7,9 +7,11 @@ import { useI18n } from "@/lib/i18n"
 import { ArrowRight, Heart } from "lucide-react"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 
 export function HeroSection() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("hero", lang)
   const media = useSiteMediaKeys([SITE_MEDIA.HERO_HOME])
   const heroMedia = media[SITE_MEDIA.HERO_HOME]
   const heroSrc = "/images/hero image.png"
@@ -55,7 +57,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
           >
-            {t.hero.headline}
+            {c("hero.headline", t.hero.headline)}
           </motion.h1>
 
           {/* Sub text */}
@@ -65,7 +67,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.6 }}
           >
-            {t.hero.sub}
+            {c("hero.subtitle", t.hero.sub)}
           </motion.p>
 
           {/* CTA Buttons */}
