@@ -7,6 +7,7 @@ import { AboutSection } from "@/components/about-section"
 import { ActivitiesSection } from "@/components/activities-section"
 import { NewsletterSection } from "@/components/newsletter-section"
 import { PartnersSection } from "@/components/partners-section"
+import { VideosSection } from "@/components/videos-section"
 import { Footer } from "@/components/footer"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 
@@ -20,6 +21,7 @@ export default function HomePage() {
           <HeroRedDivider />
           <AboutSection />
           <ActivitiesSection />
+          <VideosSection />
           <PartnersSection />
           <NewsletterSection />
         </main>

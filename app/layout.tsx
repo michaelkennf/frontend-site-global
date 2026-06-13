@@ -1,6 +1,7 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { Inter, Montserrat } from 'next/font/google'
+import { LOGO_SRC } from '@/lib/brand'
 import './globals.css'
 
 const inter = Inter({
@@ -23,13 +24,14 @@ export const metadata: Metadata = {
   keywords: ['humanitarian', 'NGO', 'global sos', 'humanitaire', 'aide', 'urgence', 'Bukavu', 'Sud-Kivu', 'RDC', 'Congo', 'ASBL'],
   authors: [{ name: 'Global SOS ASBL' }],
   icons: {
-    icon: [
-      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
-      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
-    ],
-    shortcut: ['/favicon.png'],
-    apple: ['/apple-touch-icon.png'],
+    icon: [{ url: LOGO_SRC, type: 'image/png' }],
+    shortcut: [LOGO_SRC],
+    apple: [LOGO_SRC],
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#20B7E6',
 }
 
 export default function RootLayout({

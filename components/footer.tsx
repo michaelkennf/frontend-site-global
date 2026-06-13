@@ -1,9 +1,8 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
-import Image from "next/image"
 import Link from "next/link"
-import { Facebook, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Mail, MapPin } from "lucide-react"
 import { useSiteContent } from "@/hooks/use-site-content"
 
 const SOCIAL_LINKS = [
@@ -34,18 +33,8 @@ export function Footer() {
     <footer className="text-white" style={{ backgroundColor: "var(--sos-blue)" }}>
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Logo & Description */}
+          {/* Description */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/images/logo SOS.png"
-                alt="Global SOS"
-                width={60}
-                height={60}
-                className="rounded-lg bg-white p-1"
-              />
-              <span className="font-serif text-xl font-bold">Global SOS</span>
-            </Link>
             <p className="text-sm text-white/80 leading-relaxed">
               {c("footer.description", t.footer.description)}
             </p>
@@ -86,6 +75,11 @@ export function Footer() {
               <li>
                 <Link href="/contact" className="text-white/80 transition-colors hover:text-white">
                   {cNav("nav.contact", t.nav.contact)}
+                </Link>
+              </li>
+              <li>
+                <Link href="/zones" className="text-white/80 transition-colors hover:text-white">
+                  {cNav("nav.zones", t.nav.zones)}
                 </Link>
               </li>
             </ul>

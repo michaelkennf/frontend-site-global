@@ -25,7 +25,13 @@ async function request<T>(
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: 'Erreur réseau' }));
-    throw new Error(error.message ?? `Erreur ${res.status}`);
+    const msg = error.message;
+    const detail = Array.isArray(msg)
+      ? msg.join(', ')
+      : typeof msg === 'string'
+        ? msg
+        : `Erreur ${res.status}`;
+    throw new Error(detail);
   }
 
   // 204 No Content
@@ -193,6 +199,18 @@ export const siteMediaApi = {
     request<void>(`/site-media/${id}`, { method: 'DELETE' }, true),
 };
 
+// ── Vidéos YouTube (accueil) ───────────────────────────────────────
+export const videosApi = {
+  getPublic: () => request<SiteVideo[]>('/videos/public'),
+  getAll: () => request<SiteVideo[]>('/videos', {}, true),
+  create: (data: Partial<SiteVideo>) =>
+    request<SiteVideo>('/videos', { method: 'POST', body: JSON.stringify(data) }, true),
+  update: (id: string, data: Partial<SiteVideo>) =>
+    request<SiteVideo>(`/videos/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+  delete: (id: string) =>
+    request<void>(`/videos/${id}`, { method: 'DELETE' }, true),
+};
+
 // ── Site Content (CMS) ─────────────────────────────────────────────
 export const siteContentApi = {
   getBySection: (section: string) => request<SiteContent[]>(`/site-content/public?section=${section}`),
@@ -220,6 +238,7 @@ export interface Activity {
   descriptionEn: string;
   image?: string;
   inlineImages?: string;
+  layoutSettings?: string;
   location: string;
   date: string;
   category?: string;
@@ -240,6 +259,7 @@ export interface Article {
   contentEn: string;
   image?: string;
   inlineImages?: string;
+  layoutSettings?: string;
   status: ArticleStatus;
   category: string;
   views: number;
@@ -352,6 +372,17 @@ export interface SiteContent {
   valueFr: string;
   valueEn: string;
   section: string;
+  updatedAt: string;
+}
+
+export interface SiteVideo {
+  id: string;
+  youtubeUrl: string;
+  titleFr: string;
+  titleEn: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
   updatedAt: string;
 }
 

@@ -70,9 +70,10 @@ const nextConfig = {
       "default-src 'self'",
       `script-src ${scriptSrc}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' blob: data: https: http:",
+      "img-src 'self' blob: data: https: http: https://img.youtube.com https://i.ytimg.com",
       "font-src 'self' data:",
       `connect-src ${connectSrc}`,
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
       "frame-ancestors 'self'",
     ].join("; ")
     return [

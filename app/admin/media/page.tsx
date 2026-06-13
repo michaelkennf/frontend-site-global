@@ -178,7 +178,7 @@ export default function MediaPage() {
               <button
                 onClick={openCreate}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold shadow"
-                style={{ background: "#007CF8" }}
+                style={{ background: "var(--sos-blue)" }}
               >
                 <Plus size={16} /> Ajouter une image
               </button>
@@ -442,7 +442,7 @@ export default function MediaPage() {
                 <button
                   type="submit"
                   className="flex-1 py-2 rounded-xl text-white text-sm font-semibold"
-                  style={{ background: "#007CF8" }}
+                  style={{ background: "var(--sos-blue)" }}
                 >
                   {editingMedia ? "Enregistrer" : "Ajouter"}
                 </button>

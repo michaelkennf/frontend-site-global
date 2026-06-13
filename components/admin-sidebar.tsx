@@ -6,6 +6,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { logout, getStoredUser } from "@/lib/auth"
+import { LOGO_SRC } from "@/lib/brand"
 import {
   LayoutDashboard,
   FileText,
@@ -25,6 +26,7 @@ import {
   Shield,
   User,
   FileEdit,
+  Video,
 } from "lucide-react"
 
 const menuItems = [
@@ -34,7 +36,8 @@ const menuItems = [
   { icon: FileEdit, labelFr: "Contenu du site", href: "/admin/content", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: UserCircle2, labelFr: "Équipe", href: "/admin/team", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Handshake, labelFr: "Partenaires", href: "/admin/partners", roles: ["ADMIN", "GESTIONNAIRE"] },
-  { icon: TrendingUp, labelFr: "Chiffres d'impact", href: "/admin/stats", roles: ["ADMIN", "GESTIONNAIRE"] },
+  { icon: Video, labelFr: "Vidéos", href: "/admin/videos", roles: ["ADMIN", "GESTIONNAIRE"] },
+  { icon: TrendingUp, labelFr: "Années d'engagement", href: "/admin/stats", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: ImageIcon, labelFr: "Médiathèque", href: "/admin/media", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Mail, labelFr: "Newsletter", href: "/admin/newsletter", roles: ["ADMIN", "GESTIONNAIRE"] },
   { icon: Heart, labelFr: "Dons", href: "/admin/donations", roles: ["ADMIN", "GESTIONNAIRE"] },
@@ -63,13 +66,19 @@ export function AdminSidebar() {
   const SidebarContent = () => (
     <>
       <div className="p-5 border-b border-sidebar-border">
-        <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="shrink-0 bg-white rounded-xl p-1.5 shadow-sm">
-            <Image src="/images/logo SOS.png" alt="Global SOS" width={36} height={36} className="rounded-lg object-contain" />
-          </div>
+        <Link href="/admin/dashboard" className="flex items-center gap-2.5">
+          <Image
+            src={LOGO_SRC}
+            alt="Global SOS"
+            width={48}
+            height={82}
+            className="h-14 w-auto object-contain shrink-0"
+          />
           <div className="leading-tight">
             <span className="font-serif font-bold text-white text-lg">Global</span>
-            <span className="font-serif font-black text-lg" style={{ color: "#E32219" }}> SOS</span>
+            <span className="font-serif font-black text-lg" style={{ color: "var(--sos-red)" }}>
+              {" "}SOS
+            </span>
           </div>
         </Link>
       </div>

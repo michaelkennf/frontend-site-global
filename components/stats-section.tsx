@@ -52,7 +52,7 @@ export function StatsSection() {
     : []
 
   return (
-    <section className="py-20" style={{ background: "#007CF8" }} ref={ref}>
+    <section className="py-20" style={{ background: "var(--sos-blue)" }} ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-14"

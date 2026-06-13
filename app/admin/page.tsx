@@ -4,11 +4,11 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff, Lock, Mail, AlertCircle } from "lucide-react"
 import { login, isAuthenticated } from "@/lib/auth"
+import { LOGO_SRC } from "@/lib/brand"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -40,8 +40,7 @@ export default function AdminLoginPage() {
       <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--sos-blue)]">
         <Image src="/images/hero image.png" alt="Global SOS" fill className="object-cover opacity-60" />
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
-          <Image src="/images/logo SOS.png" alt="Global SOS Logo" width={100} height={100} className="mb-8 rounded-xl" />
-          <h1 className="font-serif font-black text-4xl mb-4">Global SOS</h1>
+          <Image src={LOGO_SRC} alt="Global SOS" width={140} height={238} className="mb-8 h-36 w-auto object-contain" />
           <p className="text-white/80 text-lg leading-relaxed max-w-md">
             Espace administration pour la gestion du contenu, des dons et des communications.
           </p>
@@ -49,39 +48,29 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <motion.div
-          className="w-full max-w-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link href="/" className="flex items-center justify-center gap-3 mb-8 group">
+        <div className="w-full max-w-md">
+          <Link href="/" className="flex flex-col items-center gap-2 mb-8 group">
             <Image
-              src="/images/logo SOS.png"
-              alt="Global SOS Logo"
-              width={64}
-              height={64}
-              className="rounded-lg group-hover:scale-105 transition-transform"
+              src={LOGO_SRC}
+              alt="Global SOS"
+              width={96}
+              height={164}
+              className="h-28 w-auto object-contain group-hover:scale-[1.02] transition-transform"
             />
-            <div className="text-left">
-              <span className="font-serif font-bold text-2xl text-[var(--sos-blue)]">Global</span>
-              <span className="font-serif font-black text-2xl text-[var(--sos-red)]"> SOS</span>
-              <div className="text-xs text-gray-400 mt-0.5">Retour à l’accueil</div>
-            </div>
+            <div className="text-xs text-gray-400">Retour à l&apos;accueil</div>
           </Link>
 
           <h2 className="font-serif font-bold text-3xl text-gray-900 mb-2">Administration</h2>
           <p className="text-gray-500 mb-8">Connectez-vous pour accéder au tableau de bord</p>
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+            <div
+              role="alert"
               className="mb-6 p-4 bg-[var(--sos-red-light)] border border-[var(--sos-red)] rounded-lg flex items-center gap-3 text-[var(--sos-red)]"
             >
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span className="text-sm">{error}</span>
-            </motion.div>
+            </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -131,7 +120,7 @@ export default function AdminLoginPage() {
             </Button>
           </form>
 
-        </motion.div>
+        </div>
       </div>
     </div>
   )

@@ -10,6 +10,7 @@ import { useI18n, Language } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 import { DOMAIN_DISPLAY_ORDER } from "@/lib/domain-assets"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { LOGO_SRC } from "@/lib/brand"
 
 export function Navbar() {
   const { t, lang, setLang } = useI18n()
@@ -49,6 +50,7 @@ export function Navbar() {
     { label: c("nav.domains", t.nav.domains), href: "/domaines", hasDropdown: true },
     { label: c("nav.news", t.nav.news), href: "/news" },
     { label: c("nav.contact", t.nav.contact), href: "/contact" },
+    { label: c("nav.zones", t.nav.zones), href: "/zones" },
   ]
 
   const domainLinks = DOMAIN_DISPLAY_ORDER.map((slug) => ({
@@ -79,15 +81,16 @@ export function Navbar() {
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
               <Image
-                src="/images/logo SOS.png"
-                alt="Global SOS Logo"
-                width={56}
-                height={56}
-                className="rounded-full object-cover w-14 h-14 group-hover:scale-105 transition-transform"
+                src={LOGO_SRC}
+                alt="Global SOS"
+                width={64}
+                height={110}
+                className="h-14 sm:h-16 w-auto object-contain group-hover:scale-[1.02] transition-transform"
+                priority
               />
-              <div className="hidden sm:block">
+              <div className="hidden sm:block leading-tight">
                 <span className="font-serif font-bold text-xl" style={{ color: "var(--sos-blue)" }}>
                   Global
                 </span>

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Mail, Users, Download, Search, TrendingUp, Trash2, Loader2 } from "lucide-react"
 import { newsletterApi, NewsletterSubscriber } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
+import { brandTintBg } from "@/lib/brand"
 
 export default function AdminNewsletter() {
   const router = useRouter()
@@ -69,14 +70,14 @@ export default function AdminNewsletter() {
           {stats && (
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[
-                { label: "Total abonnés", value: stats.total, icon: Users, color: "#007CF8" },
-                { label: "Actifs", value: stats.active, icon: Mail, color: "#007CF8" },
+                { label: "Total abonnés", value: stats.total, icon: Users, color: "var(--sos-blue)" },
+                { label: "Actifs", value: stats.active, icon: Mail, color: "var(--sos-blue)" },
                 { label: "Désabonnés", value: stats.total - stats.active, icon: TrendingUp, color: "#E32219" },
               ].map((stat, i) => (
                 <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                   <Card><CardContent className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${stat.color}15` }}>
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: brandTintBg(stat.color) }}>
                         <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
                       </div>
                       <div><p className="text-xs text-gray-500">{stat.label}</p><p className="text-xl font-bold text-gray-900">{stat.value}</p></div>

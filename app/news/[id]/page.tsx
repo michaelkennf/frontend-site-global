@@ -8,14 +8,13 @@ import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Loader2, MapPin, Calendar, Share2, ArrowRight } from "lucide-react"
+import { ArrowLeft, Loader2, Calendar, MapPin, ArrowRight } from "lucide-react"
 import { activitiesApi, Activity } from "@/lib/api"
-import { HeroRedDivider } from "@/components/hero-red-divider"
 import {
   classifyActivityForDomain,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
-import { renderBodyWithInlineImages } from "@/lib/render-inline-body"
+import { ContentDetailView } from "@/components/content-detail-view"
 
 function readingMinutes(text: string): number {
   if (!text) return 1
@@ -71,17 +70,6 @@ function ActivityContent() {
       .catch(() => setRelated([]))
   }, [item, domain])
 
-  function handleShare() {
-    if (typeof window === "undefined") return
-    const url = window.location.href
-    const title = item ? (lang === "fr" ? item.titleFr : item.titleEn) : "Global SOS"
-    if (navigator.share) {
-      navigator.share({ title, url }).catch(() => {})
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).catch(() => {})
-    }
-  }
-
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col">
@@ -113,120 +101,55 @@ function ActivityContent() {
     )
   }
 
-  const reading = readingMinutes(
-    lang === "fr" ? item.descriptionFr : item.descriptionEn,
-  )
+  const title = lang === "fr" ? item.titleFr : item.titleEn
+  const body = lang === "fr" ? item.descriptionFr : item.descriptionEn
+  const reading = readingMinutes(body)
+  const dateStr = formatDate(item.createdAt, lang) || item.date
+
+  const detailMeta = {
+    categoryLabel: domain ? formatCategoryLabel(domain, lang) : undefined,
+    statusLabel:
+      lang === "fr"
+        ? item.status === "ONGOING"
+          ? "En cours"
+          : "Terminé"
+        : item.status === "ONGOING"
+          ? "Ongoing"
+          : "Completed",
+    statusVariant: item.status === "ONGOING" ? ("ongoing" as const) : ("completed" as const),
+    date: dateStr,
+    location: item.location,
+    authorName: item.author?.name,
+    readingMinutes: reading,
+    readingMinLabel: t.news.readingMin,
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        {/* En-tête éditorial */}
-        <section className="pt-32 pb-10 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="pt-24 pb-4 bg-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 text-[var(--sos-blue)] hover:text-[var(--sos-blue-dark)] text-sm font-medium mb-6"
+              className="inline-flex items-center gap-2 text-[var(--sos-blue)] hover:text-[var(--sos-blue-dark)] text-sm font-medium"
             >
               <ArrowLeft size={16} />
               {t.news.backToList}
             </Link>
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              {domain && (
-                <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-[var(--sos-blue-light)] text-[var(--sos-blue-dark)] uppercase tracking-widest">
-                  {formatCategoryLabel(domain, lang)}
-                </span>
-              )}
-              <span
-                className={`text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-widest ${
-                  item.status === "ONGOING"
-                    ? "bg-[var(--sos-blue)] text-white"
-                    : "bg-[var(--sos-red-light)] text-[var(--sos-red-dark)]"
-                }`}
-              >
-                {lang === "fr"
-                  ? item.status === "ONGOING"
-                    ? "En cours"
-                    : "Terminé"
-                  : item.status === "ONGOING"
-                    ? "Ongoing"
-                    : "Completed"}
-              </span>
-            </div>
-            <motion.h1
-              className="font-serif font-black text-3xl md:text-4xl lg:text-5xl text-gray-900 mb-6 leading-tight text-balance"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {lang === "fr" ? item.titleFr : item.titleEn}
-            </motion.h1>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 mb-6">
-              <span className="inline-flex items-center gap-1">
-                <Calendar size={14} />
-                {formatDate(item.createdAt, lang) || item.date}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <MapPin size={14} />
-                {item.location}
-              </span>
-              <span>
-                {reading} {t.news.readingMin}
-              </span>
-              {item.author?.name && (
-                <span>
-                  {lang === "fr" ? "Par" : "By"} <strong>{item.author.name}</strong>
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-1 text-[var(--sos-blue)] hover:text-[var(--sos-blue-dark)] font-semibold ml-auto"
-              >
-                <Share2 size={14} />
-                {t.news.shareTitle}
-              </button>
-            </div>
           </div>
-        </section>
+        </div>
 
-        {/* Image principale */}
-        <section className="bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gray-100">
-              <Image
-                src={item.image || "/images/hero image.png"}
-                alt={lang === "fr" ? item.titleFr : item.titleEn}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-            </div>
-          </div>
-        </section>
+        <ContentDetailView
+          title={title}
+          body={body}
+          image={item.image}
+          inlineImages={item.inlineImages}
+          layoutSettings={item.layoutSettings}
+          lang={lang}
+          meta={detailMeta}
+        />
 
-        <HeroRedDivider />
-
-        {/* Corps de l'article (texte + [[IMG1]]…[[IMG4]] dans le contenu) */}
-        <section className="py-14 bg-white">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-            >
-              {renderBodyWithInlineImages(
-                lang === "fr" ? item.descriptionFr : item.descriptionEn,
-                item.inlineImages,
-                lang === "fr" ? item.titleFr : item.titleEn,
-              )}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Articles connexes */}
         {related.length > 0 && (
           <section className="py-14 bg-gray-50 border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

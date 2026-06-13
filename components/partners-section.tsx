@@ -34,7 +34,7 @@ export function PartnersSection() {
   }, [])
 
   return (
-    <section className="py-16 bg-[#eef4ff]" ref={ref}>
+    <section className="py-16 bg-[var(--sos-blue-light)]" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}

@@ -8,6 +8,7 @@ import { Eye, Heart, Users, MessageSquare, TrendingUp, ArrowUpRight, FileText, C
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { statsApi, donationsApi, DashboardStats, Donation } from "@/lib/api"
 import { isAuthenticated, getStoredUser } from "@/lib/auth"
+import { brandTintBg } from "@/lib/brand"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -23,9 +24,9 @@ export default function AdminDashboard() {
 
   const cards = stats
     ? [
-        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "#007CF8" },
+        { label: "Articles publiés", value: String(stats.articles), icon: FileText, color: "var(--sos-blue)" },
         { label: "Dons confirmés", value: `$${stats.totalDonations.toFixed(0)}`, icon: Heart, color: "#E32219", positive: true, change: `${stats.donationCount} dons` },
-        { label: "Abonnés actifs", value: String(stats.activeSubscribers), icon: Users, color: "#007CF8" },
+        { label: "Abonnés actifs", value: String(stats.activeSubscribers), icon: Users, color: "var(--sos-blue)" },
         { label: "Messages non lus", value: String(stats.unreadMessages), icon: MessageSquare, color: "#E32219" },
       ]
     : []
@@ -59,7 +60,7 @@ export default function AdminDashboard() {
                           </div>
                         )}
                       </div>
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${stat.color}15` }}>
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: brandTintBg(stat.color) }}>
                         <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
                       </div>
                     </div>
@@ -121,9 +122,9 @@ export default function AdminDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     {[
-                      { icon: FileText, label: "Nouvel article", color: "#007CF8", href: "/admin/articles" },
-                      { icon: Calendar, label: "Nouvelle activité", color: "#007CF8", href: "/admin/activities" },
-                      { icon: TrendingUp, label: "Voir les stats", color: "#007CF8", href: "/admin/stats" },
+                      { icon: FileText, label: "Nouvel article", color: "var(--sos-blue)", href: "/admin/articles" },
+                      { icon: Calendar, label: "Nouvelle activité", color: "var(--sos-blue)", href: "/admin/activities" },
+                      { icon: TrendingUp, label: "Voir les stats", color: "var(--sos-blue)", href: "/admin/stats" },
                       { icon: Heart, label: "Rapport dons", color: "#E32219", href: "/admin/donations" },
                     ].map((action) => (
                       <a
@@ -131,7 +132,7 @@ export default function AdminDashboard() {
                         href={action.href}
                         className="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
                       >
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${action.color}15` }}>
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: brandTintBg(action.color) }}>
                           <action.icon className="w-5 h-5" style={{ color: action.color }} />
                         </div>
                         <span className="text-sm font-medium text-gray-700 text-center">{action.label}</span>

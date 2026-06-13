@@ -5,7 +5,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
-import { siteMediaApi, type SiteMedia } from "@/lib/api"
+import { siteMediaApi, statsApi, type SiteMedia } from "@/lib/api"
 import { useSiteContent } from "@/hooks/use-site-content"
 import {
   ChevronLeft,
@@ -45,6 +45,14 @@ export function AboutSection() {
   const [carouselImages, setCarouselImages] = useState<
     { id: string; src: string; altFr: string; altEn: string }[]
   >(FALLBACK_CAROUSEL)
+  const [yearsOfEngagement, setYearsOfEngagement] = useState(10)
+
+  useEffect(() => {
+    statsApi
+      .getImpact()
+      .then((data) => setYearsOfEngagement(data.yearsOfExistence ?? 10))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     siteMediaApi
@@ -83,7 +91,7 @@ export function AboutSection() {
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,124,248,0.12), transparent), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(227,34,25,0.06), transparent)",
+            "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--sos-blue-rgb),0.12), transparent), radial-gradient(ellipse 60% 40% at 100% 50%, rgba(227,34,25,0.06), transparent)",
         }}
         aria-hidden
       />
@@ -101,7 +109,7 @@ export function AboutSection() {
             className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] mb-5 rounded-full px-5 py-2.5 shadow-sm"
             style={{
               color: "var(--sos-blue)",
-              background: "linear-gradient(135deg, rgba(0,124,248,0.14), rgba(0,124,248,0.06))",
+              background: "linear-gradient(135deg, rgba(var(--sos-blue-rgb),0.14), rgba(var(--sos-blue-rgb),0.06))",
               boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
             }}
           >
@@ -114,7 +122,7 @@ export function AboutSection() {
             className="font-serif font-black text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-balance leading-[1.15] mb-6 px-3 py-2 rounded-2xl inline-block"
             style={{
               color: "var(--sos-blue)",
-              background: "linear-gradient(180deg, rgba(0,124,248,0.12) 0%, rgba(0,124,248,0.04) 100%)",
+              background: "linear-gradient(180deg, rgba(var(--sos-blue-rgb),0.12) 0%, rgba(var(--sos-blue-rgb),0.04) 100%)",
             }}
           >
             {c("about.title", t.about.whoWeAreTitle)}
@@ -203,7 +211,7 @@ export function AboutSection() {
                 }}
               >
                 <div className="text-3xl font-black font-serif leading-none" style={{ color: "var(--sos-red)" }}>
-                  15+
+                  {yearsOfEngagement}+
                 </div>
                 <div className="text-xs font-bold mt-1.5" style={{ color: "var(--sos-red)" }}>
                   {lang === "fr" ? "Années d'engagement" : "Years of commitment"}
@@ -225,7 +233,7 @@ export function AboutSection() {
                 label: t.about.mission,
                 text: t.about.missionText,
                 border: "var(--sos-blue)",
-                bg: "rgba(0, 124, 248, 0.06)",
+                bg: "rgba(var(--sos-blue-rgb), 0.08)",
               },
               {
                 Icon: Eye,

@@ -23,6 +23,14 @@ import {
   ImagePlus,
 } from "lucide-react"
 import {
+  DEFAULT_LAYOUT_SETTINGS,
+  LayoutSettings,
+  parseLayoutSettings,
+  serializeLayoutSettings,
+} from "@/lib/article-layout"
+import { LayoutSettingsForm } from "@/components/layout-settings-form"
+import { ContentPreviewModal } from "@/components/content-preview-modal"
+import {
   articlesApi,
   Article,
   ArticleStatus,
@@ -49,6 +57,7 @@ type FormState = {
   inlineImages: string[]
   category: string
   status: ArticleStatus
+  layoutSettings: LayoutSettings
 }
 
 const emptyForm: FormState = {
@@ -62,6 +71,7 @@ const emptyForm: FormState = {
   inlineImages: ["", "", "", ""],
   category: "Général",
   status: "DRAFT",
+  layoutSettings: { ...DEFAULT_LAYOUT_SETTINGS },
 }
 
 type StatusFilter = "all" | ArticleStatus
@@ -79,6 +89,7 @@ export default function AdminArticles() {
   const [error, setError] = useState("")
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all")
   const [search, setSearch] = useState("")
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -123,6 +134,7 @@ export default function AdminArticles() {
       inlineImages: parsed,
       category: a.category || "Général",
       status: a.status,
+      layoutSettings: parseLayoutSettings(a.layoutSettings),
     })
     setError("")
     setShowForm(true)
@@ -150,10 +162,11 @@ export default function AdminArticles() {
     setSaving(true)
     setError("")
     try {
-      const { inlineImages, ...rest } = form
+      const { inlineImages, layoutSettings, ...rest } = form
       const payload = {
         ...(nextStatus ? { ...rest, status: nextStatus } : rest),
         inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)),
+        layoutSettings: serializeLayoutSettings(layoutSettings),
       }
       if (editingId) {
         await articlesApi.update(editingId, payload)
@@ -289,7 +302,7 @@ export default function AdminArticles() {
                   initial={{ scale: 0.95 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0.95 }}
-                  className="bg-white rounded-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto p-6"
+                  className="bg-white rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto p-6"
                 >
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-bold text-xl">
@@ -462,10 +475,24 @@ export default function AdminArticles() {
                       </div>
                     </div>
 
+                    <LayoutSettingsForm
+                      value={form.layoutSettings}
+                      onChange={(layoutSettings) => setForm({ ...form, layoutSettings })}
+                    />
+
                     {error && <p className="text-[var(--sos-red)] text-sm">{error}</p>}
                     <div className="flex flex-wrap gap-3 justify-end pt-2">
                       <Button variant="outline" onClick={() => setShowForm(false)}>
                         Annuler
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowPreview(true)}
+                        className="border-[var(--sos-blue)] text-[var(--sos-blue)]"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Aperçu
                       </Button>
                       <Button
                         variant="outline"
@@ -497,6 +524,32 @@ export default function AdminArticles() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <ContentPreviewModal
+            open={showPreview}
+            onClose={() => setShowPreview(false)}
+            data={{
+              titleFr: form.titleFr,
+              titleEn: form.titleEn,
+              excerptFr: form.excerptFr,
+              excerptEn: form.excerptEn,
+              bodyFr: form.contentFr,
+              bodyEn: form.contentEn,
+              image: form.image,
+              inlineImages: form.inlineImages,
+              layoutSettings: form.layoutSettings,
+              metaFr: {
+                categoryLabel: categoryLabel(form.category),
+                statusLabel: form.status === "PUBLISHED" ? "Publié" : "Brouillon",
+                statusVariant: form.status === "PUBLISHED" ? "published" : "draft",
+              },
+              metaEn: {
+                categoryLabel: categoryLabel(form.category),
+                statusLabel: form.status === "PUBLISHED" ? "Published" : "Draft",
+                statusVariant: form.status === "PUBLISHED" ? "published" : "draft",
+              },
+            }}
+          />
 
           {loading ? (
             <div className="flex justify-center py-16">

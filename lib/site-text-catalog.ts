@@ -69,6 +69,10 @@ export const SITE_TEXT_CATALOG: SiteTextCatalogEntry[] = [
   { section: "nav", key: "nav.research", label: "Menu — Recherche", multiline: false, defaultFr: fr.nav.research, defaultEn: en.nav.research },
   { section: "nav", key: "nav.donate", label: "Menu — Don", multiline: false, defaultFr: fr.nav.donate, defaultEn: en.nav.donate },
   { section: "nav", key: "nav.contact", label: "Menu — Contact", multiline: false, defaultFr: fr.nav.contact, defaultEn: en.nav.contact },
+  { section: "nav", key: "nav.zones", label: "Menu — Nos zones d'intervention", multiline: false, defaultFr: fr.nav.zones, defaultEn: en.nav.zones },
+  { section: "zones", key: "zones.titleOur", label: "Zones — Titre (1re partie, ex. Nos)", multiline: false, defaultFr: fr.zones.titleOur, defaultEn: en.zones.titleOur },
+  { section: "zones", key: "zones.titleRest", label: "Zones — Titre (suite)", multiline: false, defaultFr: fr.zones.titleRest, defaultEn: en.zones.titleRest },
+  { section: "zones", key: "zones.body", label: "Zones — Texte principal", multiline: true, defaultFr: fr.zones.body, defaultEn: en.zones.body },
   // Hero & bloc à propos (accueil)
   { section: "hero", key: "hero.headline", label: "Accueil — Hero titre", multiline: false, defaultFr: fr.hero.headline, defaultEn: en.hero.headline },
   { section: "hero", key: "hero.subtitle", label: "Accueil — Hero sous-titre", multiline: true, defaultFr: fr.hero.sub, defaultEn: en.hero.sub },
@@ -159,6 +163,7 @@ function sectionLabel(id: string): string {
     donate: "Page don",
     newsletter: "Newsletter",
     contact: "Contact (formulaire)",
+    zones: "Nos zones d'intervention",
     "domain-index": "Liste des domaines",
   }
   return map[id] ?? id

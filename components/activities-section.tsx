@@ -67,7 +67,7 @@ export function ActivitiesSection() {
   if (!primary) return null
 
   return (
-    <section className="relative py-20 md:py-24 overflow-hidden bg-[#f5f7fb]" id="activities">
+    <section className="relative py-20 md:py-24 overflow-hidden bg-[var(--sos-blue-light)]/30" id="activities">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-10"
@@ -86,7 +86,7 @@ export function ActivitiesSection() {
               {c("activities.subtitle", t.activities.subtitle)}
             </span>
             <h2 className="font-serif font-black text-4xl sm:text-5xl lg:text-[3.35rem] tracking-tight text-balance leading-[1.05]">
-              <span style={{ color: "#0d3356" }}>
+              <span style={{ color: "var(--sos-blue)" }}>
                 {lang === "fr" ? "Actualités" : "Recent"}
               </span>{" "}
               <span style={{ color: "var(--sos-red)" }}>
@@ -165,7 +165,7 @@ export function ActivitiesSection() {
 
           <div className="lg:col-span-4">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-serif font-bold text-2xl text-[#0d3356]">
+              <h4 className="font-serif font-bold text-2xl text-[var(--sos-blue)]">
                 {lang === "fr" ? "Plus d'actualités" : "More news"}
               </h4>
               {sidePool.length > 3 && (
@@ -204,7 +204,7 @@ export function ActivitiesSection() {
                     <Link
                       key={item.id}
                       href={`/news/${item.id}`}
-                      className="group block rounded-2xl border border-[#e8edf4] bg-white p-4 hover:shadow-md transition"
+                      className="group block rounded-2xl border border-[var(--sos-blue-light)] bg-white p-4 hover:shadow-md transition"
                     >
                       <div className="flex items-start gap-3">
                         <div className="w-12 h-12 rounded-xl bg-gray-100 text-gray-700 flex flex-col items-center justify-center shrink-0">

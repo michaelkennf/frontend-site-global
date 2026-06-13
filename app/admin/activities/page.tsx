@@ -8,14 +8,23 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2, ImagePlus } from "lucide-react"
+import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2, ImagePlus, Eye } from "lucide-react"
 import { activitiesApi, Activity, uploadsApi } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
+import {
+  DEFAULT_LAYOUT_SETTINGS,
+  LayoutSettings,
+  parseLayoutSettings,
+  serializeLayoutSettings,
+} from "@/lib/article-layout"
+import { LayoutSettingsForm } from "@/components/layout-settings-form"
+import { ContentPreviewModal } from "@/components/content-preview-modal"
 
 const emptyForm = {
   titleFr: "", titleEn: "", descriptionFr: "", descriptionEn: "",
   image: "", inlineImages: ["", "", "", ""], location: "", date: "", category: "Général",
   status: "ONGOING" as "ONGOING" | "COMPLETED",
+  layoutSettings: { ...DEFAULT_LAYOUT_SETTINGS },
 }
 
 const ACTIVITY_DOMAIN_OPTIONS: { id: string; label: string }[] = [
@@ -36,6 +45,7 @@ export default function AdminActivities() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [uploadingInline, setUploadingInline] = useState<boolean[]>([false, false, false, false])
   const [error, setError] = useState("")
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated()) { router.push("/admin"); return }
@@ -68,6 +78,7 @@ export default function AdminActivities() {
       date: a.date,
       category: a.category ?? "Général",
       status: a.status,
+      layoutSettings: parseLayoutSettings(a.layoutSettings),
     })
     setShowForm(true)
   }
@@ -90,8 +101,12 @@ export default function AdminActivities() {
   async function handleSave() {
     setSaving(true); setError("")
     try {
-      const { inlineImages, ...rest } = form
-      const payload = { ...rest, inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)) }
+      const { inlineImages, layoutSettings, ...rest } = form
+      const payload = {
+        ...rest,
+        inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)),
+        layoutSettings: serializeLayoutSettings(layoutSettings),
+      }
       if (editingId) await activitiesApi.update(editingId, payload)
       else await activitiesApi.create(payload)
       setShowForm(false); fetchActivities()
@@ -138,7 +153,7 @@ export default function AdminActivities() {
           <AnimatePresence>
             {showForm && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={(e) => e.target === e.currentTarget && setShowForm(false)}>
-                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+                <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-bold text-xl">{editingId ? "Modifier l'activité" : "Nouvelle activité"}</h2>
                     <button onClick={() => setShowForm(false)}><X className="w-5 h-5 text-gray-400" /></button>
@@ -223,9 +238,24 @@ export default function AdminActivities() {
                         </select>
                       </div>
                     </div>
+
+                    <LayoutSettingsForm
+                      value={form.layoutSettings}
+                      onChange={(layoutSettings) => setForm({ ...form, layoutSettings })}
+                    />
+
                     {error && <p className="text-[var(--sos-red)] text-sm">{error}</p>}
-                    <div className="flex gap-3 justify-end pt-2">
+                    <div className="flex flex-wrap gap-3 justify-end pt-2">
                       <Button variant="outline" onClick={() => setShowForm(false)}>Annuler</Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowPreview(true)}
+                        className="border-[var(--sos-blue)] text-[var(--sos-blue)]"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Aperçu
+                      </Button>
                       <Button onClick={handleSave} disabled={saving} className="bg-[var(--sos-blue)] text-white">
                         {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                         Enregistrer
@@ -236,6 +266,32 @@ export default function AdminActivities() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <ContentPreviewModal
+            open={showPreview}
+            onClose={() => setShowPreview(false)}
+            data={{
+              titleFr: form.titleFr,
+              titleEn: form.titleEn,
+              bodyFr: form.descriptionFr,
+              bodyEn: form.descriptionEn,
+              image: form.image,
+              inlineImages: form.inlineImages,
+              layoutSettings: form.layoutSettings,
+              metaFr: {
+                statusLabel: form.status === "ONGOING" ? "En cours" : "Terminé",
+                statusVariant: form.status === "ONGOING" ? "ongoing" : "completed",
+                location: form.location,
+                date: form.date,
+              },
+              metaEn: {
+                statusLabel: form.status === "ONGOING" ? "Ongoing" : "Completed",
+                statusVariant: form.status === "ONGOING" ? "ongoing" : "completed",
+                location: form.location,
+                date: form.date,
+              },
+            }}
+          />
 
           {loading ? (
             <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-gray-400" /></div>

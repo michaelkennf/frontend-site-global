@@ -15,6 +15,7 @@ export const translations = {
       research: "Recherche",
       donate: "Faire un don",
       contact: "Contact",
+      zones: "Nos zones d'intervention",
     },
     hero: {
       headline: "Protéger les vies et renforcer la résilience des communautés",
@@ -173,9 +174,11 @@ export const translations = {
       title: "Témoignages du terrain",
       subtitle: "Des histoires de résilience et d'espoir",
     },
-    map: {
-      title: "Zones d'intervention",
-      subtitle: "Global SOS opère dans plusieurs régions du monde",
+    zones: {
+      titleOur: "Nos",
+      titleRest: "zones d'intervention",
+      body:
+        "Le rayon d'activité de GLOBAL SOS couvre la province du Sud-Kivu. Il peut s'étendre sur tout le territoire national de la RDC et hors des frontières selon les besoins",
     },
     donate: {
       title: "Soutenez les communautés dans le besoin",
@@ -248,6 +251,7 @@ export const translations = {
       research: "Research",
       donate: "Donate",
       contact: "Contact",
+      zones: "Our intervention zones",
     },
     hero: {
       headline: "Protecting Lives and Strengthening Community Resilience",
@@ -406,9 +410,11 @@ export const translations = {
       title: "Field Stories",
       subtitle: "Stories of resilience and hope",
     },
-    map: {
-      title: "Intervention Zones",
-      subtitle: "Global SOS operates in several regions of the world",
+    zones: {
+      titleOur: "Our",
+      titleRest: "intervention zones",
+      body:
+        "GLOBAL SOS's area of operation covers South Kivu province. It may extend across the entire national territory of the DRC and beyond borders as needed.",
     },
     donate: {
       title: "Support Communities in Need",

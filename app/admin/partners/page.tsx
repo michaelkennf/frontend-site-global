@@ -172,7 +172,7 @@ export default function AdminPartnersPage() {
                       </div>
                     ) : (
                       <div className="w-14 h-14 rounded-full bg-[var(--sos-blue-light)] flex items-center justify-center">
-                        <Handshake size={22} style={{ color: "#007CF8" }} />
+                        <Handshake size={22} style={{ color: "var(--sos-blue)" }} />
                       </div>
                     )}
                     <div>

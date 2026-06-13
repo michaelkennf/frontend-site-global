@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Heart, TrendingUp, Download, Users, Calendar, Loader2, Save, DollarSign } from "lucide-react"
 import { donationsApi, Donation, DonationInfo } from "@/lib/api"
 import { isAuthenticated, getStoredUser } from "@/lib/auth"
+import { brandTintBg } from "@/lib/brand"
 
 export default function AdminDonations() {
   const router = useRouter()
@@ -42,9 +43,9 @@ export default function AdminDonations() {
   }
 
   const statCards = stats ? [
-    { label: "Total confirmé", value: `$${stats.totalAmount.toFixed(0)}`, icon: DollarSign, color: "#007CF8" },
+    { label: "Total confirmé", value: `$${stats.totalAmount.toFixed(0)}`, icon: DollarSign, color: "var(--sos-blue)" },
     { label: "Nombre de dons", value: String(stats.count), icon: Heart, color: "#E32219" },
-    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "#007CF8" },
+    { label: "Donateurs uniques", value: String(stats.uniqueDonors), icon: Users, color: "var(--sos-blue)" },
     { label: "Don moyen", value: `$${stats.averageAmount.toFixed(0)}`, icon: TrendingUp, color: "#E32219" },
   ] : []
 
@@ -77,7 +78,7 @@ export default function AdminDonations() {
                   <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card><CardContent className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${stat.color}15` }}>
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: brandTintBg(stat.color) }}>
                           <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
                         </div>
                         <div><p className="text-xs text-gray-500">{stat.label}</p><p className="text-xl font-bold text-gray-900">{stat.value}</p></div>

@@ -27,7 +27,8 @@ export default function AdminStatsPage() {
     setSaving(true)
     setError(null)
     try {
-      await statsApi.updateImpact({ yearsOfExistence: years })
+      const updated = await statsApi.updateImpact({ yearsOfExistence: years })
+      setYears(updated.yearsOfExistence ?? years)
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (err: any) {
@@ -45,9 +46,9 @@ export default function AdminStatsPage() {
 
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Années d'existence</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Années d&apos;engagement</h1>
             <p className="text-gray-500 text-sm mt-1">
-              Cette valeur est affichée publiquement sur la page d'accueil
+              Ce nombre est affiché sur la page d&apos;accueil (badge «&nbsp;Années d&apos;engagement&nbsp;» du carrousel).
             </p>
           </div>
 
@@ -70,9 +71,9 @@ export default function AdminStatsPage() {
                   style={{ background: "var(--sos-blue)" }}
                 >
                   <CalendarDays size={40} className="mb-3 opacity-80" />
-                  <span className="font-serif font-black text-6xl leading-none">{years}</span>
+                  <span className="font-serif font-black text-6xl leading-none">{years}+</span>
                   <span className="mt-2 text-sm font-semibold uppercase tracking-widest opacity-80">
-                    ans d'existence
+                    années d&apos;engagement
                   </span>
                 </div>
               </div>
@@ -80,7 +81,7 @@ export default function AdminStatsPage() {
               {/* Input */}
               <div className="space-y-3">
                 <label className="block text-sm font-semibold text-gray-700">
-                  Nombre d'années d'existence
+                  Nombre d&apos;années d&apos;engagement
                 </label>
                 <input
                   type="number"

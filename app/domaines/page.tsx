@@ -36,7 +36,7 @@ function DomainesContent() {
             className="pointer-events-none absolute inset-0 opacity-60"
             style={{
               backgroundImage:
-                "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,124,248,0.08), transparent 60%), radial-gradient(ellipse 50% 35% at 100% 100%, rgba(227,34,25,0.05), transparent 60%)",
+                "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(var(--sos-blue-rgb),0.08), transparent 60%), radial-gradient(ellipse 50% 35% at 100% 100%, rgba(227,34,25,0.05), transparent 60%)",
             }}
             aria-hidden
           />
