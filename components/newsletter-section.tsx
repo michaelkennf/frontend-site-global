@@ -3,13 +3,15 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { useI18n } from "@/lib/i18n"
+import { useSiteContent } from "@/hooks/use-site-content"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Send, CheckCircle } from "lucide-react"
 import { newsletterApi } from "@/lib/api"
 
 export function NewsletterSection() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
+  const { c } = useSiteContent("newsletter", lang)
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -41,10 +43,10 @@ export function NewsletterSection() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="font-serif text-3xl font-bold text-[var(--sos-blue)] md:text-4xl">
-            {t.newsletter.title}
+            {c("newsletter.title", t.newsletter.title)}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            {t.newsletter.subtitle}
+            {c("newsletter.subtitle", t.newsletter.subtitle)}
           </p>
 
           {submitted ? (
@@ -54,7 +56,7 @@ export function NewsletterSection() {
               className="mt-8 flex items-center justify-center gap-2 text-[var(--sos-blue)]"
             >
               <CheckCircle className="h-6 w-6" />
-              <span className="text-lg font-medium">{t.newsletter.success}</span>
+              <span className="text-lg font-medium">{c("newsletter.success", t.newsletter.success)}</span>
             </motion.div>
           ) : (
             <>
@@ -62,7 +64,7 @@ export function NewsletterSection() {
               <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <Input
                   type="email"
-                  placeholder={t.newsletter.placeholder}
+                  placeholder={c("newsletter.placeholder", t.newsletter.placeholder)}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -74,7 +76,7 @@ export function NewsletterSection() {
                   className="h-12 bg-[var(--sos-red)] px-8 text-base font-semibold text-white hover:bg-[var(--sos-red-dark)]"
                 >
                   <Send className="mr-2 h-4 w-4" />
-                  {loading ? "..." : t.newsletter.button}
+                  {loading ? "..." : c("newsletter.button", t.newsletter.button)}
                 </Button>
               </form>
             </>

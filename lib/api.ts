@@ -21,7 +21,11 @@ async function request<T>(
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    cache: 'no-store',
+    ...options,
+    headers,
+  });
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ message: 'Erreur réseau' }));
@@ -184,7 +188,9 @@ export const siteMediaApi = {
   getBySection: (section: string) => request<SiteMedia[]>(`/site-media/public?section=${section}`),
   /** Média public par clé unique (hero, en-têtes, domaines…). Null si absent. */
   getPublicByKey: async (key: string): Promise<SiteMedia | null> => {
-    const res = await fetch(`${API_BASE}/site-media/public/key/${encodeURIComponent(key)}`)
+    const res = await fetch(`${API_BASE}/site-media/public/key/${encodeURIComponent(key)}`, {
+      cache: 'no-store',
+    })
     if (res.status === 404) return null
     if (!res.ok) return null
     const data = (await res.json()) as SiteMedia | null
@@ -213,7 +219,8 @@ export const videosApi = {
 
 // ── Site Content (CMS) ─────────────────────────────────────────────
 export const siteContentApi = {
-  getBySection: (section: string) => request<SiteContent[]>(`/site-content/public?section=${section}`),
+  getBySection: (section: string) => request<SiteContent[]>(`/site-content/public?section=${encodeURIComponent(section)}`),
+  getAllPublic: () => request<SiteContent[]>('/site-content/public/all'),
   getAllAdmin: () => request<SiteContent[]>('/site-content/admin/all', {}, true),
   upsert: (key: string, data: { valueFr: string; valueEn: string; section: string }) =>
     request<SiteContent>(`/site-content/${key}`, { method: 'PUT', body: JSON.stringify(data) }, true),

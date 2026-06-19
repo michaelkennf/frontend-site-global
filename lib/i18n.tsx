@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, ReactNode } from "react"
+import { SiteContentProvider } from "@/lib/site-content-provider"
 
 export type Language = "fr" | "en"
 
@@ -494,7 +495,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = translations[lang]
   return (
     <I18nContext.Provider value={{ lang, setLang, t }}>
-      {children}
+      <SiteContentProvider>{children}</SiteContentProvider>
     </I18nContext.Provider>
   )
 }

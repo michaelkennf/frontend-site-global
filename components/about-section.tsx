@@ -114,7 +114,7 @@ export function AboutSection() {
             }}
           >
             <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
-            <span className="relative">{t.about.homeAboutEyebrow}</span>
+            <span className="relative">{c("about.homeAboutEyebrow", t.about.homeAboutEyebrow)}</span>
             <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
           </motion.span>
           <motion.h2
@@ -230,15 +230,15 @@ export function AboutSection() {
             {[
               {
                 Icon: Target,
-                label: t.about.mission,
-                text: t.about.missionText,
+                label: c("about.mission", t.about.mission),
+                text: c("about.missionText", t.about.missionText),
                 border: "var(--sos-blue)",
                 bg: "rgba(var(--sos-blue-rgb), 0.08)",
               },
               {
                 Icon: Eye,
-                label: t.about.vision,
-                text: t.about.visionText,
+                label: c("about.vision", t.about.vision),
+                text: c("about.visionText", t.about.visionText),
                 border: "var(--sos-red)",
                 bg: "rgba(227, 34, 25, 0.06)",
               },

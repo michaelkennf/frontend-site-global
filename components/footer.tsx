@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n"
 import Link from "next/link"
-import { Facebook, Twitter, Linkedin, Mail, MapPin } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react"
 import { useSiteContent } from "@/hooks/use-site-content"
 
 const SOCIAL_LINKS = [
@@ -12,9 +12,14 @@ const SOCIAL_LINKS = [
     Icon: Facebook,
   },
   {
-    href: "https://x.com/Globalsos_asbl",
+    href: "https://x.com/globalsosasbl",
     label: "X (Twitter)",
     Icon: Twitter,
+  },
+  {
+    href: "https://www.instagram.com/globalsosasbl/",
+    label: "Instagram",
+    Icon: Instagram,
   },
   {
     href: "https://www.linkedin.com/company/global-sos-asbl/",

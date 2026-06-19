@@ -9,7 +9,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Send, CheckCircle, Facebook, Twitter, Linkedin } from "lucide-react"
+import { Mail, MapPin, Send, CheckCircle, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
@@ -122,7 +122,8 @@ function ContactContent() {
                   <div className="flex gap-3">
                     {[
                       { Icon: Facebook, href: "https://www.facebook.com/profile.php?id=61587351878517", label: "Facebook" },
-                      { Icon: Twitter, href: "https://x.com/Globalsos_asbl", label: "X (Twitter)" },
+                      { Icon: Twitter, href: "https://x.com/globalsosasbl", label: "X (Twitter)" },
+                      { Icon: Instagram, href: "https://www.instagram.com/globalsosasbl/", label: "Instagram" },
                       { Icon: Linkedin, href: "https://www.linkedin.com/company/global-sos-asbl/", label: "LinkedIn" },
                     ].map(({ Icon, href, label }) => (
                       <a
@@ -175,13 +176,13 @@ function ContactContent() {
                       <h3 className="font-bold text-xl text-gray-900 mb-2">
                         {lang === "fr" ? "Message envoyé !" : "Message sent!"}
                       </h3>
-                      <p className="text-[var(--sos-blue-dark)]">{t.contact.success}</p>
+                      <p className="text-[var(--sos-blue-dark)]">{c("contact.success", t.contact.success)}</p>
                     </motion.div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.contact.name}
+                          {c("contact.name", t.contact.name)}
                         </label>
                         <Input
                           type="text"
@@ -194,7 +195,7 @@ function ContactContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.contact.email}
+                          {c("contact.email", t.contact.email)}
                         </label>
                         <Input
                           type="email"
@@ -207,7 +208,7 @@ function ContactContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.contact.subject}
+                          {c("contact.subject", t.contact.subject)}
                         </label>
                         <Input
                           type="text"
@@ -220,7 +221,7 @@ function ContactContent() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.contact.message}
+                          {c("contact.message", t.contact.message)}
                         </label>
                         <Textarea
                           required
@@ -235,7 +236,7 @@ function ContactContent() {
                         className="w-full h-12 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-bold"
                       >
                         <Send className="w-4 h-4 mr-2" />
-                        {t.contact.send}
+                        {c("contact.send", t.contact.send)}
                       </Button>
                     </form>
                   )}

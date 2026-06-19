@@ -17,7 +17,7 @@ type FieldValues = Record<string, { valueFr: string; valueEn: string }>
 function defaultsFromCatalog(): FieldValues {
   const m: FieldValues = {}
   for (const e of SITE_TEXT_CATALOG) {
-    m[e.key] = { valueFr: e.defaultFr, valueEn: e.defaultEn }
+    m[e.key] = { valueFr: e.defaultFr, valueEn: "" }
   }
   return m
 }
@@ -64,7 +64,8 @@ export default function AdminContent() {
       ...prev,
       [key]: {
         valueFr: lang === "fr" ? val : (prev[key]?.valueFr ?? ""),
-        valueEn: lang === "en" ? val : (prev[key]?.valueEn ?? ""),
+        // Effacer l'anglais quand le français change → retraduction à l'enregistrement
+        valueEn: lang === "en" ? val : "",
       },
     }))
   }
@@ -74,11 +75,15 @@ export default function AdminContent() {
     setSaving(key)
     setError(null)
     try {
-      await siteContentApi.upsert(key, {
+      const updated = await siteContentApi.upsert(key, {
         valueFr: values[key]?.valueFr ?? "",
         valueEn: values[key]?.valueEn ?? "",
         section: entry.section,
       })
+      setValues((prev) => ({
+        ...prev,
+        [key]: { valueFr: updated.valueFr, valueEn: updated.valueEn },
+      }))
       setSaved(key)
       setTimeout(() => setSaved(null), 2500)
     } catch (err: unknown) {
@@ -100,8 +105,12 @@ export default function AdminContent() {
             </h1>
             <p className="text-gray-500 mt-1 flex flex-wrap items-center gap-2">
               <List className="w-4 h-4 shrink-0" />
-              Tous les textes publics listés par zone. Laissez une langue vide pour la remplir via la traduction
-              automatique côté articles/activités ; ici les deux champs sont libres.
+              Remplissez uniquement le français : la version anglaise sera traduite automatiquement à
+              l&apos;enregistrement. Laissez l&apos;anglais vide pour forcer une nouvelle traduction.
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              Les modifications sont visibles sur le site public après enregistrement (rechargez la page ou
+              revenez sur l&apos;onglet du site).
             </p>
           </div>
 
@@ -169,6 +178,9 @@ export default function AdminContent() {
                         <div key={lang}>
                           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-1.5">
                             {lang === "fr" ? "Français" : "English"}
+                            {lang === "en" && (
+                              <span className="ml-1 font-normal normal-case text-gray-400">(auto si vide)</span>
+                            )}
                           </label>
                           {field.multiline ? (
                             <textarea
@@ -176,7 +188,11 @@ export default function AdminContent() {
                               value={get(field.key, lang)}
                               onChange={(e) => set(field.key, lang, e.target.value)}
                               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 resize-y focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
-                              placeholder={lang === "fr" ? "Texte en français…" : "English text…"}
+                              placeholder={
+                                lang === "fr"
+                                  ? "Texte en français…"
+                                  : "Laissez vide pour traduction automatique…"
+                              }
                             />
                           ) : (
                             <input
@@ -184,7 +200,11 @@ export default function AdminContent() {
                               value={get(field.key, lang)}
                               onChange={(e) => set(field.key, lang, e.target.value)}
                               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
-                              placeholder={lang === "fr" ? "Texte en français…" : "English text…"}
+                              placeholder={
+                                lang === "fr"
+                                  ? "Texte en français…"
+                                  : "Laissez vide pour traduction automatique…"
+                              }
                             />
                           )}
                         </div>

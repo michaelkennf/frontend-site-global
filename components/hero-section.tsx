@@ -81,7 +81,7 @@ export function HeroSection() {
               href="/about"
               className="inline-flex items-center justify-center gap-2 bg-white text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] font-bold px-8 py-4 rounded-full text-base transition-all hover:scale-[1.02] group"
             >
-              {t.hero.learnMore}
+              {c("hero.learnMore", t.hero.learnMore)}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
@@ -89,7 +89,7 @@ export function HeroSection() {
               className="inline-flex items-center justify-center gap-2 bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-bold px-8 py-4 rounded-full text-base transition-all hover:scale-[1.02] group"
             >
               <Heart size={18} className="group-hover:scale-110 transition-transform" />
-              {t.hero.donate}
+              {c("hero.donate", t.hero.donate)}
             </Link>
           </motion.div>
         </div>

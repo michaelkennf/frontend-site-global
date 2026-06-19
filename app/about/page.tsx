@@ -11,10 +11,12 @@ import { teamApi, TeamMember } from "@/lib/api"
 import { valueIcons } from "@/components/about-section"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
+import { useSiteContent } from "@/hooks/use-site-content"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
 
 function AboutContent() {
   const { t, lang } = useI18n()
+  const { c } = useSiteContent("about", lang)
   const headerMedia = useSiteMediaKeys([SITE_MEDIA.ABOUT_HEADER])[SITE_MEDIA.ABOUT_HEADER]
   const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
@@ -57,7 +59,7 @@ function AboutContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {t.about.title}
+              {c("about.pageTitle", t.about.title)}
             </motion.h1>
             <motion.p
               className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed"
@@ -65,7 +67,7 @@ function AboutContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              {t.about.description}
+              {c("about.pageSubtitle", t.about.description)}
             </motion.p>
           </div>
         </section>
@@ -87,10 +89,13 @@ function AboutContent() {
                 {lang === "fr" ? "Présentation" : "Introduction"}
               </span>
               <h2 className="font-serif font-black text-3xl md:text-4xl text-gray-900 mb-8 text-balance leading-tight">
-                {t.about.whoWeAreTitle}
+                {c("about.title", t.about.whoWeAreTitle)}
               </h2>
               <div className="space-y-6 text-gray-600 text-base md:text-lg leading-relaxed">
-                {t.about.whoWeAreParagraphs.map((paragraph, index) => (
+                {c("about.description", t.about.whoWeAreParagraphs.join("\n\n"))
+                  .split("\n\n")
+                  .filter(Boolean)
+                  .map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
               </div>
@@ -112,8 +117,8 @@ function AboutContent() {
                 <div className="w-14 h-14 rounded-xl bg-[var(--sos-blue)] flex items-center justify-center mb-6">
                   <Target className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{t.about.mission}</h2>
-                <p className="text-gray-600 leading-relaxed">{t.about.missionText}</p>
+                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{c("about.mission", t.about.mission)}</h2>
+                <p className="text-gray-600 leading-relaxed">{c("about.missionText", t.about.missionText)}</p>
               </motion.div>
 
               <motion.div
@@ -126,8 +131,8 @@ function AboutContent() {
                 <div className="w-14 h-14 rounded-xl bg-[var(--sos-red)] flex items-center justify-center mb-6">
                   <Eye className="w-7 h-7 text-white" />
                 </div>
-                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{t.about.vision}</h2>
-                <p className="text-gray-600 leading-relaxed">{t.about.visionText}</p>
+                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{c("about.vision", t.about.vision)}</h2>
+                <p className="text-gray-600 leading-relaxed">{c("about.visionText", t.about.visionText)}</p>
               </motion.div>
             </div>
           </div>
@@ -142,7 +147,7 @@ function AboutContent() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="font-serif font-black text-4xl text-gray-900 mb-4">{t.about.values}</h2>
+              <h2 className="font-serif font-black text-4xl text-gray-900 mb-4">{c("about.values", t.about.values)}</h2>
               <div className="w-16 h-1 mx-auto rounded-full bg-[var(--sos-red)]" />
             </motion.div>
 
@@ -182,7 +187,7 @@ function AboutContent() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="font-serif font-black text-4xl text-white mb-4">{t.about.principles}</h2>
+              <h2 className="font-serif font-black text-4xl text-white mb-4">{c("about.principles", t.about.principles)}</h2>
               <div className="w-16 h-1 mx-auto rounded-full bg-[var(--sos-red)]" />
             </motion.div>
 
