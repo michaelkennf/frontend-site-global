@@ -24,6 +24,7 @@ module.exports = {
       env_production: {
         NODE_ENV: "production",
         PORT: 3000,
+        NEXT_PUBLIC_API_URL: "https://api.globalsos.org/api",
       },
       error_file: "./logs/pm2-error.log",
       out_file: "./logs/pm2-out.log",

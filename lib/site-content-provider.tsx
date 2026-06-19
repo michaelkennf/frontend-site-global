@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react"
@@ -28,14 +29,22 @@ export function notifySiteContentUpdated() {
   window.dispatchEvent(new Event(UPDATE_EVENT))
 }
 
-export function SiteContentProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<SiteContent[]>([])
-  const [loaded, setLoaded] = useState(false)
+export function SiteContentProvider({
+  children,
+  initialItems = [],
+}: {
+  children: ReactNode
+  initialItems?: SiteContent[]
+}) {
+  const [items, setItems] = useState<SiteContent[]>(initialItems)
+  const [loaded, setLoaded] = useState(initialItems.length > 0)
 
   const refresh = useCallback(() => {
-    siteContentApi
+    return siteContentApi
       .getAllPublic()
-      .then((data) => setItems(data))
+      .then((data) => {
+        if (Array.isArray(data)) setItems(data)
+      })
       .catch(() => {})
       .finally(() => setLoaded(true))
   }, [])
@@ -63,10 +72,13 @@ export function SiteContentProvider({ children }: { children: ReactNode }) {
     }
   }, [refresh])
 
+  const value = useMemo(
+    () => ({ items, loaded, refresh }),
+    [items, loaded, refresh],
+  )
+
   return (
-    <SiteContentContext.Provider value={{ items, loaded, refresh }}>
-      {children}
-    </SiteContentContext.Provider>
+    <SiteContentContext.Provider value={value}>{children}</SiteContentContext.Provider>
   )
 }
 

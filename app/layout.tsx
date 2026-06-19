@@ -2,7 +2,11 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { Inter, Montserrat } from 'next/font/google'
 import { LOGO_SRC } from '@/lib/brand'
+import { fetchSiteContentPublic } from '@/lib/site-content-server'
+import { SiteContentRoot } from '@/components/site-content-root'
 import './globals.css'
+
+export const dynamic = 'force-dynamic'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,11 +38,13 @@ export const viewport: Viewport = {
   themeColor: '#20B7E6',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const siteContent = await fetchSiteContentPublic()
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${montserrat.variable} font-sans antialiased`}>
@@ -47,7 +53,7 @@ export default function RootLayout({
             {`(function(){if(typeof navigator!=='undefined'&&navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}})();`}
           </Script>
         )}
-        {children}
+        <SiteContentRoot initialItems={siteContent}>{children}</SiteContentRoot>
       </body>
     </html>
   )

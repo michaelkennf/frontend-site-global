@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { siteContentApi, type SiteContent } from "@/lib/api"
 import { useSiteContentStore } from "@/lib/site-content-provider"
 
@@ -15,20 +15,24 @@ export function useSiteContent(section: string, lang: Lang = "fr") {
     siteContentApi.getBySection(section).then(setFallbackItems).catch(() => {})
   }, [section, store])
 
-  /** Avec le store global : recherche par clé unique. Sinon : section chargée. */
-  const items = store ? store.items : fallbackItems
+  const items = store?.items ?? fallbackItems
+  const loaded = store ? store.loaded : fallbackItems.length > 0
 
-  function c(key: string, fallback = ""): string {
-    const item = items.find((i) => i.key === key)
-    if (!item) return fallback
-    const val = lang === "fr" ? item.valueFr : item.valueEn
-    return val?.trim() ? val : fallback
-  }
+  const c = useCallback(
+    (key: string, fallback = ""): string => {
+      const item = items.find((i) => i.key === key)
+      if (!item) return fallback
+      if (!item.valueFr?.trim() && !item.valueEn?.trim()) return fallback
+      const val = lang === "fr" ? item.valueFr : item.valueEn
+      return val?.trim() ? val : fallback
+    },
+    [items, lang],
+  )
 
   return {
     c,
     items: store ? items.filter((i) => i.section === section) : fallbackItems,
-    loaded: store ? store.loaded : fallbackItems.length > 0,
+    loaded,
     refresh: store?.refresh,
   }
 }
