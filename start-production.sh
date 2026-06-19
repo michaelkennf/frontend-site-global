@@ -13,15 +13,22 @@ fi
 echo "==> Installation des dépendances..."
 npm ci
 
+echo "==> Vérification du logo..."
+if [ ! -f "public/images/logo SOS.png" ]; then
+  echo "ATTENTION : public/images/logo SOS.png est absent — copiez le fichier depuis votre machine locale."
+fi
+
+echo "==> Nettoyage du cache Next.js..."
+rm -rf .next
+
 echo "==> Build Next.js..."
 npm run build
 
 mkdir -p logs
 
 if command -v pm2 >/dev/null 2>&1; then
-  echo "==> Démarrage avec PM2..."
-  pm2 delete globalsos-web 2>/dev/null || true
-  pm2 start ecosystem.config.js --env production
+  echo "==> Redémarrage PM2..."
+  pm2 restart globalsos-web 2>/dev/null || pm2 start ecosystem.config.js --env production
   pm2 save
   echo "Site en ligne : pm2 logs globalsos-web"
 else

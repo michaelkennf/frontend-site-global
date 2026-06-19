@@ -1,4 +1,4 @@
-import type { Activity } from "@/lib/api"
+import type { Activity, Article } from "@/lib/api"
 import type { DomainSlug } from "@/lib/domain-slugs"
 import type { Language } from "@/lib/i18n"
 
@@ -22,6 +22,18 @@ export function classifyActivityForDomain(activity: Activity): DomainSlug | null
     return explicit as DomainSlug
   }
   const text = `${activity.titleFr} ${activity.titleEn} ${activity.descriptionFr} ${activity.descriptionEn} ${activity.location ?? ""}`
+  for (const slug of BLOG_DOMAIN_SLUGS) {
+    if (KEYWORDS[slug].test(text)) return slug
+  }
+  return null
+}
+
+export function classifyArticleForDomain(article: Article): DomainSlug | null {
+  const explicit = article.category?.trim()
+  if (explicit && (BLOG_DOMAIN_SLUGS as readonly string[]).includes(explicit)) {
+    return explicit as DomainSlug
+  }
+  const text = `${article.titleFr} ${article.titleEn} ${article.excerptFr} ${article.excerptEn} ${article.contentFr} ${article.contentEn}`
   for (const slug of BLOG_DOMAIN_SLUGS) {
     if (KEYWORDS[slug].test(text)) return slug
   }

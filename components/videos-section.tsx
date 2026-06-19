@@ -13,13 +13,21 @@ export function VideosSection() {
   const [activeId, setActiveId] = useState<string | null>(null)
 
   useEffect(() => {
+    let cancelled = false
     videosApi
       .getPublic()
       .then((list) => {
+        if (cancelled) return
         setVideos(list)
         if (list.length) setActiveId(list[0].id)
       })
-      .catch(() => setVideos([]))
+      .catch((err) => {
+        console.error("Vidéos publiques:", err)
+        if (!cancelled) setVideos([])
+      })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   if (!videos.length) return null

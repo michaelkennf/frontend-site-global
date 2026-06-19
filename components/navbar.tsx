@@ -89,6 +89,7 @@ export function Navbar() {
                 height={110}
                 className="h-14 sm:h-16 w-auto object-contain group-hover:scale-[1.02] transition-transform"
                 priority
+                unoptimized
               />
               <div className="hidden sm:block leading-tight">
                 <span className="font-serif font-bold text-xl" style={{ color: "var(--sos-blue)" }}>

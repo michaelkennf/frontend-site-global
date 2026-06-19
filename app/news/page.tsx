@@ -7,18 +7,19 @@ import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Loader2, ArrowRight, Calendar, MapPin, Newspaper } from "lucide-react"
-import { activitiesApi, Activity } from "@/lib/api"
+import { Loader2, ArrowRight, Calendar, Newspaper } from "lucide-react"
+import { articlesApi, Article } from "@/lib/api"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
 import {
   BlogCategoryFilter,
   BLOG_DOMAIN_SLUGS,
-  classifyActivityForDomain,
+  classifyArticleForDomain,
   formatCategoryLabel,
   formatCategoryLabelOrAll,
 } from "@/lib/blog-categories"
+import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 import { cn } from "@/lib/utils"
 import { useSiteContent } from "@/hooks/use-site-content"
 
@@ -50,12 +51,12 @@ function NewsContent() {
   const headerSrc = headerMedia?.url ?? "/images/hero image.png"
   const headerAlt =
     (lang === "fr" ? headerMedia?.altFr : headerMedia?.altEn)?.trim() || ""
-  const [items, setItems] = useState<Activity[]>([])
+  const [items, setItems] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<BlogCategoryFilter>("all")
 
   useEffect(() => {
-    activitiesApi.getPublic()
+    articlesApi.getPublic()
       .then(setItems)
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -65,7 +66,7 @@ function NewsContent() {
     () =>
       items.map((item) => ({
         item,
-        domain: classifyActivityForDomain(item),
+        domain: classifyArticleForDomain(item),
       })),
     [items],
   )
@@ -212,17 +213,13 @@ function NewsContent() {
                       <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-4">
                         <span className="inline-flex items-center gap-1">
                           <Calendar size={12} />
-                          {formatDate(featured.item.createdAt, lang) || featured.item.date}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <MapPin size={12} />
-                          {featured.item.location}
+                          {formatArticleDate(articleDisplayDate(featured.item), lang)}
                         </span>
                         <span>
                           {readingMinutes(
                             lang === "fr"
-                              ? featured.item.descriptionFr
-                              : featured.item.descriptionEn,
+                              ? featured.item.contentFr
+                              : featured.item.contentEn,
                           )}{" "}
                           {c("news.readingMin", t.news.readingMin)}
                         </span>
@@ -237,8 +234,8 @@ function NewsContent() {
                       </h2>
                       <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6 line-clamp-4">
                         {lang === "fr"
-                          ? featured.item.descriptionFr
-                          : featured.item.descriptionEn}
+                          ? featured.item.excerptFr || featured.item.contentFr
+                          : featured.item.excerptEn || featured.item.contentEn}
                       </p>
                       <Link
                         href={`/news/${featured.item.id}`}
@@ -296,11 +293,11 @@ function NewsContent() {
                               <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
                                 <span className="inline-flex items-center gap-1">
                                   <Calendar size={12} />
-                                  {formatDate(a.createdAt, lang) || a.date}
+                                  {formatArticleDate(articleDisplayDate(a), lang)}
                                 </span>
                                 <span>
                                   {readingMinutes(
-                                    lang === "fr" ? a.descriptionFr : a.descriptionEn,
+                                    lang === "fr" ? a.contentFr : a.contentEn,
                                   )}{" "}
                                   {c("news.readingMin", t.news.readingMin)}
                                 </span>
@@ -311,12 +308,13 @@ function NewsContent() {
                                 </Link>
                               </h3>
                               <p className="text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3 flex-1">
-                                {lang === "fr" ? a.descriptionFr : a.descriptionEn}
+                                {lang === "fr" ? a.excerptFr || a.contentFr : a.excerptEn || a.contentEn}
                               </p>
                               <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-100">
                                 <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                                  <MapPin size={12} />
-                                  {a.location}
+                                  {entry.domain
+                                    ? formatCategoryLabel(entry.domain, lang)
+                                    : a.author?.name || (lang === "fr" ? "Global SOS" : "Global SOS")}
                                 </span>
                                 <Link
                                   href={`/news/${a.id}`}

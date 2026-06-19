@@ -73,6 +73,7 @@ export function AdminSidebar() {
             width={48}
             height={82}
             className="h-14 w-auto object-contain shrink-0"
+            unoptimized
           />
           <div className="leading-tight">
             <span className="font-serif font-bold text-white text-lg">Global</span>

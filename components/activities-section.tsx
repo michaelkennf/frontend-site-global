@@ -5,26 +5,28 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
-import { MapPin, Calendar, Clock3, Users, ArrowUpRight, ChevronUp, ChevronDown, ArrowRight } from "lucide-react"
-import { activitiesApi, Activity } from "@/lib/api"
+import { Calendar, Clock3, ArrowUpRight, ChevronUp, ChevronDown, ArrowRight } from "lucide-react"
+import { articlesApi, Article } from "@/lib/api"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { formatArticleDate, articleDateParts, articleDisplayDate } from "@/lib/format-article-date"
+import { classifyArticleForDomain, formatCategoryLabel } from "@/lib/blog-categories"
 
 const AUTO_MS = 5500
 
 export function ActivitiesSection() {
   const { t, lang } = useI18n()
   const { c } = useSiteContent("activities", lang)
-  const [activities, setActivities] = useState<Activity[]>([])
+  const [articles, setArticles] = useState<Article[]>([])
   const [currentSide, setCurrentSide] = useState(0)
   const [direction, setDirection] = useState(0)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    activitiesApi.getPublic().then(setActivities).catch(() => {})
+    articlesApi.getPublic().then(setArticles).catch(() => {})
   }, [])
 
-  const primary = activities[0]
-  const sidePool = useMemo(() => activities.slice(1), [activities])
+  const primary = articles[0]
+  const sidePool = useMemo(() => articles.slice(1), [articles])
 
   const bumpAuto = useCallback(() => {
     if (intervalRef.current != null) {
@@ -133,26 +135,23 @@ export function ActivitiesSection() {
                 {lang === "fr" ? primary.titleFr : primary.titleEn}
               </h3>
               <p className="text-white/85 text-base md:text-lg max-w-2xl mb-6 line-clamp-2">
-                {lang === "fr" ? primary.descriptionFr : primary.descriptionEn}
+                {lang === "fr" ? primary.excerptFr || primary.contentFr : primary.excerptEn || primary.contentEn}
               </p>
 
               <div className="grid grid-cols-2 gap-4 text-sm mb-6 max-w-xl">
                 <span className="inline-flex items-center gap-2 text-white/90">
                   <Calendar size={16} />
-                  {primary.date}
+                  {formatArticleDate(articleDisplayDate(primary), lang)}
                 </span>
                 <span className="inline-flex items-center gap-2 text-white/90">
                   <Clock3 size={16} />
-                  {lang === "fr" ? "09:00 - 17:00" : "09:00 - 17:00"}
+                  {formatCategoryLabel(classifyArticleForDomain(primary), lang)}
                 </span>
-                <span className="inline-flex items-center gap-2 text-white/90">
-                  <MapPin size={16} />
-                  {primary.location}
-                </span>
-                <span className="inline-flex items-center gap-2 text-white/90">
-                  <Users size={16} />
-                  {lang === "fr" ? "250 attendus" : "250 expected"}
-                </span>
+                {primary.author?.name && (
+                  <span className="inline-flex items-center gap-2 text-white/90 col-span-2">
+                    {primary.author.name}
+                  </span>
+                )}
               </div>
 
               <span className="inline-flex items-center gap-2 rounded-full bg-[var(--sos-red)] text-white px-5 py-2.5 text-sm font-bold w-fit shadow-md group-hover:bg-[var(--sos-red-dark)] transition-colors">
@@ -200,7 +199,10 @@ export function ActivitiesSection() {
                   transition={{ duration: 0.3 }}
                   className="space-y-3"
                 >
-                  {sideItems.map((item) => (
+                  {sideItems.map((item) => {
+                    const parts = articleDateParts(articleDisplayDate(item), lang)
+                    const domain = classifyArticleForDomain(item)
+                    return (
                     <Link
                       key={item.id}
                       href={`/news/${item.id}`}
@@ -209,29 +211,19 @@ export function ActivitiesSection() {
                       <div className="flex items-start gap-3">
                         <div className="w-12 h-12 rounded-xl bg-gray-100 text-gray-700 flex flex-col items-center justify-center shrink-0">
                           <span className="text-sm font-black leading-none">
-                            {item.date?.slice(0, 2) || "--"}
+                            {parts.day}
                           </span>
                           <span className="text-[10px] uppercase tracking-wider">
-                            {item.date?.slice(3, 6) || "N/A"}
+                            {parts.month}
                           </span>
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs font-semibold text-[var(--sos-blue)] mb-1">
-                            {item.status === "ONGOING"
-                              ? lang === "fr"
-                                ? "En cours"
-                                : "Ongoing"
-                              : lang === "fr"
-                                ? "Terminé"
-                                : "Completed"}
+                            {formatCategoryLabel(domain, lang)}
                           </p>
                           <h5 className="font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-[var(--sos-red)] transition-colors">
                             {lang === "fr" ? item.titleFr : item.titleEn}
                           </h5>
-                          <p className="text-xs text-gray-500 mt-1 inline-flex items-center gap-1">
-                            <MapPin size={12} />
-                            {item.location}
-                          </p>
                         </div>
                         <span className="shrink-0 mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[var(--sos-blue)] group-hover:text-[var(--sos-red)] transition-colors whitespace-nowrap">
                           {lang === "fr" ? "Voir plus" : "See more"}
@@ -239,7 +231,8 @@ export function ActivitiesSection() {
                         </span>
                       </div>
                     </Link>
-                  ))}
+                    )
+                  })}
                 </motion.div>
               </AnimatePresence>
             </div>

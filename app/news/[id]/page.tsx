@@ -8,13 +8,14 @@ import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Loader2, Calendar, MapPin, ArrowRight } from "lucide-react"
-import { activitiesApi, Activity } from "@/lib/api"
+import { ArrowLeft, Loader2, Calendar, ArrowRight } from "lucide-react"
+import { articlesApi, Article } from "@/lib/api"
 import {
-  classifyActivityForDomain,
+  classifyArticleForDomain,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
 import { ContentDetailView } from "@/components/content-detail-view"
+import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 
 function readingMinutes(text: string): number {
   if (!text) return 1
@@ -22,48 +23,33 @@ function readingMinutes(text: string): number {
   return Math.max(1, Math.round(words / 200))
 }
 
-function formatDate(value: string, lang: "fr" | "en"): string {
-  if (!value) return ""
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  try {
-    return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date)
-  } catch {
-    return value
-  }
-}
-
-function ActivityContent() {
+function ArticleContent() {
   const { t, lang } = useI18n()
   const params = useParams()
-  const [item, setItem] = useState<Activity | null>(null)
+  const [item, setItem] = useState<Article | null>(null)
   const [loading, setLoading] = useState(true)
-  const [related, setRelated] = useState<Activity[]>([])
+  const [related, setRelated] = useState<Article[]>([])
 
   useEffect(() => {
     if (!params?.id) return
     setLoading(true)
-    activitiesApi
+    articlesApi
       .getOnePublic(params.id as string)
       .then(setItem)
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [params?.id])
 
-  const domain = useMemo(() => (item ? classifyActivityForDomain(item) : null), [item])
+  const domain = useMemo(() => (item ? classifyArticleForDomain(item) : null), [item])
 
   useEffect(() => {
     if (!item) return
-    activitiesApi
+    articlesApi
       .getPublic()
       .then((all) => {
         const filtered = all.filter((a) => a.id !== item.id)
         const sameDomain = domain
-          ? filtered.filter((a) => classifyActivityForDomain(a) === domain)
+          ? filtered.filter((a) => classifyArticleForDomain(a) === domain)
           : filtered
         setRelated((sameDomain.length ? sameDomain : filtered).slice(0, 3))
       })
@@ -89,7 +75,7 @@ function ActivityContent() {
         <main className="flex-1 flex items-center justify-center text-gray-400">
           <div className="text-center">
             <p className="text-xl font-bold mb-4">
-              {lang === "fr" ? "Actualité introuvable" : "Not found"}
+              {lang === "fr" ? "Article introuvable" : "Article not found"}
             </p>
             <Link href="/news" className="text-[var(--sos-blue)] hover:underline">
               ← {t.news.backToList}
@@ -102,23 +88,16 @@ function ActivityContent() {
   }
 
   const title = lang === "fr" ? item.titleFr : item.titleEn
-  const body = lang === "fr" ? item.descriptionFr : item.descriptionEn
+  const excerpt = lang === "fr" ? item.excerptFr : item.excerptEn
+  const body = lang === "fr" ? item.contentFr : item.contentEn
   const reading = readingMinutes(body)
-  const dateStr = formatDate(item.createdAt, lang) || item.date
+  const dateStr = formatArticleDate(articleDisplayDate(item), lang)
 
   const detailMeta = {
-    categoryLabel: domain ? formatCategoryLabel(domain, lang) : undefined,
-    statusLabel:
-      lang === "fr"
-        ? item.status === "ONGOING"
-          ? "En cours"
-          : "Terminé"
-        : item.status === "ONGOING"
-          ? "Ongoing"
-          : "Completed",
-    statusVariant: item.status === "ONGOING" ? ("ongoing" as const) : ("completed" as const),
+    categoryLabel: domain ? formatCategoryLabel(domain, lang) : item.category,
+    statusLabel: lang === "fr" ? "Publié" : "Published",
+    statusVariant: "published" as const,
     date: dateStr,
-    location: item.location,
     authorName: item.author?.name,
     readingMinutes: reading,
     readingMinLabel: t.news.readingMin,
@@ -142,6 +121,7 @@ function ActivityContent() {
 
         <ContentDetailView
           title={title}
+          excerpt={excerpt}
           body={body}
           image={item.image}
           inlineImages={item.inlineImages}
@@ -167,7 +147,7 @@ function ActivityContent() {
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {related.map((a) => {
-                  const d = classifyActivityForDomain(a)
+                  const d = classifyArticleForDomain(a)
                   return (
                     <Link
                       key={a.id}
@@ -195,11 +175,7 @@ function ActivityContent() {
                         <div className="flex items-center gap-3 text-xs text-gray-400">
                           <span className="inline-flex items-center gap-1">
                             <Calendar size={12} />
-                            {formatDate(a.createdAt, lang) || a.date}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <MapPin size={12} />
-                            {a.location}
+                            {formatArticleDate(articleDisplayDate(a), lang)}
                           </span>
                         </div>
                       </div>
@@ -216,10 +192,10 @@ function ActivityContent() {
   )
 }
 
-export default function ActivityPage() {
+export default function ArticlePage() {
   return (
     <I18nProvider>
-      <ActivityContent />
+      <ArticleContent />
     </I18nProvider>
   )
 }

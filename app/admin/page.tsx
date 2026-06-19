@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
       <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--sos-blue)]">
         <Image src="/images/hero image.png" alt="Global SOS" fill className="object-cover opacity-60" />
         <div className="relative z-10 flex flex-col justify-center p-12 text-white">
-          <Image src={LOGO_SRC} alt="Global SOS" width={140} height={238} className="mb-8 h-36 w-auto object-contain" />
+          <Image src={LOGO_SRC} alt="Global SOS" width={140} height={238} className="mb-8 h-36 w-auto object-contain" unoptimized />
           <p className="text-white/80 text-lg leading-relaxed max-w-md">
             Espace administration pour la gestion du contenu, des dons et des communications.
           </p>
@@ -56,6 +56,7 @@ export default function AdminLoginPage() {
               width={96}
               height={164}
               className="h-28 w-auto object-contain group-hover:scale-[1.02] transition-transform"
+              unoptimized
             />
             <div className="text-xs text-gray-400">Retour à l&apos;accueil</div>
           </Link>

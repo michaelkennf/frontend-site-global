@@ -12,12 +12,15 @@ New-Item -ItemType Directory -Force -Path logs | Out-Null
 Write-Host "==> npm ci"
 npm ci
 
+Write-Host "==> Nettoyage cache .next"
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+
 Write-Host "==> Build"
 npm run build
 
 Write-Host "==> PM2"
-pm2 delete globalsos-web 2>$null
-pm2 start ecosystem.config.js --env production
+pm2 restart globalsos-web 2>$null
+if ($LASTEXITCODE -ne 0) { pm2 start ecosystem.config.js --env production }
 pm2 save
 
 Write-Host "Site en ligne. Logs : pm2 logs globalsos-web"

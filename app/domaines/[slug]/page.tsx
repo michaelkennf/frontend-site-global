@@ -13,11 +13,12 @@ import { isDomainSlug, type DomainSlug } from "@/lib/domain-slugs"
 import { DOMAIN_SLUG_MEDIA_KEY, resolveDomainIllustrationUrl } from "@/lib/domain-assets"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
-import { activitiesApi, type Activity } from "@/lib/api"
+import { articlesApi, type Article } from "@/lib/api"
 import {
-  classifyActivityForDomain,
+  classifyArticleForDomain,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
+import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 import { useSiteContent } from "@/hooks/use-site-content"
 
 const accentBySlug: Record<DomainSlug, { color: string; bg: string }> = {
@@ -44,15 +45,15 @@ function DomainDetailContent() {
   const mediaKey = isDomainSlug(slugParam) ? DOMAIN_SLUG_MEDIA_KEY[slugParam] : null
   const domainMedia = useSiteMediaKeys(mediaKey ? [mediaKey] : [])
   const heroMedia = mediaKey ? domainMedia[mediaKey] : null
-  const [relatedItems, setRelatedItems] = useState<Activity[]>([])
+  const [relatedItems, setRelatedItems] = useState<Article[]>([])
 
   useEffect(() => {
     if (!isDomainSlug(slugParam)) return
-    activitiesApi
+    articlesApi
       .getPublic()
       .then((items) => {
         const filtered = items.filter(
-          (a) => classifyActivityForDomain(a) === slugParam,
+          (a) => classifyArticleForDomain(a) === slugParam,
         )
         setRelatedItems(filtered.slice(0, 3))
       })
@@ -251,16 +252,12 @@ function DomainDetailContent() {
                         {lang === "fr" ? a.titleFr : a.titleEn}
                       </h3>
                       <p className="text-gray-500 text-sm line-clamp-2 mb-3">
-                        {lang === "fr" ? a.descriptionFr : a.descriptionEn}
+                        {lang === "fr" ? a.excerptFr || a.contentFr : a.excerptEn || a.contentEn}
                       </p>
                       <div className="flex items-center gap-3 text-xs text-gray-400">
                         <span className="inline-flex items-center gap-1">
-                          <MapPin size={12} />
-                          {a.location}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
                           <Calendar size={12} />
-                          {a.date}
+                          {formatArticleDate(articleDisplayDate(a), lang)}
                         </span>
                       </div>
                     </div>

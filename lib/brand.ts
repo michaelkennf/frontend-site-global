@@ -24,4 +24,7 @@ export function brandTintBg(color: string, alpha = 0.15): string {
 }
 
 /** Logo officiel Global SOS — fichier PNG `public/images/logo SOS.png` (inchangé). */
-export const LOGO_SRC = "/images/logo SOS.png"
+export const LOGO_FILE = "/images/logo SOS.png"
+/** Incrémenter après chaque changement de logo pour invalider le cache navigateur/CDN. */
+export const LOGO_VERSION = "20260613"
+export const LOGO_SRC = `${LOGO_FILE}?v=${LOGO_VERSION}`
