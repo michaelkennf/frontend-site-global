@@ -137,7 +137,7 @@ export function AboutSection() {
               href="/about"
               className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-[0_12px_24px_-12px_rgba(227,34,25,0.25)] transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
             >
-              {t.hero.learnMore}
+              {c("hero.learnMore", t.hero.learnMore)}
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
             </Link>
           </motion.div>

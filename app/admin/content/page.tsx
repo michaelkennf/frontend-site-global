@@ -5,28 +5,23 @@ import { useRouter } from "next/navigation"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { siteContentApi, SiteContent } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
-import { Save, Loader2, CheckCircle, FileEdit, List } from "lucide-react"
+import { Save, Loader2, CheckCircle, FileEdit, List, Languages } from "lucide-react"
 import {
   SITE_TEXT_CATALOG,
   catalogSectionsForTabs,
   type SiteTextCatalogEntry,
 } from "@/lib/site-text-catalog"
-
-type FieldValues = Record<string, { valueFr: string; valueEn: string }>
-
-function defaultsFromCatalog(): FieldValues {
-  const m: FieldValues = {}
-  for (const e of SITE_TEXT_CATALOG) {
-    m[e.key] = { valueFr: e.defaultFr, valueEn: "" }
-  }
-  return m
-}
+import {
+  mergeContentRows,
+  type ContentFieldValues,
+} from "@/lib/site-content-admin"
+import { notifySiteContentUpdated } from "@/lib/site-content-provider"
 
 export default function AdminContent() {
   const router = useRouter()
   const tabs = useMemo(() => catalogSectionsForTabs(), [])
   const [activeSection, setActiveSection] = useState(tabs[0]?.id ?? "nav")
-  const [values, setValues] = useState<FieldValues>({})
+  const [values, setValues] = useState<ContentFieldValues>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState<string | null>(null)
   const [saved, setSaved] = useState<string | null>(null)
@@ -40,14 +35,8 @@ export default function AdminContent() {
     setLoading(true)
     siteContentApi
       .getAllAdmin()
-      .then((rows: SiteContent[]) => {
-        const base = defaultsFromCatalog()
-        rows.forEach((r) => {
-          base[r.key] = { valueFr: r.valueFr, valueEn: r.valueEn }
-        })
-        setValues(base)
-      })
-      .catch(() => setValues(defaultsFromCatalog()))
+      .then((rows: SiteContent[]) => setValues(mergeContentRows(rows)))
+      .catch(() => setError("Impossible de charger le contenu. Vérifiez votre connexion."))
       .finally(() => setLoading(false))
   }, [router])
 
@@ -59,31 +48,44 @@ export default function AdminContent() {
     return values[key]?.[lang === "fr" ? "valueFr" : "valueEn"] ?? ""
   }
 
-  function set(key: string, lang: "fr" | "en", val: string) {
+  function setField(key: string, lang: "fr" | "en", val: string) {
     setValues((prev) => ({
       ...prev,
       [key]: {
         valueFr: lang === "fr" ? val : (prev[key]?.valueFr ?? ""),
-        // Effacer l'anglais quand le français change → retraduction à l'enregistrement
-        valueEn: lang === "en" ? val : "",
+        valueEn: lang === "en" ? val : (prev[key]?.valueEn ?? ""),
       },
     }))
   }
 
-  async function handleSave(entry: SiteTextCatalogEntry) {
+  async function handleSave(entry: SiteTextCatalogEntry, forceRetranslateEn = false) {
     const key = entry.key
+    const current = values[key]
+    if (!current) return
+
+    const valueFr = current.valueFr ?? ""
+    const valueEn = forceRetranslateEn ? "" : (current.valueEn ?? "")
+
+    if (!valueFr.trim() && !valueEn.trim()) {
+      setError("Le texte ne peut pas être vide. Remplissez au moins le champ français.")
+      return
+    }
+
     setSaving(key)
     setError(null)
     try {
       const updated = await siteContentApi.upsert(key, {
-        valueFr: values[key]?.valueFr ?? "",
-        valueEn: values[key]?.valueEn ?? "",
+        valueFr,
+        valueEn,
         section: entry.section,
+        retranslateEn: forceRetranslateEn,
       })
-      setValues((prev) => ({
-        ...prev,
-        [key]: { valueFr: updated.valueFr, valueEn: updated.valueEn },
-      }))
+      if (!updated.valueFr?.trim() && !updated.valueEn?.trim()) {
+        throw new Error("La sauvegarde a échoué : contenu vide renvoyé par le serveur.")
+      }
+      const next = { valueFr: updated.valueFr, valueEn: updated.valueEn }
+      setValues((prev) => ({ ...prev, [key]: next }))
+      notifySiteContentUpdated()
       setSaved(key)
       setTimeout(() => setSaved(null), 2500)
     } catch (err: unknown) {
@@ -105,12 +107,11 @@ export default function AdminContent() {
             </h1>
             <p className="text-gray-500 mt-1 flex flex-wrap items-center gap-2">
               <List className="w-4 h-4 shrink-0" />
-              Remplissez uniquement le français : la version anglaise sera traduite automatiquement à
-              l&apos;enregistrement. Laissez l&apos;anglais vide pour forcer une nouvelle traduction.
+              Les textes actuels du site sont préremplis (français et anglais). Modifiez le français
+              puis enregistrez : l&apos;anglais est traduit automatiquement s&apos;il est vide.
             </p>
             <p className="text-gray-400 text-sm mt-1">
-              Les modifications sont visibles sur le site public après enregistrement (rechargez la page ou
-              revenez sur l&apos;onglet du site).
+              Utilisez « Retraduire EN » pour regénérer l&apos;anglais à partir du français.
             </p>
           </div>
 
@@ -156,21 +157,33 @@ export default function AdminContent() {
                         <h3 className="font-semibold text-gray-900">{field.label}</h3>
                         <p className="text-xs text-gray-400 font-mono mt-0.5">{field.key}</p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleSave(field)}
-                        disabled={saving === field.key}
-                        className="inline-flex items-center justify-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors shrink-0"
-                      >
-                        {saving === field.key ? (
-                          <Loader2 size={15} className="animate-spin" />
-                        ) : saved === field.key ? (
-                          <CheckCircle size={15} />
-                        ) : (
-                          <Save size={15} />
-                        )}
-                        {saved === field.key ? "Enregistré !" : "Enregistrer"}
-                      </button>
+                      <div className="flex flex-wrap gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleSave(field, true)}
+                          disabled={saving === field.key || !get(field.key, "fr").trim()}
+                          title="Regénérer l'anglais depuis le français"
+                          className="inline-flex items-center justify-center gap-2 border border-gray-200 hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)] disabled:opacity-50 text-gray-600 text-sm font-semibold px-3 py-2 rounded-lg transition-colors"
+                        >
+                          <Languages size={15} />
+                          Retraduire EN
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSave(field)}
+                          disabled={saving === field.key}
+                          className="inline-flex items-center justify-center gap-2 bg-[var(--sos-blue)] hover:bg-[var(--sos-blue-dark)] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                        >
+                          {saving === field.key ? (
+                            <Loader2 size={15} className="animate-spin" />
+                          ) : saved === field.key ? (
+                            <CheckCircle size={15} />
+                          ) : (
+                            <Save size={15} />
+                          )}
+                          {saved === field.key ? "Enregistré !" : "Enregistrer"}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
@@ -178,33 +191,22 @@ export default function AdminContent() {
                         <div key={lang}>
                           <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-1.5">
                             {lang === "fr" ? "Français" : "English"}
-                            {lang === "en" && (
-                              <span className="ml-1 font-normal normal-case text-gray-400">(auto si vide)</span>
-                            )}
                           </label>
                           {field.multiline ? (
                             <textarea
                               rows={field.key.includes("body") || field.key.includes("description") ? 8 : 4}
                               value={get(field.key, lang)}
-                              onChange={(e) => set(field.key, lang, e.target.value)}
+                              onChange={(e) => setField(field.key, lang, e.target.value)}
                               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 resize-y focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
-                              placeholder={
-                                lang === "fr"
-                                  ? "Texte en français…"
-                                  : "Laissez vide pour traduction automatique…"
-                              }
+                              placeholder={lang === "fr" ? "Texte en français…" : "English text…"}
                             />
                           ) : (
                             <input
                               type="text"
                               value={get(field.key, lang)}
-                              onChange={(e) => set(field.key, lang, e.target.value)}
+                              onChange={(e) => setField(field.key, lang, e.target.value)}
                               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
-                              placeholder={
-                                lang === "fr"
-                                  ? "Texte en français…"
-                                  : "Laissez vide pour traduction automatique…"
-                              }
+                              placeholder={lang === "fr" ? "Texte en français…" : "English text…"}
                             />
                           )}
                         </div>

@@ -222,8 +222,14 @@ export const siteContentApi = {
   getBySection: (section: string) => request<SiteContent[]>(`/site-content/public?section=${encodeURIComponent(section)}`),
   getAllPublic: () => request<SiteContent[]>('/site-content/public/all'),
   getAllAdmin: () => request<SiteContent[]>('/site-content/admin/all', {}, true),
-  upsert: (key: string, data: { valueFr: string; valueEn: string; section: string }) =>
-    request<SiteContent>(`/site-content/${key}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+  upsert: (
+    key: string,
+    data: { valueFr: string; valueEn: string; section: string; retranslateEn?: boolean },
+  ) =>
+    request<SiteContent>('/site-content/upsert', {
+      method: 'PUT',
+      body: JSON.stringify({ key, ...data }),
+    }, true),
 };
 
 // ── Types ──────────────────────────────────────────────────────────

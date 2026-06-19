@@ -15,9 +15,8 @@ export function useSiteContent(section: string, lang: Lang = "fr") {
     siteContentApi.getBySection(section).then(setFallbackItems).catch(() => {})
   }, [section, store])
 
-  const items = store
-    ? store.items.filter((i) => i.section === section)
-    : fallbackItems
+  /** Avec le store global : recherche par clé unique. Sinon : section chargée. */
+  const items = store ? store.items : fallbackItems
 
   function c(key: string, fallback = ""): string {
     const item = items.find((i) => i.key === key)
@@ -26,5 +25,10 @@ export function useSiteContent(section: string, lang: Lang = "fr") {
     return val?.trim() ? val : fallback
   }
 
-  return { c, items, loaded: store ? store.loaded : fallbackItems.length > 0, refresh: store?.refresh }
+  return {
+    c,
+    items: store ? items.filter((i) => i.section === section) : fallbackItems,
+    loaded: store ? store.loaded : fallbackItems.length > 0,
+    refresh: store?.refresh,
+  }
 }

@@ -88,12 +88,7 @@ export function ActivitiesSection() {
               {c("activities.subtitle", t.activities.subtitle)}
             </span>
             <h2 className="font-serif font-black text-4xl sm:text-5xl lg:text-[3.35rem] tracking-tight text-balance leading-[1.05]">
-              <span style={{ color: "var(--sos-blue)" }}>
-                {lang === "fr" ? "Actualités" : "Recent"}
-              </span>{" "}
-              <span style={{ color: "var(--sos-red)" }}>
-                {lang === "fr" ? "récentes" : "News"}
-              </span>
+              {c("activities.title", t.activities.title)}
             </h2>
           </div>
           <Link
