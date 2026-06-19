@@ -170,7 +170,7 @@ export default function AdminActivities() {
                     <p className="text-xs text-gray-500 bg-[var(--sos-blue-light)]/40 border border-[var(--sos-blue-light)] rounded-lg px-3 py-2">
                       <strong className="text-gray-800">Traduction automatique :</strong> une seule langue suffit pour le titre et la description — l&apos;autre sera générée à l&apos;enregistrement.
                       <br />
-                      <strong className="text-gray-800">Images dans le texte :</strong> placez <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> … <code className="text-[11px] bg-white px-1 rounded">[[IMG4]]</code> dans la description aux endroits voulus (optionnel).
+                      <strong className="text-gray-800">Images dans le texte :</strong> placez <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> (ou <code className="text-[11px] bg-white px-1 rounded">[IMG1]</code>) … <code className="text-[11px] bg-white px-1 rounded">[[IMG4]]</code> dans la description aux endroits voulus (optionnel).
                     </p>
                     <div>
                       <label className="text-sm font-medium text-gray-700 mb-1 block">Image de couverture</label>

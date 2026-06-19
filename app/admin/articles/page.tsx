@@ -382,7 +382,8 @@ export default function AdminArticles() {
                       <em>ou</em> uniquement l&apos;anglais pour le titre, le résumé et le contenu — l&apos;autre langue sera générée à l&apos;enregistrement.
                       <br />
                       <strong className="text-gray-800">Images dans le texte :</strong> insérez{" "}
-                      <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> …{" "}
+                      <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> (ou{" "}
+                      <code className="text-[11px] bg-white px-1 rounded">[IMG1]</code>) …{" "}
                       <code className="text-[11px] bg-white px-1 rounded">[[IMG4]]</code> dans le contenu aux endroits souhaités, puis uploadez les photos ci-dessous (facultatif).
                     </p>
                     <div className="grid md:grid-cols-2 gap-4">

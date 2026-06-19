@@ -1,5 +1,6 @@
 import Image from "next/image"
 import React from "react"
+import { normalizeInlineImageMarkers, resolveMediaUrl } from "@/lib/inline-image-markers"
 
 function parseInlineUrls(raw?: string | null): string[] {
   if (!raw) return []
@@ -13,7 +14,7 @@ function parseInlineUrls(raw?: string | null): string[] {
 }
 
 /**
- * Découpe le texte sur [[IMG1]] … [[IMG4]] et insère les images aux positions voulues.
+ * Découpe le texte sur [[IMG1]] … [[IMG4]] (ou [IMG1] … [IMG4]) et insère les images.
  * Les URLs viennent du JSON `inlineImages` (indices 0–3 pour IMG1–4).
  */
 export function renderBodyWithInlineImages(
@@ -21,18 +22,19 @@ export function renderBodyWithInlineImages(
   inlineImagesJson: string | undefined | null,
   imageAlt: string,
 ): React.ReactNode {
-  const urls = parseInlineUrls(inlineImagesJson)
+  const urls = parseInlineUrls(inlineImagesJson).map(resolveMediaUrl)
   if (!body) return null
 
+  const normalizedBody = normalizeInlineImageMarkers(body)
   const parts: React.ReactNode[] = []
   let last = 0
   const re = /\[\[IMG([1-4])\]\]/g
   let m: RegExpExecArray | null
   let key = 0
-  while ((m = re.exec(body)) !== null) {
+  while ((m = re.exec(normalizedBody)) !== null) {
     const idx = parseInt(m[1], 10) - 1
     if (m.index > last) {
-      const chunk = body.slice(last, m.index)
+      const chunk = normalizedBody.slice(last, m.index)
       parts.push(
         <span key={`t-${key++}`} className="whitespace-pre-wrap">
           {chunk}
@@ -51,16 +53,16 @@ export function renderBodyWithInlineImages(
     }
     last = m.index + m[0].length
   }
-  if (last < body.length) {
+  if (last < normalizedBody.length) {
     parts.push(
       <span key={`t-${key++}`} className="whitespace-pre-wrap">
-        {body.slice(last)}
+        {normalizedBody.slice(last)}
       </span>,
     )
   }
 
   if (parts.length === 0) {
-    return <span className="whitespace-pre-wrap">{body}</span>
+    return <span className="whitespace-pre-wrap">{normalizedBody}</span>
   }
   return <>{parts}</>
 }

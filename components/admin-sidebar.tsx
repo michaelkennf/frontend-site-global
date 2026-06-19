@@ -67,14 +67,16 @@ export function AdminSidebar() {
     <>
       <div className="p-5 border-b border-sidebar-border">
         <Link href="/admin/dashboard" className="flex items-center gap-2.5">
-          <Image
-            src={LOGO_SRC}
-            alt="Global SOS"
-            width={48}
-            height={82}
-            className="h-14 w-auto object-contain shrink-0"
-            unoptimized
-          />
+          <div className="shrink-0 rounded-xl bg-white p-1.5 shadow-sm">
+            <Image
+              src={LOGO_SRC}
+              alt="Global SOS"
+              width={48}
+              height={82}
+              className="h-12 w-auto object-contain"
+              unoptimized
+            />
+          </div>
           <div className="leading-tight">
             <span className="font-serif font-bold text-white text-lg">Global</span>
             <span className="font-serif font-black text-lg" style={{ color: "var(--sos-red)" }}>
