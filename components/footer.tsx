@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n"
 import Link from "next/link"
 import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/brand"
 
 const SOCIAL_LINKS = [
   {
@@ -108,10 +109,10 @@ export function Footer() {
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-[var(--sos-red)]" />
                 <a
-                  href="mailto:contact@globalsos.org?subject=Contact%20Global%20SOS"
+                  href={CONTACT_MAILTO}
                   className="text-white/80 hover:text-white transition-colors underline-offset-2 hover:underline"
                 >
-                  contact@globalsos.org
+                  {CONTACT_EMAIL}
                 </a>
               </li>
             </ul>

@@ -14,6 +14,7 @@ import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/brand"
 
 function ContactContent() {
   const { t, lang } = useI18n()
@@ -107,10 +108,10 @@ function ContactContent() {
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1">{t.contact.emailLabel}</h3>
                       <a
-                        href="mailto:contact@globalsos.org?subject=Contact%20Global%20SOS"
+                        href={CONTACT_MAILTO}
                         className="text-gray-600 hover:text-[var(--sos-blue)] transition-colors underline-offset-2 hover:underline font-medium"
                       >
-                        contact@globalsos.org
+                        {CONTACT_EMAIL}
                       </a>
                     </div>
                   </div>

@@ -28,6 +28,17 @@ const SECTION_LABELS: Record<string, string> = {
   general: "Général",
 }
 
+const KEY_LABELS: Record<string, string> = {
+  "hero-home": "Image hero — Accueil (plein écran)",
+  "about-header": "En-tête — Page À propos",
+  "contact-header": "En-tête — Page Contact",
+  "donate-hero-bg": "Fond — Page Faire un don",
+  "news-header": "En-tête — Page Actualités",
+  "domain-risques": "Illustration — Risques de catastrophes",
+  "domain-climat": "Illustration — Justice climatique",
+  "domain-sante": "Illustration — Urgences sanitaires",
+}
+
 const SECTION_KEYS = Object.keys(SECTION_LABELS)
 
 export default function MediaPage() {
@@ -165,7 +176,8 @@ export default function MediaPage() {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Médiathèque</h1>
               <p className="text-gray-500 text-sm mt-1">
-                Gérez les images du site : hero d&apos;accueil, en-têtes, illustrations des domaines, carousel, etc.
+                Gérez les images du site. Pour changer le bandeau d&apos;accueil : section
+                « Site — Hero… » → clé <code className="text-xs bg-gray-100 px-1 rounded">hero-home</code> → Modifier.
               </p>
             </div>
             <div className="flex gap-3">
@@ -269,7 +281,12 @@ export default function MediaPage() {
                           {/* Info */}
                           <div className="p-4">
                             <p className="text-xs text-gray-400 mb-1 truncate font-mono">{m.key}</p>
-                            <p className="font-semibold text-gray-800 text-sm truncate mb-0.5">{m.altFr || "—"}</p>
+                            <p className="font-semibold text-gray-800 text-sm truncate mb-0.5">
+                              {KEY_LABELS[m.key] || m.altFr || "—"}
+                            </p>
+                            {KEY_LABELS[m.key] && m.altFr ? (
+                              <p className="text-xs text-gray-500 truncate mb-0.5">{m.altFr}</p>
+                            ) : null}
                             <p className="text-xs text-gray-400 truncate">{m.url}</p>
 
                             <div className="flex gap-2 mt-3">

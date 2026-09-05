@@ -7,45 +7,36 @@ import { useI18n } from "@/lib/i18n"
 import { partnersApi, Partner } from "@/lib/api"
 import { Handshake } from "lucide-react"
 
-const FALLBACK_PARTNERS: Partner[] = [
-  {
-    id: "yarh-drc",
-    name: "YARH DRC",
-    logo: "",
-    website: "https://yarhdrc.org",
-    description: "Youth Alliance for Reproductive Health",
-    order: 0,
-    isActive: true,
-    createdAt: "",
-    updatedAt: "",
-  },
-]
-
 export function PartnersSection() {
   const { lang } = useI18n()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-60px" })
-  const [partners, setPartners] = useState<Partner[]>(FALLBACK_PARTNERS)
+  const [partners, setPartners] = useState<Partner[]>([])
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    partnersApi.getPublic()
-      .then((data) => { if (data.length > 0) setPartners(data) })
-      .catch(() => {})
+    partnersApi
+      .getPublic()
+      .then((data) => setPartners(Array.isArray(data) ? data : []))
+      .catch(() => setPartners([]))
+      .finally(() => setLoaded(true))
   }, [])
+
+  if (loaded && partners.length === 0) return null
 
   return (
     <section className="py-16 bg-[var(--sos-blue-light)]" ref={ref}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
-            style={{ background: "var(--sos-blue-light)", color: "var(--sos-blue)" }}>
+          <div
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
+            style={{ background: "var(--sos-blue-light)", color: "var(--sos-blue)" }}
+          >
             <Handshake size={13} />
             {lang === "fr" ? "Nos Partenaires" : "Our Partners"}
           </div>
@@ -55,7 +46,6 @@ export function PartnersSection() {
           <div className="w-16 h-1 mx-auto mt-4 rounded-full" style={{ background: "var(--sos-red)" }} />
         </motion.div>
 
-        {/* Logos grid */}
         <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
           {partners.map((partner, i) => (
             <motion.div
@@ -88,7 +78,9 @@ function PartnerCard({ partner }: { partner: Partner }) {
         </div>
       ) : (
         <div className="w-36 h-20 flex items-center justify-center">
-          <Handshake size={32} className="text-[var(--sos-blue)] opacity-40" />
+          <span className="text-sm font-semibold text-[var(--sos-blue)] text-center px-2">
+            {partner.name}
+          </span>
         </div>
       )}
     </div>

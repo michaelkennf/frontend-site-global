@@ -23,6 +23,10 @@ export function brandTintBg(color: string, alpha = 0.15): string {
   return `rgba(${BRAND_BLUE_RGB}, ${alpha})`
 }
 
+/** Email public de l’organisation (footer, page contact). */
+export const CONTACT_EMAIL = "contact1@globalsos.org"
+export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Contact Global SOS")}`
+
 /** Logo officiel Global SOS — fichier PNG `public/images/logo SOS.png` (inchangé). */
 export const LOGO_FILE = "/images/logo SOS.png"
 /** Incrémenter après chaque changement de logo pour invalider le cache navigateur/CDN. */

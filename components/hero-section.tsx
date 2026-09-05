@@ -14,7 +14,7 @@ export function HeroSection() {
   const { c } = useSiteContent("hero", lang)
   const media = useSiteMediaKeys([SITE_MEDIA.HERO_HOME])
   const heroMedia = media[SITE_MEDIA.HERO_HOME]
-  const heroSrc = "/images/hero image.png"
+  const heroSrc = heroMedia?.url?.trim() || "/images/hero image.png"
   const heroAlt =
     (lang === "fr" ? heroMedia?.altFr : heroMedia?.altEn)?.trim() ||
     "Global SOS humanitarian work"

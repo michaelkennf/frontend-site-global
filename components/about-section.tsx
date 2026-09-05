@@ -62,7 +62,9 @@ export function AboutSection() {
           setCarouselImages(items.map((m) => ({ id: m.id, src: m.url, altFr: m.altFr, altEn: m.altEn })))
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        /* garde le fallback local uniquement si l'API est indisponible */
+      })
   }, [])
 
   useEffect(() => {
