@@ -24,6 +24,7 @@ export function HeroSection() {
       {/* Background image — couvre toute la section, centré, visible en entier */}
       <div className="absolute inset-0 w-full h-full">
         <Image
+          key={heroSrc}
           src={heroSrc}
           alt={heroAlt}
           fill

@@ -1,37 +1,33 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-import { siteMediaApi, type SiteMedia } from "@/lib/api"
+import { useMemo } from "react"
+import type { SiteMedia } from "@/lib/api"
+import { useSiteMediaStore } from "@/lib/site-media-provider"
+import { mediaUrlWithCacheBust } from "@/lib/media-url"
 
-/** Charge plusieurs médias publics par clé (Médiathèque). Valeur null si absent ou erreur. */
+/**
+ * Médias publics par clé — lit le store préchargé (SSR),
+ * donc pas de flash de l’ancienne image hero.
+ */
 export function useSiteMediaKeys(keys: readonly string[]) {
+  const store = useSiteMediaStore()
   const sorted = [...keys].sort().join("|")
-  const [data, setData] = useState<Record<string, SiteMedia | null>>({})
 
-  const load = useCallback(async () => {
-    const list = [...keys].sort()
+  return useMemo(() => {
+    const list = sorted ? sorted.split("|") : []
     const out: Record<string, SiteMedia | null> = {}
-    await Promise.all(
-      list.map(async (k) => {
-        out[k] = await siteMediaApi.getPublicByKey(k)
-      }),
-    )
-    setData(out)
-  }, [keys, sorted])
-
-  useEffect(() => {
-    load()
-    const onRefresh = () => {
-      if (document.visibilityState === "hidden") return
-      load()
+    for (const k of list) {
+      if (!k) continue
+      const raw = store?.byKey[k] ?? null
+      if (!raw) {
+        out[k] = null
+        continue
+      }
+      out[k] = {
+        ...raw,
+        url: mediaUrlWithCacheBust(raw.url, raw.updatedAt),
+      }
     }
-    window.addEventListener("focus", onRefresh)
-    document.addEventListener("visibilitychange", onRefresh)
-    return () => {
-      window.removeEventListener("focus", onRefresh)
-      document.removeEventListener("visibilitychange", onRefresh)
-    }
-  }, [load])
-
-  return data
+    return out
+  }, [sorted, store?.byKey])
 }

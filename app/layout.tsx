@@ -3,6 +3,7 @@ import Script from 'next/script'
 import { Inter, Montserrat } from 'next/font/google'
 import { LOGO_SRC } from '@/lib/brand'
 import { fetchSiteContentPublic } from '@/lib/site-content-server'
+import { fetchSiteMediaPublic } from '@/lib/site-media-server'
 import { SiteContentRoot } from '@/components/site-content-root'
 import './globals.css'
 
@@ -43,7 +44,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const siteContent = await fetchSiteContentPublic()
+  const [siteContent, siteMedia] = await Promise.all([
+    fetchSiteContentPublic(),
+    fetchSiteMediaPublic(),
+  ])
 
   return (
     <html lang="fr" suppressHydrationWarning>
@@ -53,7 +57,9 @@ export default async function RootLayout({
             {`(function(){if(typeof navigator!=='undefined'&&navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}})();`}
           </Script>
         )}
-        <SiteContentRoot initialItems={siteContent}>{children}</SiteContentRoot>
+        <SiteContentRoot initialItems={siteContent} initialMedia={siteMedia}>
+          {children}
+        </SiteContentRoot>
       </body>
     </html>
   )

@@ -1,12 +1,14 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useMemo } from "react"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
-import { siteMediaApi, statsApi, type SiteMedia } from "@/lib/api"
+import { statsApi } from "@/lib/api"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { useSiteMediaStore } from "@/lib/site-media-provider"
+import { mediaUrlWithCacheBust } from "@/lib/media-url"
 import {
   ChevronLeft,
   ChevronRight,
@@ -39,13 +41,25 @@ export const valueIcons = [
 export function AboutSection() {
   const { t, lang } = useI18n()
   const { c } = useSiteContent("about", lang)
+  const mediaStore = useSiteMediaStore()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: "-80px" })
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [carouselImages, setCarouselImages] = useState<
-    { id: string; src: string; altFr: string; altEn: string }[]
-  >(FALLBACK_CAROUSEL)
   const [yearsOfEngagement, setYearsOfEngagement] = useState(10)
+
+  const carouselImages = useMemo(() => {
+    const fromStore =
+      mediaStore?.items
+        .filter((m) => m.section === "about-carousel" && m.isActive)
+        .sort((a, b) => a.order - b.order)
+        .map((m) => ({
+          id: m.id,
+          src: mediaUrlWithCacheBust(m.url, m.updatedAt),
+          altFr: m.altFr,
+          altEn: m.altEn,
+        })) ?? []
+    return fromStore.length > 0 ? fromStore : FALLBACK_CAROUSEL
+  }, [mediaStore?.items])
 
   useEffect(() => {
     statsApi
@@ -55,24 +69,15 @@ export function AboutSection() {
   }, [])
 
   useEffect(() => {
-    siteMediaApi
-      .getBySection("about-carousel")
-      .then((items: SiteMedia[]) => {
-        if (items && items.length > 0) {
-          setCarouselImages(items.map((m) => ({ id: m.id, src: m.url, altFr: m.altFr, altEn: m.altEn })))
-        }
-      })
-      .catch(() => {
-        /* garde le fallback local uniquement si l'API est indisponible */
-      })
-  }, [])
-
-  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length)
     }, 5000)
     return () => clearInterval(timer)
   }, [carouselImages.length])
+
+  useEffect(() => {
+    setCurrentSlide(0)
+  }, [carouselImages])
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length)
   const prevSlide = () =>

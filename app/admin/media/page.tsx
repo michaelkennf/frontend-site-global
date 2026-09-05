@@ -6,6 +6,7 @@ import Image from "next/image"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { siteMediaApi, uploadsApi, type SiteMedia } from "@/lib/api"
 import { isAuthenticated } from "@/lib/auth"
+import { notifySiteMediaUpdated } from "@/lib/site-media-provider"
 import {
   ImageIcon,
   Plus,
@@ -125,6 +126,7 @@ export default function MediaPage() {
       }
       setShowForm(false)
       load()
+      notifySiteMediaUpdated()
     } catch (err: unknown) {
       notify(err instanceof Error ? err.message : "Erreur lors de la sauvegarde.", true)
     }
@@ -136,6 +138,7 @@ export default function MediaPage() {
       await siteMediaApi.delete(id)
       notify("Image supprimée.")
       load()
+      notifySiteMediaUpdated()
     } catch {
       notify("Erreur lors de la suppression.", true)
     }
@@ -145,6 +148,7 @@ export default function MediaPage() {
     try {
       await siteMediaApi.update(m.id, { isActive: !m.isActive })
       load()
+      notifySiteMediaUpdated()
     } catch {
       notify("Erreur lors de la mise à jour.", true)
     }
