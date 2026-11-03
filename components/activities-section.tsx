@@ -105,14 +105,18 @@ export function ActivitiesSection() {
             href={`/news/${primary.id}`}
             className="group lg:col-span-8 relative rounded-[20px] overflow-hidden min-h-[360px] md:min-h-[440px] bg-slate-900 shadow-[0_20px_40px_-20px_rgba(13,51,86,0.45)]"
           >
-            <Image
-              src={primary.image || "/images/hero image.png"}
-              alt={lang === "fr" ? primary.titleFr : primary.titleEn}
-              fill
-              className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              priority
-            />
+            {primary.image?.trim() ? (
+              <Image
+                src={primary.image}
+                alt={lang === "fr" ? primary.titleFr : primary.titleEn}
+                fill
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                priority
+              />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--sos-blue)] to-[var(--sos-blue-dark)]" />
+            )}
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(9,41,83,0.86)] via-[rgba(12,72,110,0.72)] to-[rgba(9,160,126,0.58)]" />
             <div className="relative z-10 h-full p-6 sm:p-8 md:p-9 flex flex-col justify-between text-white">
               <div className="flex items-center gap-2 flex-wrap">

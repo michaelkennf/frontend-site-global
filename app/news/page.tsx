@@ -9,6 +9,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Loader2, ArrowRight, Calendar, Newspaper } from "lucide-react"
 import { articlesApi, Article } from "@/lib/api"
+import { ArticleCoverMedia } from "@/components/article-cover-media"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
@@ -190,13 +191,12 @@ function NewsContent() {
                       href={`/news/${featured.item.id}`}
                       className="relative lg:col-span-7 block aspect-[16/10] lg:aspect-[16/11] overflow-hidden group"
                     >
-                      <Image
-                        src={featured.item.image || "/images/hero image.png"}
+                      <ArticleCoverMedia
+                        src={featured.item.image}
                         alt={lang === "fr" ? featured.item.titleFr : featured.item.titleEn}
-                        fill
                         priority
                         sizes="(max-width: 1024px) 100vw, 60vw"
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        className="group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute top-5 left-5 flex flex-wrap gap-2">
                         <span className="text-[11px] font-black px-3 py-1 rounded-full bg-[var(--sos-red)] text-white uppercase tracking-wider">
@@ -273,13 +273,11 @@ function NewsContent() {
                               href={`/news/${a.id}`}
                               className="relative h-48 sm:h-52 overflow-hidden block"
                             >
-                              <Image
-                                src={a.image || "/images/hero image.png"}
+                              <ArticleCoverMedia
+                                src={a.image}
                                 alt={lang === "fr" ? a.titleFr : a.titleEn}
-                                fill
-                                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                loading="lazy"
+                                className="group-hover:scale-105 transition-transform duration-500"
                               />
                               {entry.domain && (
                                 <div className="absolute top-4 left-4">

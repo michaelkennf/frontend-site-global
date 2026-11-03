@@ -6,10 +6,10 @@ import { I18nProvider, useI18n } from "@/lib/i18n"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Loader2, Calendar, ArrowRight } from "lucide-react"
 import { articlesApi, Article } from "@/lib/api"
+import { ArticleCoverMedia } from "@/components/article-cover-media"
 import {
   classifyArticleForDomain,
   formatCategoryLabel,
@@ -155,12 +155,11 @@ function ArticleContent() {
                       className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all"
                     >
                       <div className="relative aspect-[16/10] overflow-hidden">
-                        <Image
-                          src={a.image || "/images/hero image.png"}
+                        <ArticleCoverMedia
+                          src={a.image}
                           alt={lang === "fr" ? a.titleFr : a.titleEn}
-                          fill
-                          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                           sizes="(max-width: 768px) 100vw, 33vw"
+                          className="group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-5">

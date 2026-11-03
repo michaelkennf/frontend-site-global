@@ -57,7 +57,16 @@ type FormState = {
   inlineImages: string[]
   category: string
   status: ArticleStatus
+  /** YYYY-MM-DD pour l'affichage public (indépendant du jour de publication). */
+  publishedAt: string
   layoutSettings: LayoutSettings
+}
+
+function toDateInputValue(value?: string | null): string {
+  if (!value) return ""
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return ""
+  return d.toISOString().slice(0, 10)
 }
 
 const emptyForm: FormState = {
@@ -71,6 +80,7 @@ const emptyForm: FormState = {
   inlineImages: ["", "", "", ""],
   category: "Général",
   status: "DRAFT",
+  publishedAt: "",
   layoutSettings: { ...DEFAULT_LAYOUT_SETTINGS },
 }
 
@@ -134,6 +144,7 @@ export default function AdminArticles() {
       inlineImages: parsed,
       category: a.category || "Général",
       status: a.status,
+      publishedAt: toDateInputValue(a.publishedAt),
       layoutSettings: parseLayoutSettings(a.layoutSettings),
     })
     setError("")
@@ -162,9 +173,11 @@ export default function AdminArticles() {
     setSaving(true)
     setError("")
     try {
-      const { inlineImages, layoutSettings, ...rest } = form
+      const { inlineImages, layoutSettings, image, publishedAt, ...rest } = form
       const payload = {
         ...(nextStatus ? { ...rest, status: nextStatus } : rest),
+        image: image.trim(),
+        publishedAt: publishedAt.trim(),
         inlineImages: JSON.stringify(inlineImages.slice(0, 4).filter(Boolean)),
         layoutSettings: serializeLayoutSettings(layoutSettings),
       }
@@ -417,23 +430,50 @@ export default function AdminArticles() {
                         </select>
                       </div>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">
-                        Image de couverture
-                      </label>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageFileChange(e.target.files?.[0])}
-                      />
-                      {uploadingImage && (
-                        <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>
-                      )}
-                      {form.image && (
-                        <div className="mt-2 h-32 rounded-md overflow-hidden border border-gray-200">
-                          <img src={form.image} alt="Aperçu couverture" className="w-full h-full object-cover" />
-                        </div>
-                      )}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-1 block">
+                          Date de l&apos;actualité
+                        </label>
+                        <Input
+                          type="date"
+                          value={form.publishedAt}
+                          onChange={(e) => setForm({ ...form, publishedAt: e.target.value })}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Date affichée sur le site (pas forcément aujourd&apos;hui). Laissez vide si non précisée.
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-1 block">
+                          Image de couverture (optionnelle)
+                        </label>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageFileChange(e.target.files?.[0])}
+                        />
+                        {uploadingImage && (
+                          <p className="text-xs text-gray-500 mt-1">Upload en cours...</p>
+                        )}
+                        {form.image ? (
+                          <div className="mt-2 relative h-32 rounded-md overflow-hidden border border-gray-200">
+                            <img src={form.image} alt="Aperçu couverture" className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => setForm((prev) => ({ ...prev, image: "" }))}
+                              className="absolute top-2 right-2 bg-white/95 rounded-full p-1 shadow hover:bg-red-50"
+                              title="Retirer l'image"
+                            >
+                              <X size={14} className="text-red-500" />
+                            </button>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-500 mt-1">
+                            Sans image, l&apos;actualité s&apos;affiche sans photo de couverture.
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     {/* Images inline */}

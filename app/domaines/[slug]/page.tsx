@@ -20,6 +20,7 @@ import {
 } from "@/lib/blog-categories"
 import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { ArticleCoverMedia } from "@/components/article-cover-media"
 
 const accentBySlug: Record<DomainSlug, { color: string; bg: string }> = {
   "risques-catastrophes": { color: "var(--sos-blue)", bg: "var(--sos-blue-light)" },
@@ -233,12 +234,11 @@ function DomainDetailContent() {
                     className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all"
                   >
                     <div className="relative aspect-[16/10] overflow-hidden">
-                      <Image
-                        src={a.image || "/images/hero image.png"}
+                      <ArticleCoverMedia
+                        src={a.image}
                         alt={lang === "fr" ? a.titleFr : a.titleEn}
-                        fill
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                         sizes="(max-width: 768px) 100vw, 33vw"
+                        className="group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="p-5">

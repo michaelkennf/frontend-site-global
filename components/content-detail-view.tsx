@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { Calendar, MapPin } from "lucide-react"
 import { HeroRedDivider } from "@/components/hero-red-divider"
+import { ArticleCoverMedia } from "@/components/article-cover-media"
 import { renderBodyWithInlineImages } from "@/lib/render-inline-body"
 import {
   parseLayoutSettings,
@@ -35,8 +36,6 @@ export interface ContentDetailViewProps {
   preview?: boolean
 }
 
-const COVER_FALLBACK = "/images/hero image.png"
-
 function CoverImage({
   src,
   alt,
@@ -44,20 +43,24 @@ function CoverImage({
   priority,
   preview,
 }: {
-  src: string
+  src?: string | null
   alt: string
   className?: string
   priority?: boolean
   preview?: boolean
 }) {
+  const url = src?.trim()
+  if (!url) {
+    return <ArticleCoverMedia src={null} alt={alt} />
+  }
   if (preview) {
     return (
-      <img src={src || COVER_FALLBACK} alt={alt} className={cn("object-cover object-center w-full h-full", className)} />
+      <img src={url} alt={alt} className={cn("object-cover object-center w-full h-full", className)} />
     )
   }
   return (
     <Image
-      src={src || COVER_FALLBACK}
+      src={url}
       alt={alt}
       fill
       priority={priority}
@@ -67,7 +70,7 @@ function CoverImage({
   )
 }
 
-function MetaRow({ meta, lang }: { meta?: ContentDetailMeta; lang: "fr" | "en" }) {
+function MetaRow({ meta }: { meta?: ContentDetailMeta; lang: "fr" | "en" }) {
   if (!meta) return null
   const statusColors: Record<string, string> = {
     ongoing: "bg-[var(--sos-blue)] text-white",
@@ -164,17 +167,26 @@ export function ContentDetailView({
   const settings = parseLayoutSettings(layoutSettings)
   const widthClass = contentWidthClass(settings.contentWidth)
   const alignClass = textAlignClass(settings.textAlign)
-  const cover = image || COVER_FALLBACK
+  const hasCover = Boolean(image?.trim())
   const showExcerpt = settings.showExcerpt && excerpt?.trim()
 
   if (settings.layout === "immersive") {
     return (
       <div className="bg-white">
-        <section className="relative min-h-[320px] md:min-h-[420px] flex items-end">
-          <div className="absolute inset-0">
-            <CoverImage src={cover} alt={title} preview={preview} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-          </div>
+        <section
+          className={cn(
+            "relative flex items-end",
+            hasCover ? "min-h-[320px] md:min-h-[420px]" : "min-h-[220px] md:min-h-[280px] bg-[var(--sos-blue)]",
+          )}
+        >
+          {hasCover ? (
+            <div className="absolute inset-0">
+              <CoverImage src={image} alt={title} preview={preview} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--sos-blue)] to-[var(--sos-blue-dark)]" />
+          )}
           <div className={cn("relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-24", widthClass)}>
             <MetaRow meta={meta} lang={lang} />
             <h1
@@ -208,13 +220,15 @@ export function ContentDetailView({
       <div className="bg-white">
         <section className="pt-8 pb-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-5">
-                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100 shadow-md">
-                  <CoverImage src={cover} alt={title} priority preview={preview} />
+            <div className={cn("grid gap-8 items-center", hasCover ? "lg:grid-cols-12" : "")}>
+              {hasCover && (
+                <div className="lg:col-span-5">
+                  <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-100 shadow-md">
+                    <CoverImage src={image} alt={title} priority preview={preview} />
+                  </div>
                 </div>
-              </div>
-              <div className={cn("lg:col-span-7", alignClass)}>
+              )}
+              <div className={cn(hasCover ? "lg:col-span-7" : "max-w-3xl", alignClass)}>
                 <MetaRow meta={meta} lang={lang} />
                 <h1 className="font-serif font-black text-3xl md:text-4xl text-gray-900 mb-4 leading-tight text-balance">
                   {title}
@@ -248,9 +262,9 @@ export function ContentDetailView({
           <div className={cn("mx-auto px-4 sm:px-6 lg:px-8", widthClass)}>
             <MetaRow meta={meta} lang={lang} />
             <div className="flex flex-col sm:flex-row gap-6 items-start">
-              {image && (
+              {hasCover && (
                 <div className="relative w-full sm:w-40 shrink-0 aspect-[4/3] sm:aspect-square rounded-xl overflow-hidden bg-gray-100 border border-gray-100">
-                  <CoverImage src={cover} alt={title} preview={preview} />
+                  <CoverImage src={image} alt={title} preview={preview} />
                 </div>
               )}
               <div className={cn("flex-1 min-w-0", alignClass)}>
@@ -296,13 +310,15 @@ export function ContentDetailView({
           <MetaDetails meta={meta} lang={lang} />
         </div>
       </section>
-      <section>
-        <div className={cn("mx-auto px-4 sm:px-6 lg:px-8", widthClass)}>
-          <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gray-100">
-            <CoverImage src={cover} alt={title} priority preview={preview} />
+      {hasCover && (
+        <section>
+          <div className={cn("mx-auto px-4 sm:px-6 lg:px-8", widthClass)}>
+            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gray-100">
+              <CoverImage src={image} alt={title} priority preview={preview} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
       <HeroRedDivider />
       <BodyBlock
         body={body}
