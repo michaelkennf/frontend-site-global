@@ -152,9 +152,9 @@ export const translations = {
       initiatives: "Initiatives environnementales",
     },
     activities: {
-      title: "Actualités récentes",
-      subtitle: "Suivez nos publications et nos retours depuis le terrain",
-      viewAll: "Toutes les actualités",
+      title: "Nos activités",
+      subtitle: "Actions et projets menés sur le terrain",
+      viewAll: "Toutes les activités",
     },
     news: {
       title: "Actualités",
@@ -388,9 +388,9 @@ export const translations = {
       initiatives: "Environmental Initiatives",
     },
     activities: {
-      title: "Recent news",
-      subtitle: "Updates and stories from our work on the ground",
-      viewAll: "All news",
+      title: "Our activities",
+      subtitle: "Actions and projects from the field",
+      viewAll: "All activities",
     },
     news: {
       title: "News",

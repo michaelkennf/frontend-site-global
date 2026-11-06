@@ -1,78 +1,31 @@
 "use client"
 
-import { useEffect, useState, useCallback, useMemo, useRef } from "react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
-import { Calendar, Clock3, ArrowUpRight, ChevronUp, ChevronDown, ArrowRight } from "lucide-react"
-import { articlesApi, Article } from "@/lib/api"
+import { Calendar, MapPin } from "lucide-react"
+import { activitiesApi, Activity } from "@/lib/api"
 import { useSiteContent } from "@/hooks/use-site-content"
-import { formatArticleDate, articleDateParts, articleDisplayDate } from "@/lib/format-article-date"
-import { classifyArticleForDomain, formatCategoryLabel } from "@/lib/blog-categories"
-
-const AUTO_MS = 5500
+import { formatPublicationCategoryLabel } from "@/lib/blog-categories"
+import { resolveMediaUrl } from "@/lib/media-url"
 
 export function ActivitiesSection() {
   const { t, lang } = useI18n()
   const { c } = useSiteContent("activities", lang)
-  const [articles, setArticles] = useState<Article[]>([])
-  const [currentSide, setCurrentSide] = useState(0)
-  const [direction, setDirection] = useState(0)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [items, setItems] = useState<Activity[]>([])
 
   useEffect(() => {
-    articlesApi.getPublic().then(setArticles).catch(() => {})
+    activitiesApi.getPublic().then(setItems).catch(() => {})
   }, [])
 
-  const primary = articles[0]
-  const sidePool = useMemo(() => articles.slice(1), [articles])
-
-  const bumpAuto = useCallback(() => {
-    if (intervalRef.current != null) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null
-    }
-    if (sidePool.length <= 3) return
-    intervalRef.current = setInterval(() => {
-      setDirection(1)
-      setCurrentSide((c) => (c + 1) % sidePool.length)
-    }, AUTO_MS)
-  }, [sidePool.length])
-
-  useEffect(() => {
-    bumpAuto()
-    return () => {
-      if (intervalRef.current != null) clearInterval(intervalRef.current)
-    }
-  }, [bumpAuto])
-
-  const next = useCallback(() => {
-    if (sidePool.length <= 3) return
-    setDirection(1)
-    setCurrentSide((c) => (c + 1) % sidePool.length)
-    bumpAuto()
-  }, [sidePool.length, bumpAuto])
-
-  const prev = useCallback(() => {
-    if (sidePool.length <= 3) return
-    setDirection(-1)
-    setCurrentSide((c) => (c - 1 + sidePool.length) % sidePool.length)
-    bumpAuto()
-  }, [sidePool.length, bumpAuto])
-
-  const sideItems = useMemo(() => {
-    if (sidePool.length <= 3) return sidePool
-    return Array.from({ length: 3 }, (_, i) => sidePool[(currentSide + i) % sidePool.length])
-  }, [sidePool, currentSide])
-
-  if (!primary) return null
+  if (items.length === 0) return null
 
   return (
-    <section className="relative py-20 md:py-24 overflow-hidden bg-[var(--sos-blue-light)]/30" id="activities">
+    <section className="relative py-20 md:py-24 overflow-hidden bg-white" id="activities">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-10"
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
@@ -81,177 +34,76 @@ export function ActivitiesSection() {
           <div className="max-w-2xl">
             <span
               className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
-              style={{
-                color: "var(--sos-blue)",
-              }}
+              style={{ color: "var(--sos-red)" }}
             >
               {c("activities.subtitle", t.activities.subtitle)}
             </span>
-            <h2 className="font-serif font-black text-4xl sm:text-5xl lg:text-[3.35rem] tracking-tight text-balance leading-[1.05]">
+            <h2 className="font-serif font-black text-4xl sm:text-5xl lg:text-[3.35rem] tracking-tight text-balance leading-[1.05] text-gray-900">
               {c("activities.title", t.activities.title)}
             </h2>
           </div>
-          <Link
-            href="/news"
-            className="group inline-flex shrink-0 items-center justify-center gap-2 self-start lg:self-auto rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)] transition-all shadow-sm"
-          >
-            {c("activities.viewAll", t.activities.viewAll)}
-            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-          </Link>
         </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          <Link
-            href={`/news/${primary.id}`}
-            className="group lg:col-span-8 relative rounded-[20px] overflow-hidden min-h-[360px] md:min-h-[440px] bg-slate-900 shadow-[0_20px_40px_-20px_rgba(13,51,86,0.45)]"
-          >
-            {primary.image?.trim() ? (
-              <Image
-                src={primary.image}
-                alt={lang === "fr" ? primary.titleFr : primary.titleEn}
-                fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                priority
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--sos-blue)] to-[var(--sos-blue-dark)]" />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(9,41,83,0.86)] via-[rgba(12,72,110,0.72)] to-[rgba(9,160,126,0.58)]" />
-            <div className="relative z-10 h-full p-6 sm:p-8 md:p-9 flex flex-col justify-between text-white">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--sos-blue)] text-white px-3 py-1 text-xs font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                  {lang === "fr" ? "À la une" : "Featured"}
-                </span>
-                <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold">
-                  {lang === "fr" ? "Actualité" : "News"}
-                </span>
-              </div>
-
-              <div>
-              <h3 className="font-serif font-black text-3xl md:text-[2.8rem] leading-[1.05] mb-3 max-w-2xl">
-                {lang === "fr" ? primary.titleFr : primary.titleEn}
-              </h3>
-              <p className="text-white/85 text-base md:text-lg max-w-2xl mb-6 line-clamp-2">
-                {lang === "fr" ? primary.excerptFr || primary.contentFr : primary.excerptEn || primary.contentEn}
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 text-sm mb-6 max-w-xl">
-                <span className="inline-flex items-center gap-2 text-white/90">
-                  <Calendar size={16} />
-                  {formatArticleDate(articleDisplayDate(primary), lang)}
-                </span>
-                <span className="inline-flex items-center gap-2 text-white/90">
-                  <Clock3 size={16} />
-                  {formatCategoryLabel(classifyArticleForDomain(primary), lang)}
-                </span>
-                {primary.author?.name && (
-                  <span className="inline-flex items-center gap-2 text-white/90 col-span-2">
-                    {primary.author.name}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {items.slice(0, 6).map((item, i) => {
+            const img = item.image?.trim() ? resolveMediaUrl(item.image) : ""
+            const title = lang === "fr" ? item.titleFr : item.titleEn
+            const desc = lang === "fr" ? item.descriptionFr : item.descriptionEn
+            return (
+              <motion.article
+                key={item.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06, duration: 0.45 }}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:shadow-lg transition-all"
+              >
+                <div className="relative h-48 bg-slate-200 overflow-hidden">
+                  {img ? (
+                    <Image
+                      src={img}
+                      alt={title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--sos-blue)] to-[var(--sos-blue-dark)]" />
+                  )}
+                  <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sos-blue-dark)]">
+                    {item.status === "COMPLETED"
+                      ? lang === "fr"
+                        ? "Terminée"
+                        : "Completed"
+                      : lang === "fr"
+                        ? "En cours"
+                        : "Ongoing"}
                   </span>
-                )}
-              </div>
-
-              <span className="inline-flex items-center gap-2 rounded-full bg-[var(--sos-red)] text-white px-5 py-2.5 text-sm font-bold w-fit shadow-md group-hover:bg-[var(--sos-red-dark)] transition-colors">
-                {lang === "fr" ? "Voir plus" : "See more"}
-                <ArrowUpRight size={15} />
-              </span>
-              </div>
-            </div>
-          </Link>
-
-          <div className="lg:col-span-4">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-serif font-bold text-2xl text-[var(--sos-blue)]">
-                {lang === "fr" ? "Plus d'actualités" : "More news"}
-              </h4>
-              {sidePool.length > 3 && (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={prev}
-                    className="w-9 h-9 rounded-full border border-gray-200 bg-white text-gray-600 hover:text-[var(--sos-blue)] hover:border-[var(--sos-blue)] flex items-center justify-center"
-                    aria-label={lang === "fr" ? "Monter" : "Scroll up"}
-                  >
-                    <ChevronUp size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={next}
-                    className="w-9 h-9 rounded-full border border-gray-200 bg-white text-gray-600 hover:text-[var(--sos-blue)] hover:border-[var(--sos-blue)] flex items-center justify-center"
-                    aria-label={lang === "fr" ? "Descendre" : "Scroll down"}
-                  >
-                    <ChevronDown size={16} />
-                  </button>
                 </div>
-              )}
-            </div>
-
-            <div className="relative min-h-[390px]">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={`${sideItems.map((i) => i.id).join("-")}-${direction}`}
-                  initial={{ opacity: 0, y: direction >= 0 ? 20 : -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: direction >= 0 ? -20 : 20 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-3"
-                >
-                  {sideItems.map((item) => {
-                    const parts = articleDateParts(articleDisplayDate(item), lang)
-                    const domain = classifyArticleForDomain(item)
-                    return (
-                    <Link
-                      key={item.id}
-                      href={`/news/${item.id}`}
-                      className="group block rounded-2xl border border-[var(--sos-blue-light)] bg-white p-4 hover:shadow-md transition"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gray-100 text-gray-700 flex flex-col items-center justify-center shrink-0">
-                          <span className="text-sm font-black leading-none">
-                            {parts.day}
-                          </span>
-                          <span className="text-[10px] uppercase tracking-wider">
-                            {parts.month}
-                          </span>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-semibold text-[var(--sos-blue)] mb-1">
-                            {formatCategoryLabel(domain, lang)}
-                          </p>
-                          <h5 className="font-semibold text-gray-900 leading-snug line-clamp-2 group-hover:text-[var(--sos-red)] transition-colors">
-                            {lang === "fr" ? item.titleFr : item.titleEn}
-                          </h5>
-                        </div>
-                        <span className="shrink-0 mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[var(--sos-blue)] group-hover:text-[var(--sos-red)] transition-colors whitespace-nowrap">
-                          {lang === "fr" ? "Voir plus" : "See more"}
-                          <ArrowRight size={13} />
-                        </span>
-                      </div>
-                    </Link>
-                    )
-                  })}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {sidePool.length > 3 && (
-              <div className="mt-4 flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  {Array.from({ length: Math.max(1, Math.ceil(sidePool.length / 3)) }).map((_, i) => {
-                    const activePage = Math.floor(currentSide / 3)
-                    return (
-                      <span
-                        key={i}
-                        className={`h-1.5 rounded-full transition-all ${i === activePage ? "w-6 bg-[var(--sos-blue)]" : "w-2 bg-gray-200"}`}
-                      />
-                    )
-                  })}
+                <div className="flex flex-1 flex-col p-5">
+                  <p className="text-xs font-semibold text-[var(--sos-blue)] mb-2">
+                    {formatPublicationCategoryLabel(item.category, lang)}
+                  </p>
+                  <h3 className="font-serif font-bold text-xl text-gray-900 leading-snug mb-2 line-clamp-2">
+                    {title}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">{desc}</p>
+                  <div className="flex flex-wrap gap-3 text-xs text-gray-500 pt-3 border-t border-gray-100">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Calendar size={13} />
+                      {item.date}
+                    </span>
+                    {item.location && (
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin size={13} />
+                        {item.location}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              </motion.article>
+            )
+          })}
         </div>
       </div>
     </section>

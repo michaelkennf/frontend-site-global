@@ -160,6 +160,18 @@ export const partnersApi = {
     request<void>(`/partners/${id}`, { method: 'DELETE' }, true),
 };
 
+// ── Testimonials ───────────────────────────────────────────────────
+export const testimonialsApi = {
+  getPublic: () => request<Testimonial[]>('/testimonials'),
+  getAll: () => request<Testimonial[]>('/testimonials/admin', {}, true),
+  create: (data: Partial<Testimonial>) =>
+    request<Testimonial>('/testimonials', { method: 'POST', body: JSON.stringify(data) }, true),
+  update: (id: string, data: Partial<Testimonial>) =>
+    request<Testimonial>(`/testimonials/${id}`, { method: 'PUT', body: JSON.stringify(data) }, true),
+  delete: (id: string) =>
+    request<void>(`/testimonials/${id}`, { method: 'DELETE' }, true),
+};
+
 // ── Team ───────────────────────────────────────────────────────────
 export const teamApi = {
   getPublic: () => request<TeamMember[]>('/team'),
@@ -361,6 +373,17 @@ export interface Partner {
   logo?: string;
   website?: string;
   description?: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  quote: string;
+  photo?: string;
   order: number;
   isActive: boolean;
   createdAt: string;

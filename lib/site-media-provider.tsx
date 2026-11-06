@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react"
 import { siteMediaApi, type SiteMedia } from "@/lib/api"
+import { resolveMediaUrl } from "@/lib/media-url"
 
 const STORAGE_KEY = "globalsos-site-media-updated"
 const UPDATE_EVENT = "globalsos-site-media-updated"
@@ -29,10 +30,14 @@ export function notifySiteMediaUpdated() {
   window.dispatchEvent(new Event(UPDATE_EVENT))
 }
 
+function normalizeMedia(item: SiteMedia): SiteMedia {
+  return { ...item, url: resolveMediaUrl(item.url) }
+}
+
 function indexByKey(items: SiteMedia[]): Record<string, SiteMedia> {
   const map: Record<string, SiteMedia> = {}
   for (const item of items) {
-    if (item?.key) map[item.key] = item
+    if (item?.key) map[item.key] = normalizeMedia(item)
   }
   return map
 }
@@ -44,14 +49,16 @@ export function SiteMediaProvider({
   children: ReactNode
   initialItems?: SiteMedia[]
 }) {
-  const [items, setItems] = useState<SiteMedia[]>(initialItems)
+  const [items, setItems] = useState<SiteMedia[]>(() =>
+    initialItems.map(normalizeMedia),
+  )
   const [loaded, setLoaded] = useState(initialItems.length > 0)
 
   const refresh = useCallback(() => {
     return siteMediaApi
       .getAllPublic()
       .then((data) => {
-        if (Array.isArray(data)) setItems(data)
+        if (Array.isArray(data)) setItems(data.map(normalizeMedia))
       })
       .catch(() => {})
       .finally(() => setLoaded(true))

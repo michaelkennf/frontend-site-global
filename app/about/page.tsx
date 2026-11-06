@@ -39,10 +39,11 @@ function AboutContent() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        {/* Hero */}
-        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
-          <div className="absolute inset-0">
+        {/* Hero image (full-bleed) — texte en dessous */}
+        <section className="relative pt-20 overflow-hidden bg-white">
+          <div className="relative w-full h-[42vh] min-h-[240px] max-h-[480px]">
             <Image
+              key={headerSrc}
               src={headerSrc}
               alt={headerAlt}
               fill
@@ -52,9 +53,9 @@ function AboutContent() {
               priority
             />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 md:py-16">
             <motion.h1
-              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6"
+              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -62,7 +63,7 @@ function AboutContent() {
               {c("about.pageTitle", t.about.title)}
             </motion.h1>
             <motion.p
-              className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed"
+              className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}

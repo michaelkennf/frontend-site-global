@@ -19,6 +19,7 @@ import {
   classifyArticleForDomain,
   formatCategoryLabel,
   formatCategoryLabelOrAll,
+  formatPublicationCategoryLabel,
 } from "@/lib/blog-categories"
 import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 import { cn } from "@/lib/utils"
@@ -202,11 +203,9 @@ function NewsContent() {
                         <span className="text-[11px] font-black px-3 py-1 rounded-full bg-[var(--sos-red)] text-white uppercase tracking-wider">
                           {c("news.featured", t.news.featured)}
                         </span>
-                        {featured.domain && (
-                          <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/95 text-[var(--sos-blue-dark)] uppercase tracking-wider">
-                            {formatCategoryLabel(featured.domain, lang)}
-                          </span>
-                        )}
+                        <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/95 text-[var(--sos-blue-dark)] uppercase tracking-wider">
+                          {formatPublicationCategoryLabel(featured.item.category, lang)}
+                        </span>
                       </div>
                     </Link>
                     <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10">
@@ -279,13 +278,11 @@ function NewsContent() {
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="group-hover:scale-105 transition-transform duration-500"
                               />
-                              {entry.domain && (
-                                <div className="absolute top-4 left-4">
-                                  <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/95 text-[var(--sos-blue-dark)] uppercase tracking-widest">
-                                    {formatCategoryLabel(entry.domain, lang)}
-                                  </span>
-                                </div>
-                              )}
+                              <div className="absolute top-4 left-4">
+                                <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/95 text-[var(--sos-blue-dark)] uppercase tracking-widest">
+                                  {formatPublicationCategoryLabel(a.category, lang)}
+                                </span>
+                              </div>
                             </Link>
                             <div className="p-6 flex flex-col flex-1">
                               <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
@@ -310,9 +307,7 @@ function NewsContent() {
                               </p>
                               <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-100">
                                 <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                                  {entry.domain
-                                    ? formatCategoryLabel(entry.domain, lang)
-                                    : a.author?.name || (lang === "fr" ? "Global SOS" : "Global SOS")}
+                                  {formatPublicationCategoryLabel(a.category, lang)}
                                 </span>
                                 <Link
                                   href={`/news/${a.id}`}

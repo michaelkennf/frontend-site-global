@@ -1,4 +1,5 @@
 import type { SiteMedia } from "@/lib/api"
+import { resolveMediaUrl } from "@/lib/media-url"
 
 function apiBase(): string {
   return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001/api"
@@ -13,7 +14,8 @@ export async function fetchSiteMediaPublic(): Promise<SiteMedia[]> {
     })
     if (!res.ok) return []
     const data = (await res.json()) as SiteMedia[]
-    return Array.isArray(data) ? data : []
+    if (!Array.isArray(data)) return []
+    return data.map((item) => ({ ...item, url: resolveMediaUrl(item.url) }))
   } catch {
     return []
   }

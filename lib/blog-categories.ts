@@ -10,20 +10,15 @@ export const BLOG_DOMAIN_SLUGS: DomainSlug[] = [
   "justice-climatique",
 ]
 
-const KEYWORDS: Record<DomainSlug, RegExp> = {
-  "risques-catastrophes": /\b(risque|catastrophe|alerte|reconstruction|résilience|inondation|seisme|séisme|disaster|risk|emergency|reconstruction|resilience|preparedness|évacu|preparation|préparation)\b/i,
-  "urgences-sanitaires": /\b(sant[eé]|santé|sanit|épidémi|epidemi|dssr|sssr|srhr|contraception|sexuelle|reproductive|gbv|violence|maternel|maladie|hospital|clinic|cliniqu|vaccin|vihsida|vih|sida)\b/i,
-  "justice-climatique": /\b(climat|climate|environnement|environment|ecosys|écosys|reboise|reforest|recyclage|déchet|biodivers|carbone|carbon|pollution|nature|durable|sustainable)\b/i,
-}
-
+/**
+ * Respecte uniquement la catégorie choisie à la publication.
+ * « Général » (ou autre valeur hors domaines) ne doit jamais être
+ * réaffecté automatiquement à un domaine via mots-clés.
+ */
 export function classifyActivityForDomain(activity: Activity): DomainSlug | null {
   const explicit = activity.category?.trim()
   if (explicit && (BLOG_DOMAIN_SLUGS as readonly string[]).includes(explicit)) {
     return explicit as DomainSlug
-  }
-  const text = `${activity.titleFr} ${activity.titleEn} ${activity.descriptionFr} ${activity.descriptionEn} ${activity.location ?? ""}`
-  for (const slug of BLOG_DOMAIN_SLUGS) {
-    if (KEYWORDS[slug].test(text)) return slug
   }
   return null
 }
@@ -33,11 +28,24 @@ export function classifyArticleForDomain(article: Article): DomainSlug | null {
   if (explicit && (BLOG_DOMAIN_SLUGS as readonly string[]).includes(explicit)) {
     return explicit as DomainSlug
   }
-  const text = `${article.titleFr} ${article.titleEn} ${article.excerptFr} ${article.excerptEn} ${article.contentFr} ${article.contentEn}`
-  for (const slug of BLOG_DOMAIN_SLUGS) {
-    if (KEYWORDS[slug].test(text)) return slug
-  }
   return null
+}
+
+/** Libellé public : domaine si choisi, sinon la catégorie brute (ex. Général). */
+export function formatPublicationCategoryLabel(
+  category: string | null | undefined,
+  lang: Language,
+): string {
+  const raw = category?.trim()
+  if (raw && (BLOG_DOMAIN_SLUGS as readonly string[]).includes(raw)) {
+    return formatCategoryLabel(raw as DomainSlug, lang)
+  }
+  if (raw) return raw
+  return lang === "fr" ? "Général" : "General"
+}
+
+export function formatArticleCategoryLabel(article: Article, lang: Language): string {
+  return formatPublicationCategoryLabel(article.category, lang)
 }
 
 const LABELS_FR: Record<DomainSlug, string> = {

@@ -12,6 +12,7 @@ import { articlesApi, Article } from "@/lib/api"
 import { ArticleCoverMedia } from "@/components/article-cover-media"
 import {
   classifyArticleForDomain,
+  formatArticleCategoryLabel,
   formatCategoryLabel,
 } from "@/lib/blog-categories"
 import { ContentDetailView } from "@/components/content-detail-view"
@@ -94,7 +95,7 @@ function ArticleContent() {
   const dateStr = formatArticleDate(articleDisplayDate(item), lang)
 
   const detailMeta = {
-    categoryLabel: domain ? formatCategoryLabel(domain, lang) : item.category,
+    categoryLabel: formatArticleCategoryLabel(item, lang),
     statusLabel: lang === "fr" ? "Publié" : "Published",
     statusVariant: "published" as const,
     date: dateStr,
