@@ -1,31 +1,48 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { motion } from "framer-motion"
-import Image from "next/image"
+import { ArrowRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
-import { Calendar, MapPin } from "lucide-react"
 import { activitiesApi, Activity } from "@/lib/api"
 import { useSiteContent } from "@/hooks/use-site-content"
-import { formatPublicationCategoryLabel } from "@/lib/blog-categories"
-import { resolveMediaUrl } from "@/lib/media-url"
+import { ActivityCard } from "@/components/activity-card"
+import { cn } from "@/lib/utils"
+
+type StatusFilter = "all" | "ONGOING" | "COMPLETED"
+const HOME_LIMIT = 6
 
 export function ActivitiesSection() {
   const { t, lang } = useI18n()
   const { c } = useSiteContent("activities", lang)
   const [items, setItems] = useState<Activity[]>([])
+  const [filter, setFilter] = useState<StatusFilter>("all")
 
   useEffect(() => {
     activitiesApi.getPublic().then(setItems).catch(() => {})
   }, [])
 
+  const filtered = useMemo(() => {
+    if (filter === "all") return items
+    return items.filter((a) => a.status === filter)
+  }, [items, filter])
+
+  const visible = filtered.slice(0, HOME_LIMIT)
+
   if (items.length === 0) return null
+
+  const filters: { id: StatusFilter; label: string }[] = [
+    { id: "all", label: lang === "fr" ? "Toutes" : "All" },
+    { id: "ONGOING", label: lang === "fr" ? "En cours" : "Ongoing" },
+    { id: "COMPLETED", label: lang === "fr" ? "Terminées" : "Completed" },
+  ]
 
   return (
     <section className="relative py-20 md:py-24 overflow-hidden bg-white" id="activities">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10"
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
@@ -42,68 +59,57 @@ export function ActivitiesSection() {
               {c("activities.title", t.activities.title)}
             </h2>
           </div>
+          <Link
+            href="/activities"
+            className="group inline-flex shrink-0 items-center justify-center gap-2 self-start lg:self-auto rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-gray-700 bg-white hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)] transition-all shadow-sm"
+          >
+            {c("activities.viewAll", t.activities.viewAll)}
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+          </Link>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {items.slice(0, 6).map((item, i) => {
-            const img = item.image?.trim() ? resolveMediaUrl(item.image) : ""
-            const title = lang === "fr" ? item.titleFr : item.titleEn
-            const desc = lang === "fr" ? item.descriptionFr : item.descriptionEn
-            return (
-              <motion.article
-                key={item.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.06, duration: 0.45 }}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:shadow-lg transition-all"
-              >
-                <div className="relative h-48 bg-slate-200 overflow-hidden">
-                  {img ? (
-                    <Image
-                      src={img}
-                      alt={title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--sos-blue)] to-[var(--sos-blue-dark)]" />
-                  )}
-                  <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--sos-blue-dark)]">
-                    {item.status === "COMPLETED"
-                      ? lang === "fr"
-                        ? "Terminée"
-                        : "Completed"
-                      : lang === "fr"
-                        ? "En cours"
-                        : "Ongoing"}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <p className="text-xs font-semibold text-[var(--sos-blue)] mb-2">
-                    {formatPublicationCategoryLabel(item.category, lang)}
-                  </p>
-                  <h3 className="font-serif font-bold text-xl text-gray-900 leading-snug mb-2 line-clamp-2">
-                    {title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">{desc}</p>
-                  <div className="flex flex-wrap gap-3 text-xs text-gray-500 pt-3 border-t border-gray-100">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar size={13} />
-                      {item.date}
-                    </span>
-                    {item.location && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <MapPin size={13} />
-                        {item.location}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
-            )
-          })}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => setFilter(f.id)}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-semibold transition-colors border",
+                filter === f.id
+                  ? "bg-[var(--sos-blue)] text-white border-[var(--sos-blue)]"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)]",
+              )}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="text-center text-gray-500 py-12">
+            {lang === "fr" ? "Aucune activité dans cette catégorie." : "No activities in this category."}
+          </p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {visible.map((item, i) => (
+              <ActivityCard key={item.id} item={item} lang={lang} index={i} />
+            ))}
+          </div>
+        )}
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href={
+              filter === "all"
+                ? "/activities"
+                : `/activities?status=${filter === "ONGOING" ? "ongoing" : "completed"}`
+            }
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--sos-red)] hover:bg-[var(--sos-red-dark)] text-white font-bold px-6 py-3 text-sm transition-colors shadow-md"
+          >
+            {lang === "fr" ? "Voir plus" : "See more"}
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

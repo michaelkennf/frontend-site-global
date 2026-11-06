@@ -19,7 +19,6 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
 import { useSiteContent } from "@/hooks/use-site-content"
@@ -187,8 +186,6 @@ function DonatePage() {
             </motion.p>
           </div>
         </section>
-
-        <HeroRedDivider />
 
         {/* Content */}
         <section className="py-16 bg-gray-50">

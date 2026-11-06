@@ -9,7 +9,6 @@ import { Target, Eye, Heart, Users, Globe, Shield, UserCircle2 } from "lucide-re
 import { useEffect, useState } from "react"
 import { teamApi, TeamMember } from "@/lib/api"
 import { valueIcons } from "@/components/about-section"
-import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
@@ -72,8 +71,6 @@ function AboutContent() {
             </motion.p>
           </div>
         </section>
-
-        <HeroRedDivider />
 
         {/* Qui sommes-nous */}
         <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-100">
