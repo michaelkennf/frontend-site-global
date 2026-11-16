@@ -76,14 +76,10 @@ function AboutContent() {
               style={{ objectPosition: "center 25%" }}
               priority
             />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.55))" }}
-            />
           </div>
           <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 md:pb-20">
             <motion.h1
-              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-5 text-balance"
+              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-5 text-balance drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -91,7 +87,7 @@ function AboutContent() {
               {pageTitle}
             </motion.h1>
             <motion.p
-              className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-white text-lg md:text-xl max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}

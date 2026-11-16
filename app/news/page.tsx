@@ -104,18 +104,14 @@ function NewsContent() {
               sizes="100vw"
               className="object-cover object-center"
             />
-            <div
-              className="absolute inset-0"
-              style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55))" }}
-            />
           </div>
           <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 md:pb-20">
-            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-white/85 mb-4">
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-white mb-4 drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]">
               <Newspaper size={14} />
               {lang === "fr" ? "Le blog" : "Our blog"}
             </span>
             <motion.h1
-              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-5 text-balance"
+              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-5 text-balance drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -123,7 +119,7 @@ function NewsContent() {
               {c("news.title", t.news.title)}
             </motion.h1>
             <motion.p
-              className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+              className="text-white text-lg md:text-xl max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
