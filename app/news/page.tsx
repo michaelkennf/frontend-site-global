@@ -94,7 +94,7 @@ function NewsContent() {
       <Navbar />
       <main className="flex-1">
         {/* Hero blog */}
-        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
+        <section className="relative pt-20 overflow-hidden bg-white min-h-[62vh] flex items-end">
           <div className="absolute inset-0">
             <Image
               src={headerSrc}
@@ -106,10 +106,10 @@ function NewsContent() {
             />
             <div
               className="absolute inset-0"
-              style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.35))" }}
+              style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.55))" }}
             />
           </div>
-          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 md:pb-20">
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-white/85 mb-4">
               <Newspaper size={14} />
               {lang === "fr" ? "Le blog" : "Our blog"}

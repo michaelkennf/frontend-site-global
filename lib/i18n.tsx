@@ -24,13 +24,16 @@ export const translations = {
       donate: "Faire un don",
     },
     about: {
-      title: "À propos de Global SOS",
+      title: "À propos de nous",
       description:
         "Global SOS est une organisation humanitaire sans but lucratif. Elle apporte une assistance urgente aux cris de détresse.",
       whoWeAreTitle: "Qui sommes-nous ?",
       whoWeAreParagraphs: [
-        "Global SOS est une organisation humanitaire sans but lucratif.",
-        "Elle apporte une assistance urgente aux cris de détresse.",
+        "Global SOS asbl a été créée le 25e jour du mois de décembre par des professionnels issus de divers domaines, l’organisation est née d’une volonté commune d’apporter des réponses concrètes aux défis humanitaires, sanitaires, sociaux et environnementaux.",
+        "L’organisation adopte une approche participative et communautaire fondée sur la proximité avec les populations, le respect de la dignité humaine, la transparence et la redevabilité.",
+        "À travers ses interventions (sensibilisation communautaire, les interventions ponctuelles ainsi que la recherche et la documentation des faits) Global SOS asbl œuvre pour la protection des vies et le renforcement de la résilience communautaire.",
+        "Soucieuse d’apporter des solutions durables et innovantes, l’organisation travaille en collaboration avec les partenaires techniques étatiques et non étatiques dans la mise en œuvre de son programme.",
+        "Global SOS asbl dispose d’une structure technique hiérarchisée composée notamment des unités de coordination, de programme, des finances et RH, d’engagement communautaire, de communication, de logistique, des affaires humanitaires ainsi que de suivi et évaluation, garantissant une mise en œuvre efficace de ses activités.",
       ],
       homeAboutEyebrow: "Notre organisation",
       mission: "Mission",
@@ -260,13 +263,16 @@ export const translations = {
       donate: "Donate",
     },
     about: {
-      title: "About Global SOS",
+      title: "About us",
       description:
         "Global SOS is a humanitarian nonprofit organization committed to protecting the most vulnerable, relieving human suffering and defending the dignity of every person.",
       whoWeAreTitle: "Who are we?",
       whoWeAreParagraphs: [
-        "Global SOS is a nonprofit non-governmental organization, founded and rooted in Bukavu, Democratic Republic of the Congo. We work alongside communities most exposed to disasters, health emergencies and the impacts of climate change.",
-        "Our approach combines field proximity, transparency and humanitarian standards: every programme aims to strengthen local resilience while upholding the dignity and rights of every person.",
+        "Global SOS asbl was created on the 25th day of December by professionals from various fields. The organization was born from a shared will to provide concrete responses to humanitarian, health, social and environmental challenges.",
+        "The organization adopts a participatory and community-based approach grounded in proximity to populations, respect for human dignity, transparency and accountability.",
+        "Through its interventions (community awareness, targeted actions, as well as research and documentation of facts), Global SOS asbl works to protect lives and strengthen community resilience.",
+        "Committed to delivering sustainable and innovative solutions, the organization works with governmental and non-governmental technical partners in implementing its programme.",
+        "Global SOS asbl has a hierarchical technical structure that includes coordination, programme, finance and HR, community engagement, communication, logistics, humanitarian affairs, and monitoring and evaluation units, ensuring effective delivery of its activities.",
       ],
       homeAboutEyebrow: "Our organization",
       mission: "Mission",
