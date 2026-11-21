@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n"
 import Link from "next/link"
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, MapPin } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/brand"
 
@@ -117,6 +117,23 @@ export function Footer() {
                       ? "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, RDC"
                       : "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, DRC",
                   )}
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-[var(--sos-red)]" />
+                <span className="flex flex-col gap-1">
+                  <a
+                    href="tel:+243848883003"
+                    className="text-white/80 hover:text-white transition-colors underline-offset-2 hover:underline"
+                  >
+                    +243 848 883 003
+                  </a>
+                  <a
+                    href="tel:+243999915083"
+                    className="text-white/80 hover:text-white transition-colors underline-offset-2 hover:underline"
+                  >
+                    +243 999 915 083
+                  </a>
                 </span>
               </li>
               <li className="flex items-center gap-2">
