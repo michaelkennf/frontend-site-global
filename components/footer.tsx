@@ -84,8 +84,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/donate" className="text-white/80 transition-colors hover:text-white">
-                  {cNav("nav.donate", t.nav.donate)}
+                <Link href="/zones" className="text-white/80 transition-colors hover:text-white">
+                  {cNav("nav.zones", t.nav.zones)}
                 </Link>
               </li>
               <li>
@@ -94,8 +94,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/zones" className="text-white/80 transition-colors hover:text-white">
-                  {cNav("nav.zones", t.nav.zones)}
+                <Link href="/donate" className="text-white/80 transition-colors hover:text-white">
+                  {cNav("nav.donate", t.nav.donate)}
                 </Link>
               </li>
             </ul>
