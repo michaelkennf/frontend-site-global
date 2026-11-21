@@ -11,6 +11,7 @@ import { useSiteContent } from "@/hooks/use-site-content"
 import { formatArticleDate, articleDateParts, articleDisplayDate } from "@/lib/format-article-date"
 import { formatArticleCategoryLabel } from "@/lib/blog-categories"
 import { resolveMediaUrl } from "@/lib/media-url"
+import { htmlToPlainText } from "@/lib/rich-text"
 
 const AUTO_MS = 5500
 
@@ -135,7 +136,11 @@ export function ArticlesSection() {
                   {lang === "fr" ? primary.titleFr : primary.titleEn}
                 </h3>
                 <p className="text-white/85 text-base md:text-lg max-w-2xl mb-6 line-clamp-2">
-                  {lang === "fr" ? primary.excerptFr || primary.contentFr : primary.excerptEn || primary.contentEn}
+                  {htmlToPlainText(
+                    lang === "fr"
+                      ? primary.excerptFr || primary.contentFr
+                      : primary.excerptEn || primary.contentEn,
+                  )}
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 text-sm mb-6 max-w-xl">

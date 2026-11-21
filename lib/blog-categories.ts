@@ -48,16 +48,19 @@ export function formatArticleCategoryLabel(article: Article, lang: Language): st
   return formatPublicationCategoryLabel(article.category, lang)
 }
 
+/** Titres complets — alignés sur le menu « Nos domaines ». */
 const LABELS_FR: Record<DomainSlug, string> = {
-  "risques-catastrophes": "Gestion des risques",
-  "urgences-sanitaires": "Urgences sanitaires & DSSR",
-  "justice-climatique": "Justice climatique",
+  "risques-catastrophes": "Gestion des risques de catastrophes",
+  "urgences-sanitaires":
+    "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
+  "justice-climatique": "Promotion de la justice climatique et protection de l'environnement",
 }
 
 const LABELS_EN: Record<DomainSlug, string> = {
   "risques-catastrophes": "Disaster risk management",
-  "urgences-sanitaires": "Health emergencies & SRHR",
-  "justice-climatique": "Climate justice",
+  "urgences-sanitaires":
+    "Health emergency management and promotion of sexual and reproductive health rights (SRHR)",
+  "justice-climatique": "Promoting climate justice and environmental protection",
 }
 
 export function formatCategoryLabel(

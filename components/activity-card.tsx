@@ -8,6 +8,7 @@ import type { Activity } from "@/lib/api"
 import type { Language } from "@/lib/i18n"
 import { formatPublicationCategoryLabel } from "@/lib/blog-categories"
 import { resolveMediaUrl } from "@/lib/media-url"
+import { htmlToPlainText } from "@/lib/rich-text"
 
 export function ActivityCard({
   item,
@@ -20,7 +21,7 @@ export function ActivityCard({
 }) {
   const img = item.image?.trim() ? resolveMediaUrl(item.image) : ""
   const title = lang === "fr" ? item.titleFr : item.titleEn
-  const desc = lang === "fr" ? item.descriptionFr : item.descriptionEn
+  const desc = htmlToPlainText(lang === "fr" ? item.descriptionFr : item.descriptionEn)
   const statusLabel =
     item.status === "COMPLETED"
       ? lang === "fr"

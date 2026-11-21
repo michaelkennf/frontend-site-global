@@ -8,6 +8,8 @@ import { isAuthenticated } from "@/lib/auth"
 import { Plus, Pencil, Trash2, MessageSquareQuote, Eye, EyeOff, X, GripVertical } from "lucide-react"
 import Image from "next/image"
 import { resolveMediaUrl } from "@/lib/media-url"
+import { RichTextEditor } from "@/components/rich-text-editor"
+import { htmlToPlainText } from "@/lib/rich-text"
 
 export default function AdminTestimonialsPage() {
   const router = useRouter()
@@ -61,6 +63,10 @@ export default function AdminTestimonialsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!form.name.trim() || !htmlToPlainText(form.quote).trim()) {
+      setError("Le nom et le témoignage sont obligatoires")
+      return
+    }
     setSaving(true)
     try {
       if (editItem) {
@@ -204,7 +210,7 @@ export default function AdminTestimonialsPage() {
                       )}
                       <div className="min-w-0">
                         <p className="font-bold text-gray-900">{t.name}</p>
-                        <p className="text-sm text-gray-600 mt-1 line-clamp-3">{t.quote}</p>
+                        <p className="text-sm text-gray-600 mt-1 line-clamp-3">{htmlToPlainText(t.quote)}</p>
                       </div>
                     </div>
                   </div>
@@ -242,13 +248,11 @@ export default function AdminTestimonialsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Témoignage *</label>
-                <textarea
-                  required
+                <RichTextEditor
                   value={form.quote}
-                  rows={4}
-                  onChange={(e) => setForm({ ...form, quote: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] resize-none"
+                  onChange={(html) => setForm({ ...form, quote: html })}
                   placeholder="Texte du témoignage..."
+                  minHeight="140px"
                 />
               </div>
 

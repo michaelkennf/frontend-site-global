@@ -16,6 +16,7 @@ import {
   type ContentFieldValues,
 } from "@/lib/site-content-admin"
 import { notifySiteContentUpdated } from "@/lib/site-content-provider"
+import { RichTextEditor } from "@/components/rich-text-editor"
 
 export default function AdminContent() {
   const router = useRouter()
@@ -193,12 +194,15 @@ export default function AdminContent() {
                             {lang === "fr" ? "Français" : "English"}
                           </label>
                           {field.multiline ? (
-                            <textarea
-                              rows={field.key.includes("body") || field.key.includes("description") ? 8 : 4}
+                            <RichTextEditor
                               value={get(field.key, lang)}
-                              onChange={(e) => setField(field.key, lang, e.target.value)}
-                              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-900 resize-y focus:outline-none focus:ring-2 focus:ring-[var(--sos-blue)] focus:border-transparent"
+                              onChange={(html) => setField(field.key, lang, html)}
                               placeholder={lang === "fr" ? "Texte en français…" : "English text…"}
+                              minHeight={
+                                field.key.includes("body") || field.key.includes("description")
+                                  ? "200px"
+                                  : "140px"
+                              }
                             />
                           ) : (
                             <input

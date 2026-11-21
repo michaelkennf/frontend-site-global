@@ -70,6 +70,7 @@ export const SITE_TEXT_CATALOG: SiteTextCatalogEntry[] = [
   { section: "nav", key: "nav.donate", label: "Menu — Don", multiline: false, defaultFr: fr.nav.donate, defaultEn: en.nav.donate },
   { section: "nav", key: "nav.contact", label: "Menu — Contact", multiline: false, defaultFr: fr.nav.contact, defaultEn: en.nav.contact },
   { section: "nav", key: "nav.zones", label: "Menu — Nos zones d'intervention", multiline: false, defaultFr: fr.nav.zones, defaultEn: en.nav.zones },
+  { section: "zones", key: "zones.eyebrow", label: "Zones — Accroche hero (Rayon d'activité)", multiline: false, defaultFr: fr.zones.eyebrow, defaultEn: en.zones.eyebrow },
   { section: "zones", key: "zones.titleOur", label: "Zones — Titre (1re partie, ex. Nos)", multiline: false, defaultFr: fr.zones.titleOur, defaultEn: en.zones.titleOur },
   { section: "zones", key: "zones.titleRest", label: "Zones — Titre (suite)", multiline: false, defaultFr: fr.zones.titleRest, defaultEn: en.zones.titleRest },
   { section: "zones", key: "zones.body", label: "Zones — Texte principal", multiline: true, defaultFr: fr.zones.body, defaultEn: en.zones.body },
@@ -93,6 +94,7 @@ export const SITE_TEXT_CATALOG: SiteTextCatalogEntry[] = [
   { section: "contact", key: "contact.subtitle", label: "Page contact — Sous-titre", multiline: true, defaultFr: fr.contact.subtitle, defaultEn: en.contact.subtitle },
   { section: "contact", key: "contact.address", label: "Page contact — Adresse", multiline: true, defaultFr: "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, RDC", defaultEn: "Avenue Patrice Emery Lumumba,\nCommune d'Ibanda N°29\nBukavu, Sud-Kivu, DRC" },
   { section: "footer", key: "footer.tagline", label: "Pied de page — Accroche", multiline: false, defaultFr: fr.footer.tagline, defaultEn: en.footer.tagline },
+  { section: "footer", key: "footer.motto", label: "Pied de page — Devise", multiline: false, defaultFr: fr.footer.motto, defaultEn: en.footer.motto },
   { section: "footer", key: "footer.mission", label: "Pied de page — Texte mission (court)", multiline: true, defaultFr: fr.about.missionText, defaultEn: en.about.missionText },
   // Footer
   { section: "footer", key: "footer.description", label: "Pied de page — Description", multiline: true, defaultFr: fr.footer.description, defaultEn: en.footer.description },

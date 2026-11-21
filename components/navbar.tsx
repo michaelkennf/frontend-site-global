@@ -12,6 +12,12 @@ import { DOMAIN_DISPLAY_ORDER } from "@/lib/domain-assets"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { LOGO_SRC } from "@/lib/brand"
 
+type NavLink = {
+  label: string
+  href: string
+  dropdown?: "about" | "domains" | "news"
+}
+
 export function Navbar() {
   const { t, lang, setLang } = useI18n()
   const { c } = useSiteContent("nav", lang)
@@ -19,8 +25,14 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [domainsOpen, setDomainsOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
+  const [newsOpen, setNewsOpen] = useState(false)
   const [mobileDomainsOpen, setMobileDomainsOpen] = useState(false)
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
+  const [mobileNewsOpen, setMobileNewsOpen] = useState(false)
   const domainsRef = useRef<HTMLDivElement | null>(null)
+  const aboutRef = useRef<HTMLDivElement | null>(null)
+  const newsRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -33,6 +45,12 @@ export function Navbar() {
       if (domainsRef.current && !domainsRef.current.contains(event.target as Node)) {
         setDomainsOpen(false)
       }
+      if (aboutRef.current && !aboutRef.current.contains(event.target as Node)) {
+        setAboutOpen(false)
+      }
+      if (newsRef.current && !newsRef.current.contains(event.target as Node)) {
+        setNewsOpen(false)
+      }
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
@@ -40,17 +58,59 @@ export function Navbar() {
 
   useEffect(() => {
     setDomainsOpen(false)
+    setAboutOpen(false)
+    setNewsOpen(false)
     setMobileOpen(false)
     setMobileDomainsOpen(false)
+    setMobileAboutOpen(false)
+    setMobileNewsOpen(false)
   }, [pathname])
 
-  const navLinks = [
+  const navLinks: NavLink[] = [
     { label: c("nav.home", t.nav.home), href: "/" },
-    { label: c("nav.about", t.nav.about), href: "/about" },
-    { label: c("nav.domains", t.nav.domains), href: "/domaines", hasDropdown: true },
-    { label: c("nav.news", t.nav.news), href: "/news" },
+    { label: c("nav.about", t.nav.about), href: "/about", dropdown: "about" },
+    { label: c("nav.domains", t.nav.domains), href: "/domaines", dropdown: "domains" },
+    { label: c("nav.news", t.nav.news), href: "/news", dropdown: "news" },
     { label: c("nav.contact", t.nav.contact), href: "/contact" },
     { label: c("nav.zones", t.nav.zones), href: "/zones" },
+  ]
+
+  const newsLinks = [
+    {
+      href: "/news",
+      title: lang === "fr" ? "Articles" : "Articles",
+      excerpt:
+        lang === "fr"
+          ? "Actualités et publications depuis le terrain"
+          : "News and stories from the field",
+    },
+    {
+      href: "/galerie",
+      title: lang === "fr" ? "Galerie" : "Gallery",
+      excerpt:
+        lang === "fr"
+          ? "Images et vidéos publiées sur le site"
+          : "Images and videos published on the site",
+    },
+  ]
+
+  const aboutLinks = [
+    {
+      href: "/about",
+      title: lang === "fr" ? "Qui sommes-nous" : "Who we are",
+      excerpt:
+        lang === "fr"
+          ? "Présentation, valeurs et principes fondamentaux"
+          : "Presentation, values and core principles",
+    },
+    {
+      href: "/about/equipe",
+      title: lang === "fr" ? "Notre équipe" : "Our team",
+      excerpt:
+        lang === "fr"
+          ? "Les personnes engagées au sein de Global SOS"
+          : "The people committed within Global SOS",
+    },
   ]
 
   const domainLinks = DOMAIN_DISPLAY_ORDER.map((slug) => ({
@@ -63,17 +123,29 @@ export function Navbar() {
   const linkActive = (href: string) => {
     if (href === "/") return pathname === "/"
     if (href === "/domaines") return pathname === "/domaines" || pathname.startsWith("/domaines/")
+    if (href === "/about") return pathname === "/about" || pathname.startsWith("/about/")
+    if (href === "/news") return pathname === "/news" || pathname.startsWith("/news/") || pathname === "/galerie" || pathname.startsWith("/galerie/")
     return pathname === href || pathname.startsWith(`${href}/`)
   }
+
+  const desktopLinkClass = (active: boolean) =>
+    cn(
+      "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-colors border-b-2 border-transparent",
+      useSolidNav
+        ? active
+          ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-transparent"
+          : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)]"
+        : active
+          ? "text-white border-[var(--sos-red)] bg-black/25"
+          : "text-white hover:text-white bg-black/20 hover:bg-black/35",
+    )
 
   return (
     <>
       <motion.header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          useSolidNav
-            ? "bg-white/95 backdrop-blur-md shadow-md"
-            : "bg-transparent"
+          useSolidNav ? "bg-white/95 backdrop-blur-md shadow-md" : "bg-transparent",
         )}
         initial={{ y: -80 }}
         animate={{ y: 0 }}
@@ -105,7 +177,123 @@ export function Navbar() {
               {navLinks.map((link) => {
                 const active = linkActive(link.href)
 
-                if (link.hasDropdown) {
+                if (link.dropdown === "about") {
+                  return (
+                    <div
+                      key={link.href}
+                      ref={aboutRef}
+                      className="relative"
+                      onMouseEnter={() => setAboutOpen(true)}
+                      onMouseLeave={() => setAboutOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setAboutOpen((v) => !v)}
+                        className={desktopLinkClass(active)}
+                        aria-expanded={aboutOpen}
+                        aria-haspopup="menu"
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={14}
+                          className={cn("transition-transform", aboutOpen && "rotate-180")}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {aboutOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 8 }}
+                            transition={{ duration: 0.18 }}
+                            className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[20rem]"
+                            role="menu"
+                          >
+                            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                              <div className="py-2">
+                                {aboutLinks.map((item) => (
+                                  <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="block px-5 py-3 hover:bg-gray-50 transition-colors group"
+                                    role="menuitem"
+                                  >
+                                    <div className="text-sm font-semibold text-gray-900 group-hover:text-[var(--sos-red)] transition-colors mb-0.5">
+                                      {item.title}
+                                    </div>
+                                    <div className="text-xs text-gray-500 leading-snug">
+                                      {item.excerpt}
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                }
+
+                if (link.dropdown === "news") {
+                  return (
+                    <div
+                      key={link.href}
+                      ref={newsRef}
+                      className="relative"
+                      onMouseEnter={() => setNewsOpen(true)}
+                      onMouseLeave={() => setNewsOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setNewsOpen((v) => !v)}
+                        className={desktopLinkClass(active)}
+                        aria-expanded={newsOpen}
+                        aria-haspopup="menu"
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={14}
+                          className={cn("transition-transform", newsOpen && "rotate-180")}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {newsOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 8 }}
+                            transition={{ duration: 0.18 }}
+                            className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[20rem]"
+                            role="menu"
+                          >
+                            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                              <div className="py-2">
+                                {newsLinks.map((item) => (
+                                  <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className="block px-5 py-3 hover:bg-gray-50 transition-colors group"
+                                    role="menuitem"
+                                  >
+                                    <div className="text-sm font-semibold text-gray-900 group-hover:text-[var(--sos-red)] transition-colors mb-0.5">
+                                      {item.title}
+                                    </div>
+                                    <div className="text-xs text-gray-500 leading-snug">
+                                      {item.excerpt}
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                }
+
+                if (link.dropdown === "domains") {
                   return (
                     <div
                       key={link.href}
@@ -117,16 +305,7 @@ export function Navbar() {
                       <button
                         type="button"
                         onClick={() => setDomainsOpen((v) => !v)}
-                        className={cn(
-                          "flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-colors border-b-2 border-transparent",
-                          useSolidNav
-                            ? active
-                              ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-transparent"
-                              : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)]"
-                            : active
-                              ? "text-white border-[var(--sos-red)] bg-black/25"
-                              : "text-white hover:text-white bg-black/20 hover:bg-black/35"
-                        )}
+                        className={desktopLinkClass(active)}
                         aria-expanded={domainsOpen}
                         aria-haspopup="menu"
                       >
@@ -179,20 +358,7 @@ export function Navbar() {
                 }
 
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      "px-3 py-2 text-sm font-medium rounded-md transition-colors border-b-2 border-transparent",
-                      useSolidNav
-                        ? active
-                          ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-transparent"
-                          : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)]"
-                        : active
-                          ? "text-white border-[var(--sos-red)] bg-black/25"
-                          : "text-white hover:text-white bg-black/20 hover:bg-black/35"
-                    )}
-                  >
+                  <Link key={link.href} href={link.href} className={desktopLinkClass(active)}>
                     {link.label}
                   </Link>
                 )
@@ -200,10 +366,12 @@ export function Navbar() {
             </div>
 
             <div className="hidden lg:flex items-center gap-3">
-              <div className={cn(
-                "flex items-center gap-1 rounded-full p-1",
-                useSolidNav ? "border border-gray-200 bg-white" : "border border-white/20 bg-black/25"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center gap-1 rounded-full p-1",
+                  useSolidNav ? "border border-gray-200 bg-white" : "border border-white/20 bg-black/25",
+                )}
+              >
                 {(["fr", "en"] as Language[]).map((l) => (
                   <button
                     key={l}
@@ -215,7 +383,7 @@ export function Navbar() {
                         ? "bg-[var(--sos-red)] text-white"
                         : useSolidNav
                           ? "text-gray-600 hover:bg-gray-100"
-                          : "text-white/80 hover:text-white"
+                          : "text-white/80 hover:text-white",
                     )}
                   >
                     {l}
@@ -233,7 +401,7 @@ export function Navbar() {
             <button
               className={cn(
                 "lg:hidden p-2 rounded-md",
-                useSolidNav ? "text-gray-700" : "text-white bg-black/25"
+                useSolidNav ? "text-gray-700" : "text-white bg-black/25",
               )}
               type="button"
               onClick={() => setMobileOpen((v) => !v)}
@@ -256,7 +424,7 @@ export function Navbar() {
                 {navLinks.map((link) => {
                   const active = linkActive(link.href)
 
-                  if (link.hasDropdown) {
+                  if (link.dropdown === "about") {
                     return (
                       <div key={link.href} className="flex flex-col">
                         <div className="flex items-stretch">
@@ -267,7 +435,115 @@ export function Navbar() {
                               "flex-1 px-4 py-3 text-sm font-medium rounded-md transition-colors border-l-4",
                               active
                                 ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-[var(--sos-red-light)]"
-                                : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent"
+                                : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent",
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setMobileAboutOpen((v) => !v)}
+                            className="px-3 text-gray-500 hover:text-[var(--sos-blue)] transition-colors"
+                            aria-label="Toggle about submenu"
+                            aria-expanded={mobileAboutOpen}
+                          >
+                            <ChevronDown
+                              size={18}
+                              className={cn("transition-transform", mobileAboutOpen && "rotate-180")}
+                            />
+                          </button>
+                        </div>
+                        <AnimatePresence>
+                          {mobileAboutOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="ml-3 pl-3 border-l border-gray-100 mt-1 mb-2 space-y-1"
+                            >
+                              {aboutLinks.map((item) => (
+                                <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block px-3 py-2 text-sm text-gray-600 hover:text-[var(--sos-red)] hover:bg-gray-50 rounded-md"
+                                >
+                                  {item.title}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )
+                  }
+
+                  if (link.dropdown === "news") {
+                    return (
+                      <div key={link.href} className="flex flex-col">
+                        <div className="flex items-stretch">
+                          <Link
+                            href={link.href}
+                            onClick={() => setMobileOpen(false)}
+                            className={cn(
+                              "flex-1 px-4 py-3 text-sm font-medium rounded-md transition-colors border-l-4",
+                              active
+                                ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-[var(--sos-red-light)]"
+                                : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent",
+                            )}
+                          >
+                            {link.label}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setMobileNewsOpen((v) => !v)}
+                            className="px-3 text-gray-500 hover:text-[var(--sos-blue)] transition-colors"
+                            aria-label="Toggle news submenu"
+                            aria-expanded={mobileNewsOpen}
+                          >
+                            <ChevronDown
+                              size={18}
+                              className={cn("transition-transform", mobileNewsOpen && "rotate-180")}
+                            />
+                          </button>
+                        </div>
+                        <AnimatePresence>
+                          {mobileNewsOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="ml-3 pl-3 border-l border-gray-100 mt-1 mb-2 space-y-1"
+                            >
+                              {newsLinks.map((item) => (
+                                <Link
+                                  key={item.href}
+                                  href={item.href}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block px-3 py-2 text-sm text-gray-600 hover:text-[var(--sos-red)] hover:bg-gray-50 rounded-md"
+                                >
+                                  {item.title}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )
+                  }
+
+                  if (link.dropdown === "domains") {
+                    return (
+                      <div key={link.href} className="flex flex-col">
+                        <div className="flex items-stretch">
+                          <Link
+                            href={link.href}
+                            onClick={() => setMobileOpen(false)}
+                            className={cn(
+                              "flex-1 px-4 py-3 text-sm font-medium rounded-md transition-colors border-l-4",
+                              active
+                                ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-[var(--sos-red-light)]"
+                                : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent",
                             )}
                           >
                             {link.label}
@@ -319,7 +595,7 @@ export function Navbar() {
                         "px-4 py-3 text-sm font-medium rounded-md transition-colors border-l-4",
                         active
                           ? "text-[var(--sos-red)] border-[var(--sos-red)] bg-[var(--sos-red-light)]"
-                          : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent"
+                          : "text-gray-700 hover:text-[var(--sos-blue)] hover:bg-[var(--sos-blue-light)] border-transparent",
                       )}
                     >
                       {link.label}
@@ -332,12 +608,15 @@ export function Navbar() {
                       <button
                         key={l}
                         type="button"
-                        onClick={() => { setLang(l); setMobileOpen(false) }}
+                        onClick={() => {
+                          setLang(l)
+                          setMobileOpen(false)
+                        }}
                         className={cn(
                           "px-3 py-1.5 text-xs font-bold rounded-full uppercase transition-all",
                           lang === l
                             ? "bg-[var(--sos-red)] text-white"
-                            : "text-gray-600 border border-gray-200 hover:bg-gray-100"
+                            : "text-gray-600 border border-gray-200 hover:bg-gray-100",
                         )}
                       >
                         {l}

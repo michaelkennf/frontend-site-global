@@ -9,7 +9,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Send, CheckCircle, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
+import { Mail, MapPin, Phone, Send, CheckCircle, Facebook, Twitter, Linkedin, Instagram, Youtube } from "lucide-react"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
@@ -47,13 +47,13 @@ function ContactContent() {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative pt-32 pb-20 overflow-hidden bg-white">
+        <section className="relative w-full overflow-hidden bg-white flex items-end min-h-screen">
           <div className="absolute inset-0">
-            <Image src={headerSrc} alt={headerAlt} fill className="object-cover object-center" sizes="100vw" />
+            <Image src={headerSrc} alt={headerAlt} fill className="object-cover object-center" sizes="100vw" priority />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16 md:pb-20">
             <motion.h1
-              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6"
+              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -61,7 +61,7 @@ function ContactContent() {
               {c("contact.title", t.contact.title)}
             </motion.h1>
             <motion.p
-              className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed"
+              className="text-white text-lg max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -103,6 +103,29 @@ function ContactContent() {
 
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-[var(--sos-blue-light)] flex items-center justify-center shrink-0">
+                      <Phone className="w-5 h-5 text-[var(--sos-blue)]" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">{t.contact.phone}</h3>
+                      <div className="flex flex-col gap-1">
+                        <a
+                          href="tel:+243848883003"
+                          className="text-gray-600 hover:text-[var(--sos-blue)] transition-colors underline-offset-2 hover:underline font-medium"
+                        >
+                          +243 848 883 003
+                        </a>
+                        <a
+                          href="tel:+243999915083"
+                          className="text-gray-600 hover:text-[var(--sos-blue)] transition-colors underline-offset-2 hover:underline font-medium"
+                        >
+                          +243 999 915 083
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--sos-blue-light)] flex items-center justify-center shrink-0">
                       <Mail className="w-5 h-5 text-[var(--sos-blue)]" />
                     </div>
                     <div>
@@ -126,6 +149,7 @@ function ContactContent() {
                       { Icon: Twitter, href: "https://x.com/globalsosasbl", label: "X (Twitter)" },
                       { Icon: Instagram, href: "https://www.instagram.com/globalsosasbl/", label: "Instagram" },
                       { Icon: Linkedin, href: "https://www.linkedin.com/company/global-sos-asbl/", label: "LinkedIn" },
+                      { Icon: Youtube, href: "https://www.youtube.com/@GlobalSOSasbl", label: "YouTube" },
                     ].map(({ Icon, href, label }) => (
                       <a
                         key={label}

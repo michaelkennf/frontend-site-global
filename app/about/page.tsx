@@ -5,15 +5,15 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { Target, Eye, Heart, Users, Globe, Shield, UserCircle2 } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
-import { teamApi, TeamMember } from "@/lib/api"
+import { Heart, Users, Globe, Shield } from "lucide-react"
+import { useMemo } from "react"
 import { valueIcons } from "@/components/about-section"
 import { HeroRedDivider } from "@/components/hero-red-divider"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
-import { resolveMediaUrl } from "@/lib/media-url"
+import { RichTextView } from "@/components/rich-text-view"
+import { looksLikeHtml } from "@/lib/rich-text"
 
 function resolveAboutPageTitle(raw: string, fallback: string): string {
   const value = raw?.trim() || fallback
@@ -38,7 +38,6 @@ function AboutContent() {
   const presentationParagraphs = useMemo(() => {
     const fallback = t.about.whoWeAreParagraphs
     const fromCms = c("about.description", "")
-    // Garder la présentation canonique si le CMS a encore l’ancienne version courte
     if (
       !fromCms.trim() ||
       fromCms.length < 400 ||
@@ -49,22 +48,11 @@ function AboutContent() {
     return fromCms.split("\n\n").map((p) => p.trim()).filter(Boolean)
   }, [c, t.about.whoWeAreParagraphs])
 
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
-  const [teamLoading, setTeamLoading] = useState(true)
-
-  useEffect(() => {
-    teamApi.getPublic()
-      .then(setTeamMembers)
-      .catch(() => setTeamMembers([]))
-      .finally(() => setTeamLoading(false))
-  }, [])
-
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        {/* Hero image — titre en bas, blanc (comme Actualités) */}
-        <section className="relative pt-20 overflow-hidden bg-white min-h-[62vh] flex items-end">
+        <section className="relative w-full overflow-hidden bg-white flex items-end min-h-screen">
           <div className="absolute inset-0">
             <Image
               key={headerSrc}
@@ -77,30 +65,22 @@ function AboutContent() {
               priority
             />
           </div>
-          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 md:pb-20">
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16 md:pb-20">
             <motion.h1
-              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white mb-5 text-balance drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
+              className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-white text-balance drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               {pageTitle}
             </motion.h1>
-            <motion.p
-              className="text-white text-lg md:text-xl max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              {c("about.pageSubtitle", t.about.description)}
-            </motion.p>
           </div>
         </section>
 
         <HeroRedDivider />
 
-        {/* Présentation / Qui sommes-nous */}
-        <section className="py-16 md:py-24 bg-gray-50 border-b border-gray-100">
+        {/* Qui sommes-nous */}
+        <section id="qui-sommes-nous" className="py-16 md:py-24 bg-gray-50 border-b border-gray-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -117,121 +97,19 @@ function AboutContent() {
                 {t.about.whoWeAreTitle}
               </h2>
               <div className="space-y-6 text-gray-600 text-base md:text-lg leading-relaxed">
-                {presentationParagraphs.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+                {looksLikeHtml(presentationParagraphs.join("\n\n")) ? (
+                  <RichTextView content={presentationParagraphs.join("\n\n")} />
+                ) : (
+                  presentationParagraphs.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))
+                )}
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Notre équipe — juste après la présentation */}
-        <section id="notre-equipe" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="text-center mb-14"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="font-serif font-black text-4xl text-gray-900 mb-4">
-                {lang === "fr" ? "Notre équipe" : "Our team"}
-              </h2>
-              <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
-                {lang === "fr"
-                  ? "Les personnes engagées au quotidien pour protéger les vies et renforcer la résilience des communautés."
-                  : "The people committed every day to protecting lives and strengthening community resilience."}
-              </p>
-              <div className="w-16 h-1 mx-auto mt-5 rounded-full bg-[var(--sos-blue)]" />
-            </motion.div>
-
-            {teamLoading ? (
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {[1, 2, 3].map((n) => (
-                  <div key={n} className="text-center animate-pulse">
-                    <div className="w-40 h-40 mx-auto mb-5 rounded-full bg-gray-200" />
-                    <div className="h-5 bg-gray-200 rounded w-32 mx-auto mb-2" />
-                    <div className="h-4 bg-gray-100 rounded w-24 mx-auto" />
-                  </div>
-                ))}
-              </div>
-            ) : teamMembers.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">
-                {lang === "fr"
-                  ? "L'équipe sera bientôt présentée ici."
-                  : "The team will be presented here soon."}
-              </p>
-            ) : (
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {teamMembers.map((member, i) => {
-                  const name = lang === "fr" ? member.nameFr : member.nameEn
-                  const role = lang === "fr" ? member.roleFr : member.roleEn
-                  const photo = member.image?.trim() ? resolveMediaUrl(member.image) : ""
-                  return (
-                    <motion.div
-                      key={member.id}
-                      className="text-center group"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                    >
-                      <div className="relative w-40 h-40 mx-auto mb-5 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow bg-gray-100 flex items-center justify-center">
-                        {photo ? (
-                          <Image src={photo} alt={name} fill className="object-cover object-center" sizes="160px" />
-                        ) : (
-                          <UserCircle2 className="w-20 h-20 text-gray-300" />
-                        )}
-                      </div>
-                      <h3 className="font-bold text-gray-900 text-lg">{name}</h3>
-                      <p className="text-[var(--sos-blue)] text-sm font-medium">{role}</p>
-                      {member.bio && (
-                        <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto leading-relaxed">{member.bio}</p>
-                      )}
-                    </motion.div>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Mission & Vision */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-12">
-              <motion.div
-                className="bg-[var(--sos-blue-light)] rounded-2xl p-8 lg:p-10"
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="w-14 h-14 rounded-xl bg-[var(--sos-blue)] flex items-center justify-center mb-6">
-                  <Target className="w-7 h-7 text-white" />
-                </div>
-                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{c("about.mission", t.about.mission)}</h2>
-                <p className="text-gray-600 leading-relaxed">{c("about.missionText", t.about.missionText)}</p>
-              </motion.div>
-
-              <motion.div
-                className="bg-[var(--sos-red-light)] rounded-2xl p-8 lg:p-10"
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="w-14 h-14 rounded-xl bg-[var(--sos-red)] flex items-center justify-center mb-6">
-                  <Eye className="w-7 h-7 text-white" />
-                </div>
-                <h2 className="font-serif font-bold text-2xl text-gray-900 mb-4">{c("about.vision", t.about.vision)}</h2>
-                <p className="text-gray-600 leading-relaxed">{c("about.visionText", t.about.visionText)}</p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* Values */}
+        {/* Valeurs */}
         <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
@@ -271,7 +149,7 @@ function AboutContent() {
           </div>
         </section>
 
-        {/* Principles */}
+        {/* Principes fondamentaux */}
         <section className="py-20 bg-[var(--sos-blue)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div

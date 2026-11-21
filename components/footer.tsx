@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n"
 import Link from "next/link"
-import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react"
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, MapPin } from "lucide-react"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { CONTACT_EMAIL, CONTACT_MAILTO } from "@/lib/brand"
 
@@ -27,6 +27,11 @@ const SOCIAL_LINKS = [
     label: "LinkedIn",
     Icon: Linkedin,
   },
+  {
+    href: "https://www.youtube.com/@GlobalSOSasbl",
+    label: "YouTube",
+    Icon: Youtube,
+  },
 ]
 
 export function Footer() {
@@ -46,6 +51,9 @@ export function Footer() {
             </p>
             <p className="text-sm font-medium italic text-white/90">
               {c("footer.tagline", t.footer.tagline)}
+            </p>
+            <p className="text-sm font-medium text-white/90">
+              {c("footer.motto", t.footer.motto)}
             </p>
           </div>
 
@@ -70,7 +78,12 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/news" className="text-white/80 transition-colors hover:text-white">
-                  {cNav("nav.news", t.nav.news)}
+                  {lang === "fr" ? "Articles" : "Articles"}
+                </Link>
+              </li>
+              <li>
+                <Link href="/galerie" className="text-white/80 transition-colors hover:text-white">
+                  {lang === "fr" ? "Galerie" : "Gallery"}
                 </Link>
               </li>
               <li>

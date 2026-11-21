@@ -8,7 +8,7 @@ export const translations = {
   fr: {
     nav: {
       home: "Accueil",
-      about: "À propos",
+      about: "À propos de nous",
       domains: "Nos domaines",
       work: "Nos actions",
       news: "Actualités",
@@ -19,14 +19,13 @@ export const translations = {
     },
     hero: {
       headline: "Protéger les vies et renforcer la résilience des communautés",
-      sub: "Global SOS est une organisation humanitaire à but non lucratif qui travaille à protéger les populations vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne.",
+      sub: "Global SOS est une organisation humanitaire à but non lucratif qui travaille à protéger les populations vulnérables, soulager les souffrances humaines et défendre la dignité de chaque personne. Elle apporte une assistance urgente aux cris de détresse.",
       learnMore: "En savoir plus",
       donate: "Faire un don",
     },
     about: {
       title: "À propos de nous",
-      description:
-        "Global SOS est une organisation humanitaire sans but lucratif. Elle apporte une assistance urgente aux cris de détresse.",
+      description: "",
       whoWeAreTitle: "Qui sommes-nous ?",
       whoWeAreParagraphs: [
         "Global SOS asbl a été créée le 25e jour du mois de décembre par des professionnels issus de divers domaines, l’organisation est née d’une volonté commune d’apporter des réponses concrètes aux défis humanitaires, sanitaires, sociaux et environnementaux.",
@@ -53,10 +52,10 @@ export const translations = {
       area1Title: "Gestion des risques de catastrophes",
       area1Desc: "Prévention, préparation et renforcement communautaire face aux catastrophes.",
       area1Items: ["Prévention et préparation communautaire", "Systèmes d'alerte précoce", "Renforcement des capacités locales", "Réduction des impacts"],
-      area2Title: "Urgences sanitaires et promotion des DSSR",
+      area2Title: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
       area2Desc: "Actions de santé préventive, accès aux services DSSR et protection des personnes vulnérables.",
       area2Items: ["Sensibilisation à la santé et prévention des épidémies", "Accès à la contraception", "Éducation sexuelle complète", "Lutte contre les violences basées sur le genre"],
-      area3Title: "Justice climatique et environnementale",
+      area3Title: "Promotion de la justice climatique et protection de l'environnement",
       area3Desc: "Protection des écosystèmes et promotion de pratiques durables pour une équité climatique réelle.",
       area3Items: ["Sensibilisation sur la protection et la préservation de l'environnement", "Protection des écosystèmes", "Pratiques durables (recyclage, reboisement, etc.)", "Défense de l'équité climatique et environnementale"],
     },
@@ -94,7 +93,7 @@ export const translations = {
         ],
       },
       "urgences-sanitaires": {
-        title: "Urgences sanitaires et promotion du droit à la santé sexuelle et reproductive (DSSR)",
+        title: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
         excerpt:
           "Réponse coordonnée aux urgences sanitaires et défense du droit à la santé sexuelle et reproductive pour les femmes et les filles.",
         heroImage: "/images/domaines/sante-dssr.png",
@@ -120,7 +119,7 @@ export const translations = {
         ],
       },
       "justice-climatique": {
-        title: "Promotion de la justice climatique et environnementale",
+        title: "Promotion de la justice climatique et protection de l'environnement",
         excerpt:
           "Lier la crise écologique aux droits humains pour une répartition équitable des charges, des bénéfices et de la résilience.",
         heroImage: "/images/domaines/justice-climat.png",
@@ -178,10 +177,11 @@ export const translations = {
       subtitle: "Des histoires de résilience et d'espoir",
     },
     zones: {
+      eyebrow: "Rayon d'activité",
       titleOur: "Nos",
       titleRest: "zones d'intervention",
       body:
-        "Le rayon d'activité de GLOBAL SOS couvre la province du Sud-Kivu. Il peut s'étendre sur tout le territoire national de la RDC et hors des frontières selon les besoins",
+        "Le rayon d'activité de GLOBAL SOS couvre la province du Sud-Kivu. Il peut s'étendre sur tout le territoire national de la RDC et hors des frontières selon les besoins.",
     },
     donate: {
       title: "Soutenez les communautés dans le besoin",
@@ -216,6 +216,7 @@ export const translations = {
       contactUs: "Contactez-nous",
       rights: "Tous droits réservés.",
       tagline: "Ensemble pour un monde plus juste",
+      motto: "Sauver sans périr, Prévenir pour éviter",
     },
     admin: {
       login: {
@@ -258,14 +259,13 @@ export const translations = {
     },
     hero: {
       headline: "Protecting Lives and Strengthening Community Resilience",
-      sub: "Global SOS is a humanitarian nonprofit organization working to protect vulnerable populations, relieve human suffering and defend the dignity of every person.",
+      sub: "Global SOS is a humanitarian nonprofit organization working to protect vulnerable populations, relieve human suffering and defend the dignity of every person. It provides urgent assistance to cries of distress.",
       learnMore: "Learn More",
       donate: "Donate",
     },
     about: {
       title: "About us",
-      description:
-        "Global SOS is a humanitarian nonprofit organization committed to protecting the most vulnerable, relieving human suffering and defending the dignity of every person.",
+      description: "",
       whoWeAreTitle: "Who are we?",
       whoWeAreParagraphs: [
         "Global SOS asbl was created on the 25th day of December by professionals from various fields. The organization was born from a shared will to provide concrete responses to humanitarian, health, social and environmental challenges.",
@@ -292,10 +292,10 @@ export const translations = {
       area1Title: "Disaster Risk Management",
       area1Desc: "Community prevention, preparedness, and local capacity strengthening against disasters.",
       area1Items: ["Community prevention and preparedness", "Early warning systems", "Strengthening local capacities", "Impact reduction"],
-      area2Title: "Health Emergencies and SRHR Promotion",
+      area2Title: "Health emergency management and promotion of sexual and reproductive health rights (SRHR)",
       area2Desc: "Preventive health actions, SRHR access, and protection for vulnerable populations.",
       area2Items: ["Health awareness and epidemic prevention", "Access to contraception", "Comprehensive sexuality education", "Combating gender-based violence"],
-      area3Title: "Climate and Environmental Justice",
+      area3Title: "Promoting climate justice and environmental protection",
       area3Desc: "Ecosystem protection and sustainable practices to advance climate and environmental equity.",
       area3Items: ["Awareness on environmental protection and preservation", "Ecosystem protection", "Sustainable practices (recycling, reforestation, etc.)", "Advocacy for climate and environmental equity"],
     },
@@ -333,7 +333,7 @@ export const translations = {
         ],
       },
       "urgences-sanitaires": {
-        title: "Health emergencies and the right to sexual and reproductive health (SRHR)",
+        title: "Health emergency management and promotion of sexual and reproductive health rights (SRHR)",
         excerpt:
           "Coordinated response to health emergencies and promotion of women's and girls' right to sexual and reproductive health.",
         heroImage: "/images/domaines/sante-dssr.png",
@@ -359,7 +359,7 @@ export const translations = {
         ],
       },
       "justice-climatique": {
-        title: "Promoting climate and environmental justice",
+        title: "Promoting climate justice and environmental protection",
         excerpt:
           "Linking the ecological crisis to human rights, for a fair sharing of impacts, transition costs and benefits.",
         heroImage: "/images/domaines/justice-climat.png",
@@ -417,6 +417,7 @@ export const translations = {
       subtitle: "Stories of resilience and hope",
     },
     zones: {
+      eyebrow: "Area of operation",
       titleOur: "Our",
       titleRest: "intervention zones",
       body:
@@ -455,6 +456,7 @@ export const translations = {
       contactUs: "Contact Us",
       rights: "All rights reserved.",
       tagline: "Together for a more just world",
+      motto: "Save without perishing, Prevent to avoid",
     },
     admin: {
       login: {

@@ -6,7 +6,8 @@ import { AdminSidebar } from "@/components/admin-sidebar"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/rich-text-editor"
+import { htmlToPlainText } from "@/lib/rich-text"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plus, Edit, Trash2, Calendar, MapPin, X, Save, Loader2, ImagePlus, Eye } from "lucide-react"
 import { activitiesApi, Activity, uploadsApi } from "@/lib/api"
@@ -30,8 +31,8 @@ const emptyForm = {
 const ACTIVITY_DOMAIN_OPTIONS: { id: string; label: string }[] = [
   { id: "Général", label: "Général" },
   { id: "risques-catastrophes", label: "Gestion des risques de catastrophes" },
-  { id: "urgences-sanitaires", label: "Urgences sanitaires & DSSR" },
-  { id: "justice-climatique", label: "Justice climatique & environnementale" },
+  { id: "urgences-sanitaires", label: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)" },
+  { id: "justice-climatique", label: "Promotion de la justice climatique et protection de l'environnement" },
 ]
 
 export default function AdminActivities() {
@@ -164,8 +165,24 @@ export default function AdminActivities() {
                       <div><label className="text-sm font-medium text-gray-700 mb-1 block">Titre (EN)</label><Input value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} /></div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (FR)</label><Textarea rows={3} value={form.descriptionFr} onChange={(e) => setForm({ ...form, descriptionFr: e.target.value })} /></div>
-                      <div><label className="text-sm font-medium text-gray-700 mb-1 block">Description (EN)</label><Textarea rows={3} value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} /></div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-1 block">Description (FR)</label>
+                        <RichTextEditor
+                          value={form.descriptionFr}
+                          onChange={(html) => setForm({ ...form, descriptionFr: html })}
+                          placeholder="Description en français…"
+                          minHeight="160px"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 mb-1 block">Description (EN)</label>
+                        <RichTextEditor
+                          value={form.descriptionEn}
+                          onChange={(html) => setForm({ ...form, descriptionEn: html })}
+                          placeholder="English description…"
+                          minHeight="160px"
+                        />
+                      </div>
                     </div>
                     <p className="text-xs text-gray-500 bg-[var(--sos-blue-light)]/40 border border-[var(--sos-blue-light)] rounded-lg px-3 py-2">
                       <strong className="text-gray-800">Traduction automatique :</strong> une seule langue suffit pour le titre et la description — l&apos;autre sera générée à l&apos;enregistrement.
@@ -320,7 +337,7 @@ export default function AdminActivities() {
                       </div>
                     </div>
                     <CardContent className="p-4">
-                      <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">{activity.descriptionFr}</p>
+                      <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">{htmlToPlainText(activity.descriptionFr)}</p>
                       <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
                         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{activity.location}</span>
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{activity.date}</span>

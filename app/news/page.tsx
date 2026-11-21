@@ -85,7 +85,8 @@ function NewsContent() {
     { id: "all", label: formatCategoryLabelOrAll("all", lang) },
     ...BLOG_DOMAIN_SLUGS.map((slug) => ({
       id: slug as BlogCategoryFilter,
-      label: formatCategoryLabel(slug, lang),
+      // Titres complets identiques au menu déroulant « Nos domaines »
+      label: t.domainPages[slug].title,
     })),
   ]
 
@@ -94,7 +95,7 @@ function NewsContent() {
       <Navbar />
       <main className="flex-1">
         {/* Hero blog */}
-        <section className="relative pt-20 overflow-hidden bg-white min-h-[62vh] flex items-end">
+        <section className="relative w-full overflow-hidden bg-white flex items-end min-h-screen">
           <div className="absolute inset-0">
             <Image
               src={headerSrc}
@@ -105,7 +106,7 @@ function NewsContent() {
               className="object-cover object-center"
             />
           </div>
-          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 pb-16 md:pb-20">
+          <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-16 md:pb-20">
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-white mb-4 drop-shadow-[0_1px_6px_rgba(0,0,0,0.35)]">
               <Newspaper size={14} />
               {lang === "fr" ? "Le blog" : "Our blog"}
@@ -147,7 +148,7 @@ function NewsContent() {
                       type="button"
                       onClick={() => setFilter(btn.id)}
                       className={cn(
-                        "px-4 py-2 rounded-full text-sm font-semibold transition-colors border",
+                        "px-4 py-2 rounded-full text-sm font-semibold transition-colors border text-left max-w-full sm:max-w-xs md:max-w-sm leading-snug",
                         active
                           ? "bg-[var(--sos-red)] text-white border-[var(--sos-red)] shadow-sm"
                           : "bg-white text-gray-600 border-gray-200 hover:border-[var(--sos-blue)] hover:text-[var(--sos-blue)]",

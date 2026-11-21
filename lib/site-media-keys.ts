@@ -5,6 +5,7 @@ export const SITE_MEDIA = {
   CONTACT_HEADER: "contact-header",
   DONATE_HERO_BG: "donate-hero-bg",
   NEWS_LIST_HEADER: "news-header",
+  ZONES_HEADER: "zones-header",
   DOMAIN_RISQUES: "domain-risques",
   DOMAIN_CLIMAT: "domain-climat",
   DOMAIN_SANTE: "domain-sante",

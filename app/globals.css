@@ -136,3 +136,28 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Éditeur TipTap (admin) */
+.ProseMirror {
+  outline: none;
+  min-height: 7rem;
+}
+.ProseMirror p {
+  margin: 0 0 0.65em;
+}
+.ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+.ProseMirror h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0.4em 0 0.5em;
+}
+.ProseMirror[data-placeholder]:empty::before,
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}

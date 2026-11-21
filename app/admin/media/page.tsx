@@ -35,6 +35,7 @@ const KEY_LABELS: Record<string, string> = {
   "contact-header": "En-tête — Page Contact",
   "donate-hero-bg": "Fond — Page Faire un don",
   "news-header": "En-tête — Page Actualités",
+  "zones-header": "En-tête — Page Zones d'intervention",
   "domain-risques": "Illustration — Risques de catastrophes",
   "domain-climat": "Illustration — Justice climatique",
   "domain-sante": "Illustration — Urgences sanitaires",

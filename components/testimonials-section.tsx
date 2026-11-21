@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n"
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react"
 import { testimonialsApi, Testimonial } from "@/lib/api"
 import { resolveMediaUrl } from "@/lib/media-url"
+import { RichTextView } from "@/components/rich-text-view"
 
 const AUTO_MS = 6000
 
@@ -114,9 +115,9 @@ export function TestimonialsSection() {
                 </div>
                 <div className="min-w-0 text-center md:text-left">
                   <Quote className="w-8 h-8 text-[var(--sos-red)]/40 mb-3 mx-auto md:mx-0" />
-                  <p className="text-gray-700 text-lg md:text-xl leading-relaxed mb-5">
-                    “{current.quote}”
-                  </p>
+                  <div className="text-gray-700 text-lg md:text-xl leading-relaxed mb-5">
+                    “<RichTextView content={current.quote} className="inline [&_p]:inline [&_p]:mb-0" />”
+                  </div>
                   <p className="font-serif font-bold text-xl text-[var(--sos-blue)]">{current.name}</p>
                 </div>
               </div>

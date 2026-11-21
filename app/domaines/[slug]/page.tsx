@@ -21,6 +21,8 @@ import {
 import { formatArticleDate, articleDisplayDate } from "@/lib/format-article-date"
 import { useSiteContent } from "@/hooks/use-site-content"
 import { ArticleCoverMedia } from "@/components/article-cover-media"
+import { RichTextView } from "@/components/rich-text-view"
+import { looksLikeHtml } from "@/lib/rich-text"
 
 const accentBySlug: Record<DomainSlug, { color: string; bg: string }> = {
   "risques-catastrophes": { color: "var(--sos-blue)", bg: "var(--sos-blue-light)" },
@@ -130,7 +132,7 @@ function DomainDetailContent() {
         <section className="py-14 md:py-16 bg-white">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             {leadText.trim() && (
-              <motion.p
+              <motion.div
                 className="text-xl md:text-2xl text-gray-900 font-medium leading-relaxed mb-10 pl-5 border-l-4"
                 style={{ borderColor: accent.color }}
                 initial={{ opacity: 0, y: 16 }}
@@ -138,22 +140,26 @@ function DomainDetailContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               >
-                {leadText}
-              </motion.p>
+                <RichTextView content={leadText} />
+              </motion.div>
             )}
             <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
-              {bodyParagraphs.map((p, i) => (
-                <motion.p
-                  key={i}
-                  className="leading-relaxed text-base md:text-lg text-pretty"
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.05 * i, duration: 0.45 }}
-                >
-                  {p}
-                </motion.p>
-              ))}
+              {looksLikeHtml(bodyRaw) ? (
+                <RichTextView content={bodyRaw} className="text-base md:text-lg leading-relaxed" />
+              ) : (
+                bodyParagraphs.map((p, i) => (
+                  <motion.p
+                    key={i}
+                    className="leading-relaxed text-base md:text-lg text-pretty"
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.05 * i, duration: 0.45 }}
+                  >
+                    {p}
+                  </motion.p>
+                ))
+              )}
             </div>
           </div>
         </section>

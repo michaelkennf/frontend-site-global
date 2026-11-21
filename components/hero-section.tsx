@@ -8,6 +8,8 @@ import { ArrowRight, Heart } from "lucide-react"
 import { useSiteMediaKeys } from "@/hooks/use-site-media-keys"
 import { SITE_MEDIA } from "@/lib/site-media-keys"
 import { useSiteContent } from "@/hooks/use-site-content"
+import { RichTextView } from "@/components/rich-text-view"
+import { looksLikeHtml } from "@/lib/rich-text"
 
 export function HeroSection() {
   const { t, lang } = useI18n()
@@ -18,6 +20,17 @@ export function HeroSection() {
   const heroAlt =
     (lang === "fr" ? heroMedia?.altFr : heroMedia?.altEn)?.trim() ||
     "Global SOS humanitarian work"
+
+  const distressLine =
+    lang === "fr"
+      ? "Elle apporte une assistance urgente aux cris de détresse."
+      : "It provides urgent assistance to cries of distress."
+  const heroSubRaw = c("hero.subtitle", t.hero.sub).trim()
+  const heroSub = /assistance urgente aux cris de détresse|urgent assistance to cries of distress/i.test(
+    heroSubRaw,
+  )
+    ? heroSubRaw
+    : `${heroSubRaw} ${distressLine}`.trim()
 
   return (
     <section className="relative w-full flex items-center justify-center overflow-hidden" style={{ minHeight: "100vh" }}>
@@ -62,14 +75,18 @@ export function HeroSection() {
           </motion.h1>
 
           {/* Sub text */}
-          <motion.p
+          <motion.div
             className="text-lg text-white/80 leading-relaxed mb-10 max-w-xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, duration: 0.6 }}
           >
-            {c("hero.subtitle", t.hero.sub)}
-          </motion.p>
+            {looksLikeHtml(heroSub) ? (
+              <RichTextView content={heroSub} className="text-white/80 [&_p]:text-white/80" />
+            ) : (
+              heroSub
+            )}
+          </motion.div>
 
           {/* CTA Buttons */}
           <motion.div

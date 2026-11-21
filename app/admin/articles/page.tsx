@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/rich-text-editor"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Plus,
@@ -42,8 +43,8 @@ import { cn } from "@/lib/utils"
 const DOMAIN_OPTIONS: { id: string; label: string }[] = [
   { id: "Général", label: "Général" },
   { id: "risques-catastrophes", label: "Gestion des risques de catastrophes" },
-  { id: "urgences-sanitaires", label: "Urgences sanitaires & DSSR" },
-  { id: "justice-climatique", label: "Justice climatique & environnementale" },
+  { id: "urgences-sanitaires", label: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)" },
+  { id: "justice-climatique", label: "Promotion de la justice climatique et protection de l'environnement" },
 ]
 
 type FormState = {
@@ -373,26 +374,31 @@ export default function AdminArticles() {
                         <label className="text-sm font-medium text-gray-700 mb-1 block">
                           Contenu (FR)
                         </label>
-                        <Textarea
-                          rows={6}
+                        <RichTextEditor
                           value={form.contentFr}
-                          onChange={(e) => setForm({ ...form, contentFr: e.target.value })}
+                          onChange={(html) => setForm({ ...form, contentFr: html })}
+                          placeholder="Rédigez le contenu en français…"
+                          minHeight="200px"
                         />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-gray-700 mb-1 block">
                           Contenu (EN)
                         </label>
-                        <Textarea
-                          rows={6}
+                        <RichTextEditor
                           value={form.contentEn}
-                          onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
+                          onChange={(html) => setForm({ ...form, contentEn: html })}
+                          placeholder="Write the English content…"
+                          minHeight="200px"
                         />
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 bg-[var(--sos-blue-light)]/40 border border-[var(--sos-blue-light)] rounded-lg px-3 py-2">
                       <strong className="text-gray-800">Traduction automatique :</strong> remplissez uniquement le français
                       <em>ou</em> uniquement l&apos;anglais pour le titre, le résumé et le contenu — l&apos;autre langue sera générée à l&apos;enregistrement.
+                      <br />
+                      <strong className="text-gray-800">Mise en forme :</strong> utilisez la barre au-dessus du contenu
+                      (gras, titre, alignement, justification, couleur) pour une phrase ou un paragraphe.
                       <br />
                       <strong className="text-gray-800">Images dans le texte :</strong> insérez{" "}
                       <code className="text-[11px] bg-white px-1 rounded">[[IMG1]]</code> (ou{" "}

@@ -143,9 +143,9 @@ function DonatePage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        {/* Hero image (full-bleed) — texte en dessous */}
-        <section className="relative pt-20 overflow-hidden bg-white">
-          <div className="relative w-full h-[42vh] min-h-[240px] max-h-[480px]">
+        {/* Hero image — même hauteur que le hero d'accueil ; texte en dessous */}
+        <section className="relative overflow-hidden bg-white">
+          <div className="relative w-full min-h-screen">
             <Image
               key={heroSrc}
               src={heroSrc}

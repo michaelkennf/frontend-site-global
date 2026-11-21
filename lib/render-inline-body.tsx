@@ -1,6 +1,7 @@
 import Image from "next/image"
 import React from "react"
 import { normalizeInlineImageMarkers, resolveMediaUrl } from "@/lib/inline-image-markers"
+import { RichTextView } from "@/components/rich-text-view"
 
 function parseInlineUrls(raw?: string | null): string[] {
   if (!raw) return []
@@ -14,8 +15,8 @@ function parseInlineUrls(raw?: string | null): string[] {
 }
 
 /**
- * Découpe le texte sur [[IMG1]] … [[IMG4]] (ou [IMG1] … [IMG4]) et insère les images.
- * Les URLs viennent du JSON `inlineImages` (indices 0–3 pour IMG1–4).
+ * Découpe le texte sur [[IMG1]] … [[IMG4]] et insère les images.
+ * Le texte entre les marqueurs peut être du HTML mis en forme (admin).
  */
 export function renderBodyWithInlineImages(
   body: string,
@@ -35,11 +36,7 @@ export function renderBodyWithInlineImages(
     const idx = parseInt(m[1], 10) - 1
     if (m.index > last) {
       const chunk = normalizedBody.slice(last, m.index)
-      parts.push(
-        <span key={`t-${key++}`} className="whitespace-pre-wrap">
-          {chunk}
-        </span>,
-      )
+      parts.push(<RichTextView key={`t-${key++}`} content={chunk} />)
     }
     const src = urls[idx]
     if (src) {
@@ -54,15 +51,11 @@ export function renderBodyWithInlineImages(
     last = m.index + m[0].length
   }
   if (last < normalizedBody.length) {
-    parts.push(
-      <span key={`t-${key++}`} className="whitespace-pre-wrap">
-        {normalizedBody.slice(last)}
-      </span>,
-    )
+    parts.push(<RichTextView key={`t-${key++}`} content={normalizedBody.slice(last)} />)
   }
 
   if (parts.length === 0) {
-    return <span className="whitespace-pre-wrap">{normalizedBody}</span>
+    return <RichTextView content={normalizedBody} />
   }
   return <>{parts}</>
 }
