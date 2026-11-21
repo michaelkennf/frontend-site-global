@@ -38,7 +38,12 @@ export const valueIcons = [
   { icon: Heart, color: "var(--sos-red)", bg: "var(--sos-red-light)", label: "Empathie / Empathy" },
 ]
 
-export function AboutSection() {
+type AboutSectionProps = {
+  /** Bloc « Qui sommes-nous » (texte + CTA). Désactivé sur l’accueil. */
+  showIntro?: boolean
+}
+
+export function AboutSection({ showIntro = true }: AboutSectionProps) {
   const { t, lang } = useI18n()
   const { c } = useSiteContent("about", lang)
   const mediaStore = useSiteMediaStore()
@@ -104,51 +109,52 @@ export function AboutSection() {
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Bloc identité — Qui sommes-nous */}
-        <motion.div
-          className="max-w-3xl mx-auto text-center mb-16 md:mb-20"
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-        >
-          <motion.span
-            variants={fadeUp}
-            className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] mb-5 rounded-full px-5 py-2.5 shadow-sm"
-            style={{
-              color: "var(--sos-blue)",
-              background: "linear-gradient(135deg, rgba(var(--sos-blue-rgb),0.14), rgba(var(--sos-blue-rgb),0.06))",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-            }}
+        {showIntro ? (
+          <motion.div
+            className="max-w-3xl mx-auto text-center mb-16 md:mb-20"
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
           >
-            <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
-            <span className="relative">{c("about.homeAboutEyebrow", t.about.homeAboutEyebrow)}</span>
-            <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
-          </motion.span>
-          <motion.h2
-            variants={fadeUp}
-            className="font-serif font-black text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-balance leading-[1.15] mb-6 px-3 py-2 rounded-2xl inline-block"
-            style={{
-              color: "var(--sos-blue)",
-              background: "linear-gradient(180deg, rgba(var(--sos-blue-rgb),0.12) 0%, rgba(var(--sos-blue-rgb),0.04) 100%)",
-            }}
-          >
-            {c("about.title", t.about.whoWeAreTitle)}
-          </motion.h2>
-          <motion.div variants={fadeUp} className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-pretty">
-            {c("about.description", t.about.whoWeAreParagraphs.join("\n\n")).split("\n\n").filter(Boolean).map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </motion.div>
-          <motion.div variants={fadeUp} className="mt-8">
-            <Link
-              href="/about"
-              className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-[0_12px_24px_-12px_rgba(227,34,25,0.25)] transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
+            <motion.span
+              variants={fadeUp}
+              className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-black uppercase tracking-[0.18em] mb-5 rounded-full px-5 py-2.5 shadow-sm"
+              style={{
+                color: "var(--sos-blue)",
+                background: "linear-gradient(135deg, rgba(var(--sos-blue-rgb),0.14), rgba(var(--sos-blue-rgb),0.06))",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
+              }}
             >
-              {c("hero.learnMore", t.hero.learnMore)}
-              <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
-            </Link>
+              <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
+              <span className="relative">{c("about.homeAboutEyebrow", t.about.homeAboutEyebrow)}</span>
+              <span className="h-px w-6 sm:w-8 rounded-full bg-[var(--sos-blue)]/35" aria-hidden />
+            </motion.span>
+            <motion.h2
+              variants={fadeUp}
+              className="font-serif font-black text-3xl sm:text-4xl md:text-[2.75rem] tracking-tight text-balance leading-[1.15] mb-6 px-3 py-2 rounded-2xl inline-block"
+              style={{
+                color: "var(--sos-blue)",
+                background: "linear-gradient(180deg, rgba(var(--sos-blue-rgb),0.12) 0%, rgba(var(--sos-blue-rgb),0.04) 100%)",
+              }}
+            >
+              {c("about.title", t.about.whoWeAreTitle)}
+            </motion.h2>
+            <motion.div variants={fadeUp} className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-pretty">
+              {c("about.description", t.about.whoWeAreParagraphs.join("\n\n")).split("\n\n").filter(Boolean).map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </motion.div>
+            <motion.div variants={fadeUp} className="mt-8">
+              <Link
+                href="/about"
+                className="group inline-flex items-center gap-2 rounded-full border border-transparent bg-[var(--sos-red)] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-[0_12px_24px_-12px_rgba(227,34,25,0.25)] transition-all hover:bg-[var(--sos-red-dark)] hover:gap-3 hover:shadow-lg"
+              >
+                {c("hero.learnMore", t.hero.learnMore)}
+                <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        ) : null}
 
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 lg:items-stretch">
           {/* Carousel */}
