@@ -49,9 +49,6 @@ export function Footer() {
             <p className="text-sm text-white/80 leading-relaxed">
               {c("footer.description", t.footer.description)}
             </p>
-            <p className="text-sm font-medium italic text-white/90">
-              {c("footer.tagline", t.footer.tagline)}
-            </p>
             <p className="text-sm font-medium text-white/90">
               {c("footer.motto", t.footer.motto)}
             </p>
