@@ -52,7 +52,7 @@ export function formatArticleCategoryLabel(article: Article, lang: Language): st
 const LABELS_FR: Record<DomainSlug, string> = {
   "risques-catastrophes": "Gestion des risques de catastrophes",
   "urgences-sanitaires":
-    "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
+    "Gestion des urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
   "justice-climatique": "Promotion de la justice climatique et protection de l'environnement",
 }
 

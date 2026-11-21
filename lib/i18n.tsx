@@ -52,7 +52,7 @@ export const translations = {
       area1Title: "Gestion des risques de catastrophes",
       area1Desc: "Prévention, préparation et renforcement communautaire face aux catastrophes.",
       area1Items: ["Prévention et préparation communautaire", "Systèmes d'alerte précoce", "Renforcement des capacités locales", "Réduction des impacts"],
-      area2Title: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
+      area2Title: "Gestion des urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
       area2Desc: "Actions de santé préventive, accès aux services DSSR et protection des personnes vulnérables.",
       area2Items: ["Sensibilisation à la santé et prévention des épidémies", "Accès à la contraception", "Éducation sexuelle complète", "Lutte contre les violences basées sur le genre"],
       area3Title: "Promotion de la justice climatique et protection de l'environnement",
@@ -93,7 +93,7 @@ export const translations = {
         ],
       },
       "urgences-sanitaires": {
-        title: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
+        title: "Gestion des urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)",
         excerpt:
           "Réponse coordonnée aux urgences sanitaires et défense du droit à la santé sexuelle et reproductive pour les femmes et les filles.",
         heroImage: "/images/domaines/sante-dssr.png",

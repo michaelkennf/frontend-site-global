@@ -43,7 +43,7 @@ import { cn } from "@/lib/utils"
 const DOMAIN_OPTIONS: { id: string; label: string }[] = [
   { id: "Général", label: "Général" },
   { id: "risques-catastrophes", label: "Gestion des risques de catastrophes" },
-  { id: "urgences-sanitaires", label: "Gestion urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)" },
+  { id: "urgences-sanitaires", label: "Gestion des urgences sanitaires et promotion des droits à la santé sexuelle et reproductive (DSSR)" },
   { id: "justice-climatique", label: "Promotion de la justice climatique et protection de l'environnement" },
 ]
 

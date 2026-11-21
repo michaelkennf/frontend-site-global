@@ -79,18 +79,12 @@ export function Navbar() {
     {
       href: "/news",
       title: lang === "fr" ? "Articles" : "Articles",
-      excerpt:
-        lang === "fr"
-          ? "Actualités et publications depuis le terrain"
-          : "News and stories from the field",
+      excerpt: lang === "fr" ? "Actualités et publications" : "News and publications",
     },
     {
       href: "/galerie",
       title: lang === "fr" ? "Galerie" : "Gallery",
-      excerpt:
-        lang === "fr"
-          ? "Images et vidéos publiées sur le site"
-          : "Images and videos published on the site",
+      excerpt: lang === "fr" ? "Images et vidéos" : "Images and videos",
     },
   ]
 
